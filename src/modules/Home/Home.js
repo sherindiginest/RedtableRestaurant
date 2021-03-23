@@ -12,6 +12,7 @@ import HomeNew from '../../modules/Home/HomeNew';
 import HomeScreen from '../Home/HomeScreen';
 import MyOrders from '../MyOrder/MyOrders';
 import Offer from '../../modules/Home/Offer';
+import MyCart from '../Cart/MyCart';
 
 import {  Badge  } from 'react-native-elements'
 
@@ -82,11 +83,11 @@ export default class Home extends React.Component {
         }}
       />
       <Tab.Screen
-        name="Profile2"
-        component={Login}
+        name="My Cart"
+        component={MyCart}
         
         options={{
-          tabBarLabel: 'Profile2',
+          tabBarLabel: 'My Cart',
           tabBarIcon: ({ color }) => (
             <MaterialCommunityIcons   name="cart" color={color} size={26} />
             

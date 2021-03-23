@@ -17,6 +17,7 @@ import ManageAddress from '../Settings/ManageAddress';
 import Notification from '../Notification/Notification';
 import MyOrders from '../MyOrder/MyOrders';
 import HomeNew from '../Home/HomeNew';
+import MyCart from '../Cart/MyCart';
 import Icon from 'react-native-vector-icons/Ionicons';
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 const headerBackground = require('../../../assets/images/img1.png');
@@ -61,6 +62,7 @@ const MainStackNavigator = createStackNavigator(
         ManageAddress:ManageAddress,
         Notification:Notification,
         MyOrders:MyOrders,
+        MyCart:MyCart,
 
         Main: {
             screen: Home,
