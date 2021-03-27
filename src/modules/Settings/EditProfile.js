@@ -11,7 +11,6 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { Badge } from 'react-native-elements';
 import { NavigationEvents } from 'react-navigation';
 import ImagePicker from 'react-native-image-picker';
-import RNFS from 'react-native-fs';
 import Fontisto from "react-native-vector-icons/Fontisto";
 import SimpleLineIcons from "react-native-vector-icons/SimpleLineIcons";
 //import ProductCheckout from '../Product/ProductCheckout'
@@ -27,7 +26,7 @@ var tok;
     };
     constructor(props) {
       super(props);
-  
+
       this.state = {
         Itemid:'',
         imageupload:'',
@@ -36,24 +35,24 @@ var tok;
       Email:'',
       Gender:'',
       Phone:'',
-      
+
       filePath: '',
     Isimagesource: '',
     filetype: '',
     filename: '',
 
-        
-        
-       
+
+
+
       };
       this.arrayholder = [];
-    
+
     }
     async componentDidMount() {
-        
-     
+
+
     }
- 
+
 
 
 //text input handle change fn
@@ -69,7 +68,7 @@ async GetImage()
 {
     //alert(JSON.stringify(formData))
     let tok=this.state.UserToken
-    
+
     let response = await fetch('https://mastermindias.smartipz.com/token/user_api/get_profile_image',{
         method: 'POST',
         headers: {
@@ -77,14 +76,14 @@ async GetImage()
             'Accept': 'application/json',
             'Content-Type': 'multipart/form-data',
         },
-    
+
         body: JSON.stringify({
-          
-            
+
+
           })
     }
     );
-    
+
     let responseJson = await response.json();
 
 //alert(JSON.stringify(responseJson))
@@ -96,14 +95,14 @@ this.setState({
 
 //function for convert file to base64
 convertFile = (uri) => {
-    RNFS.readFile(uri, 'base64')
+   /*  RNFS.readFile(uri, 'base64')
         .then(data => {
 
             this.setState({
                 imageupload: data
             })
-            
-        })
+
+        }) */
 }
 
 
@@ -120,17 +119,17 @@ async chooseFile() {
     };
     ImagePicker.showImagePicker(options, response => {
         console.log('Response = ', response);
-        
+
         if (response.didCancel) {
-           
+
             console.log('User cancelled image picker');
         } else if (response.error) {
-            
+
             console.log('ImagePicker Error: ', response.error);
         }
 
         else {
-           
+
             let source = response.uri;
             let type = response.type;
             let ImageName = response.fileName
@@ -153,10 +152,10 @@ async chooseFile() {
               //alert(media.uri)
               var formData = new FormData();
               formData.append("image", media);
-          
+
 
 this.profile(formData);
-        
+
 
 
 
@@ -186,7 +185,7 @@ async profile(formData)
 {
     //alert(JSON.stringify(formData))
     let tok=this.state.UserToken
-    
+
     let response = await fetch('https://mastermindias.smartipz.com/token/user_api/change_profile_pic',{
         method: 'POST',
         headers: {
@@ -194,11 +193,11 @@ async profile(formData)
             'Accept': 'application/json',
             'Content-Type': 'multipart/form-data',
         },
-    
+
         body:  formData
     }
     );
-    
+
     let responseJson = await response.json();
 
 //alert(JSON.stringify(responseJson))
@@ -226,8 +225,8 @@ async refresh()
         return (
             <View>
                 {this.state.AllProducts == '' &&
-    
-                    
+
+
                     <View>
                         <Text style={{
                             fontWeight: "bold", textAlign: "center",
@@ -244,7 +243,7 @@ async refresh()
 
   render() {
 
-   
+
     return (
 
 <View style={{  flex: 1 }}>
@@ -252,13 +251,13 @@ async refresh()
                     onDidFocus={() => this.refresh()}
                 />
                 <View style={{ backgroundColor: 'white', height: hp('100%'), width: wp('100%') }}>
-                                       
+
     <ScrollView>
 
-    
-{/*                  
+
+{/*
                         <View style={{marginTop:hp('3%')}}>
-                   
+
                     <Button
   //onPress={onPressLearnMore}
   title="My Profile"
@@ -303,14 +302,14 @@ async refresh()
 
 
 
-                                       
+
                                         <View>
                                            {/* ..........................Name.......................... */}
         <View style={{flexDirection:'row',alignItems:'center',justifyContent:'center',alignContent:'center'}}>
 
-             
+
 <View>
-   
+
    <EvilIcons  name="user" color="#c4c3cb"
                                                             size={26}/>
    </View>
@@ -330,17 +329,17 @@ async refresh()
         placeholderTextColor="#c4c3cb"
         onChangeText={(text)=>this.handleChange(text,'Name')}
         />
-        
+
     </View>
-   
-</View> 
+
+</View>
 
 {/* ..........................Email.......................... */}
 <View style={{flexDirection:'row',alignItems:'center',justifyContent:'center',alignContent:'center'}}>
 
-             
+
 <View>
-   
+
 <Fontisto  name="email" color="#c4c3cb" size={26} />
    </View>
     <View style={{width:wp('75%')}}>
@@ -359,17 +358,17 @@ async refresh()
         placeholderTextColor="#c4c3cb"
         onChangeText={(text)=>this.handleChange(text,'Email')}
         />
-        
+
     </View>
-   
-</View> 
+
+</View>
 
 {/* ..........................Phone.......................... */}
 <View style={{flexDirection:'row',alignItems:'center',justifyContent:'center',alignContent:'center'}}>
 
-             
+
 <View>
-   
+
 <MaterialCommunityIcons  name="phone" color="#c4c3cb"
                                                             size={26}></MaterialCommunityIcons>
    </View>
@@ -389,10 +388,10 @@ async refresh()
         placeholderTextColor="#c4c3cb"
         onChangeText={(text)=>this.handleChange(text,'Phone')}
         />
-        
+
     </View>
-   
-</View> 
+
+</View>
 
 
 <View style={{paddingTop:"7%"}}>
@@ -406,7 +405,7 @@ async refresh()
                                                 alignItems: 'center',
                                                 borderRadius: 75,
                                                 marginBottom: hp('1%'),marginLeft:'5%',
-                                            }} 
+                                            }}
                      onPress={()=>this.Update()}
                   >
                          <Text style={styles.SubmitButtonText}> Update</Text>
@@ -415,15 +414,15 @@ async refresh()
                  </View>
 
 
-                                        
+
                                         </View>
-                                       
-                                        
-                                       
-                                        
-        
+
+
+
+
+
                 </ScrollView>
-                                                                           
+
 </View>
 
      </View>
