@@ -12,6 +12,9 @@ const COLORS = {
   white: '#FFFFFF',
   buttonYellow: '#FFB300',
   buttondark: '#00000056',
+  activeTabColor: '#5663FF',
+  inactiveTabColor: '#6E7FAA',
+  borderColor: '#CA3D3D30',
 };
 
 export {COLORS, WIDTH, HEIGHT};

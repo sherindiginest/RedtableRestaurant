@@ -1,5 +1,6 @@
 import SplashScreen from './SplashScreen';
 import LoginScreen from './LoginScreen';
-//import SignupScreen from './SignupScreen';
+import LanguageSwitchScreen from './LanguageSwitchScreen';
+import SignupScreen from './SignupScreen';
 
-export {SplashScreen, LoginScreen /*  SignupScreen */};
+export {SplashScreen, LoginScreen, LanguageSwitchScreen, SignupScreen};
