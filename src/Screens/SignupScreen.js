@@ -1,150 +1,134 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react'
 import {
   View,
   Text,
-  Picker,
   StatusBar,
   Image,
   Pressable,
-  TouchableOpacity,
-  StyleSheet,
-  BackHandler,
-  Platform,
-  TextInput,
-  AsyncStorage,
-  Switch,
   ImageBackground,
-} from 'react-native';
+  ScrollView,
+} from 'react-native'
+import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
 
+import { CustomTextInput, CustomButton } from './../components'
 import {
-  widthPercentageToDP as wp,
-  heightPercentageToDP as hp,
-} from 'react-native-responsive-screen';
-import AntIcon from 'react-native-vector-icons/AntDesign';
-import Dialog, {
-  DialogFooter,
-  ScaleAnimation,
-  DialogButton,
-  DialogContent,
-} from 'react-native-popup-dialog';
-import {ScrollView} from 'react-native-gesture-handler';
-import {CustomTextInput, CustomButton} from './../components';
-import {backgroundImage, logo, email, password} from './../../assets/images';
-import {COLORS, HEIGHT, WIDTH} from './../constants';
+  backgroundImage,
+  logo,
+  email,
+  password,
+  user,
+  phone,
+  eye
+} from './../../assets/images'
+import { COLORS, HEIGHT, STYLES, WIDTH } from './../constants'
 
-const SignupScreen = () => {
+const SignupScreen = (props, context) => {
+  const { navigation, lang } = props
   return (
-    
-      <View style={{flex: 1}}>
+    <View style={{ flex: 1 }}>
       <StatusBar backgroundColor={COLORS.statusbar} />
       <ImageBackground
         style={{
           flex: 1,
           justifyContent: 'space-evenly',
-          alignItems: 'center',
           paddingHorizontal: WIDTH * 0.07,
         }}
         source={backgroundImage}
         resizeMode="cover">
         <View
           style={{
-            justifyContent: 'center',
-            alignContent: 'center',
+            justifyContent: 'flex-end',
             alignItems: 'center',
-            height: '20%',
+            height: HEIGHT * 0.3,
+            marginTop: HEIGHT * 0.03,
           }}>
-           <Image
-          style={{width: WIDTH * 0.6, height: HEIGHT * 0.32}}
-          source={logo}
-          resizeMode="contain"
-        />
-        </View>
-        {/* <ScrollView> */}
-          {/* <View
+          <Image
             style={{
-              marginLeft: wp('3%'),
-              marginRight: wp('3%'),
-              marginTop: hp('10%'),
-            }}> */}
-            {/* FirstName */}
+              width: WIDTH * 0.6,
+              height: HEIGHT * 0.3,
+            }}
+            source={logo}
+            resizeMode="contain"
+          />
+        </View>
+        <View style={{ flex: 1 }}>
+          <ScrollView style={{ flex: 1 }}>
             <CustomTextInput
-                  image={email}
-                  placeholder={'Name'}
-                  onChangeText={(text) => {}}
+              style={{ marginBottom: HEIGHT * 0.01 }}
+              image={user}
+              placeholder={context.t('name')}
+              onChangeText={(text) => { }}
             />
-
-            {/* Text field for Email Id */}
             <CustomTextInput
-                  image={email}
-                  placeholder={'Email'}
-                  onChangeText={(text) => {}}
+              style={{ marginBottom: HEIGHT * 0.01 }}
+              image={email}
+              placeholder={context.t('email')}
+              onChangeText={(text) => { }}
             />
-
-            {/* Text field Mobile Number */}
             <CustomTextInput
-                  image={email}
-                  placeholder={'Phone Number'}
-                  onChangeText={(text) => {}}
+              style={{ marginBottom: HEIGHT * 0.01 }}
+              image={phone}
+              placeholder={context.t('phone_number')}
+              onChangeText={(text) => { }}
             />
-
-            {/* .......................... Password.......................... */}
             <CustomTextInput
-          image={password}
-          placeholder={'Password'}
-          onChangeText={() => {}}
-        />
-
-            {/* ..........................Submit Button........................... */}
-            
-
-
-            <CustomButton title="REGISTER" />
-        <Pressable
-          style={{
-            height: HEIGHT * 0.08,
-            alignSelf: 'stretch',
-            borderRadius: HEIGHT * 0.04,
-            backgroundColor: COLORS.buttondark,
-            alignItems: 'center',
-            justifyContent: 'center',
-            //flexDirection: 'row',
-          }}>
-          <Text style={{color: COLORS.white, fontSize: 15}}>
-            {`Already Have A Account? `}
-            <Text
-              style={{color: 'green', fontSize: 15, fontWeight: 'bold'}}>
-              LOGIN
-            </Text>
-          </Text>
-        </Pressable>
-
-
-
-
-              
-          
-            
-           
-          {/* </View> */}
-        {/* </ScrollView> */}
+              secureEntry
+              secureEntryIcon={eye}
+              style={{ marginBottom: HEIGHT * 0.01 }}
+              image={password}
+              placeholder={context.t('password')}
+              onChangeText={() => { }}
+            />
+            <CustomButton
+              onPress={() => navigation.navigate('OtpScreen')}
+              title={context.t('register')}
+              style={{
+                marginTop: HEIGHT * 0.02,
+                marginBottom: HEIGHT * 0.03,
+              }}
+            />
+            <View
+              style={[
+                {
+                  height: HEIGHT * 0.076,
+                  alignSelf: 'stretch',
+                  borderRadius: HEIGHT * 0.038,
+                  backgroundColor: COLORS.buttondark,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                },
+                STYLES.flexDirection(lang),
+              ]}>
+              <Text style={{ color: COLORS.white, fontSize: 15 }}>
+                {`${context.t('already_have_account')} `}
+              </Text>
+              <Pressable onPress={() => navigation.navigate('LoginScreen')}>
+                <Text
+                  style={{
+                    color: COLORS.green,
+                    fontSize: 15,
+                    fontWeight: 'bold',
+                  }}>
+                  {`${context.t('login')} `}
+                </Text>
+              </Pressable>
+            </View>
+          </ScrollView>
+        </View>
       </ImageBackground>
     </View>
-  );
+  )
 }
-const styless = StyleSheet.create({
-  SectionStyle: {
-    flexDirection: 'row',
-    alignContent: 'center',
-    justifyContent: 'center',
-    alignItems: 'center',
 
-    height: 50,
-    margin: 15,
-    width: '90%',
-    borderRadius: 75,
-    borderColor: 'white',
-    borderWidth: 1,
-    backgroundColor: '#FFFFFF50',
-  },
-});
-export default SignupScreen;
+SignupScreen.contextTypes = {
+  t: PropTypes.func,
+}
+const mapStateToProps = ({ i18nState }) => {
+  return {
+    lang: i18nState.lang,
+  }
+}
+const mapDispatchToProps = {}
+
+export default connect(mapStateToProps, mapDispatchToProps)(SignupScreen)

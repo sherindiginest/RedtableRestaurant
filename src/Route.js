@@ -1,26 +1,37 @@
-import React from 'react';
-import {View, Text, Image} from 'react-native';
-import {NavigationContainer} from '@react-navigation/native';
-import {createStackNavigator} from '@react-navigation/stack';
-import {createDrawerNavigator} from '@react-navigation/drawer';
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import React from 'react'
+import { View, Text, Image } from 'react-native'
+import { NavigationContainer } from '@react-navigation/native'
+import { createStackNavigator } from '@react-navigation/stack'
+import { createDrawerNavigator } from '@react-navigation/drawer'
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 
-import {email, cart, home, location, tabmenu, orders} from './../assets/images';
+import { store } from "./../App"
+import { email, cart, home, location, tabmenu, orders } from './../assets/images'
 
 import {
   SplashScreen,
   LoginScreen,
   LanguageSwitchScreen,
   SignupScreen,
-} from './Screens';
-import {HEIGHT, WIDTH, COLORS} from './constants';
-import {DrawerMenu} from './components';
+  OtpScreen,
+  ForgotPasswordScreen,
+  HomeScreen,
+  OurRestaurantsScreen,
+  SetLocationScreen,
+  MyOrdersScreen,
+  CartScreen,
+  RestaurantDetailsScreen,
+  CheckOutScreen
+} from './Screens'
 
-const TABBAR_HEIGHT = HEIGHT * 0.08;
-const TABBAR_WIDTH = WIDTH / 5;
+import { HEIGHT, WIDTH, COLORS } from './constants'
+import { DrawerMenu } from './components'
+
+const TABBAR_HEIGHT = HEIGHT * 0.08
+const TABBAR_WIDTH = WIDTH / 5
 
 const TabBarButton = (props) => {
-  const {color, style, icon, isCenterTab = false, focused} = props;
+  const { color, style, icon, isCenterTab = false, focused } = props
   return isCenterTab ? (
     <View
       style={[
@@ -41,7 +52,7 @@ const TabBarButton = (props) => {
         }}>
         <Image
           source={icon}
-          style={{tintColor: COLORS.white}}
+          style={{ tintColor: COLORS.white }}
           resizeMode="contain"
         />
       </View>
@@ -56,20 +67,20 @@ const TabBarButton = (props) => {
           alignItems: 'center',
           justifyContent: 'center',
         },
-        {...style},
+        { ...style },
       ]}>
-      <Image source={icon} style={{tintColor: color}} resizeMode="contain" />
+      <Image source={icon} style={{ tintColor: color }} resizeMode="contain" />
     </View>
-  );
-};
+  )
+}
 
-const BottomTabsStack = createBottomTabNavigator();
+const BottomTabsStack = createBottomTabNavigator()
 
 const BottomTabs = () => {
   return (
     <BottomTabsStack.Navigator
-      screenOptions={{headerShown: false}}
-      initialRouteName="Tab1"
+      screenOptions={{ headerShown: false }}
+      initialRouteName="HomeScreen"
       tabBarOptions={{
         activeTintColor: COLORS.activeTabColor,
         inactiveTintColor: COLORS.inactiveTabColor,
@@ -82,28 +93,28 @@ const BottomTabs = () => {
         showLabel: false,
       }}>
       <BottomTabsStack.Screen
-        name="Home"
-        component={SplashScreen}
+        name="HomeScreen"
+        component={HomeScreen}
         options={{
           tabBarIcon: (props) => (
             <TabBarButton
               {...props}
-              style={{borderTopLeftRadius: TABBAR_HEIGHT}}
+              style={{ borderTopLeftRadius: TABBAR_HEIGHT }}
               icon={home}
             />
           ),
         }}
       />
       <BottomTabsStack.Screen
-        name="Tab2"
-        component={LoginScreen}
+        name="OurRestaurantsScreen"
+        component={OurRestaurantsScreen}
         options={{
           tabBarIcon: (props) => <TabBarButton {...props} icon={tabmenu} />,
         }}
       />
       <BottomTabsStack.Screen
-        name="Tab3"
-        component={LanguageSwitchScreen}
+        name="SetLocationScreen"
+        component={SetLocationScreen}
         options={{
           tabBarIcon: (props) => (
             <TabBarButton {...props} icon={location} isCenterTab />
@@ -111,76 +122,78 @@ const BottomTabs = () => {
         }}
       />
       <BottomTabsStack.Screen
-        name="Tab4"
-        component={SignupScreen}
+        name="MyOrdersScreen"
+        component={MyOrdersScreen}
         options={{
           tabBarIcon: (props) => <TabBarButton {...props} icon={orders} />,
         }}
       />
       <BottomTabsStack.Screen
-        name="Tab5"
-        component={SplashScreen}
+        name="CartScreen"
+        component={CartScreen}
         options={{
           tabBarIcon: (props) => (
             <TabBarButton
               {...props}
               icon={cart}
-              style={{borderTopRightRadius: TABBAR_HEIGHT}}
+              style={{ borderTopRightRadius: TABBAR_HEIGHT }}
             />
           ),
           tabBarBadge: 2,
         }}
       />
     </BottomTabsStack.Navigator>
-  );
-};
+  )
+}
 
-const BottomStack = createStackNavigator();
 
-const Bottom = () => {
-  return (
-    <BottomStack.Navigator
-      screenOptions={{headerShown: false}}
-      initialRouteName="SplashScreen">
-      <BottomStack.Screen name="SplashScreen" component={BottomTabs} />
-      <BottomStack.Screen name="LoginScreen" component={LoginScreen} />
-    </BottomStack.Navigator>
-  );
-};
-
-const HomeStack = createDrawerNavigator();
+const HomeStack = createDrawerNavigator()
 
 const Home = () => {
+  const { lang = "en" } = store.getState().i18nState
   return (
     <HomeStack.Navigator
-      screenOptions={{headerShown: false}}
-      initialRouteName="SplashScreen"
+      screenOptions={{
+        headerShown: false,
+      }}
+      drawerPosition={lang == "en" ? "left" : "right"}
+      initialRouteName="Bottom"
       drawerContent={(props) => <DrawerMenu {...props} />}>
-      <HomeStack.Screen name="SplashScreen" component={Bottom} />
-      <HomeStack.Screen name="LoginScreen" component={LoginScreen} />
+      <HomeStack.Screen name="Bottom" component={BottomTabs} />
+      <HomeStack.Screen name="RestaurantDetailsScreen" component={RestaurantDetailsScreen} />
+      <HomeStack.Screen name="CheckOutScreen" component={CheckOutScreen} />
+      {/* <HomeStack.Screen name="LoginScreen" component={LoginScreen} /> */}
     </HomeStack.Navigator>
-  );
-};
+  )
+}
 
-const RouteStack = createStackNavigator();
+const RouteStack = createStackNavigator()
 
 const Route = () => {
   return (
     <NavigationContainer>
       <RouteStack.Navigator
-        screenOptions={{headerShown: false}}
+        screenOptions={{
+          headerShown: false,
+          animationTypeForReplace: 'pop',
+        }}
         initialRouteName="Home">
         <RouteStack.Screen name="SplashScreen" component={SplashScreen} />
-        <RouteStack.Screen name="LoginScreen" component={LoginScreen} />
         <RouteStack.Screen
           name="LanguageSwitchScreen"
           component={LanguageSwitchScreen}
         />
+        <RouteStack.Screen name="LoginScreen" component={LoginScreen} />
+        <RouteStack.Screen
+          name="ForgotPasswordScreen"
+          component={ForgotPasswordScreen}
+        />
         <RouteStack.Screen name="SignupScreen" component={SignupScreen} />
+        <RouteStack.Screen name="OtpScreen" component={OtpScreen} />
         <RouteStack.Screen name="Home" component={Home} />
       </RouteStack.Navigator>
     </NavigationContainer>
-  );
-};
+  )
+}
 
-export default Route;
+export default Route

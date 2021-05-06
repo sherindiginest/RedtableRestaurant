@@ -7,12 +7,16 @@ import {
   Image,
   Pressable,
 } from 'react-native';
+import PropTypes from 'prop-types';
+import {connect} from 'react-redux';
 
 import {CustomTextInput, CustomButton} from './../components';
 import {backgroundImage, logo, email, password} from './../../assets/images';
-import {COLORS, HEIGHT, WIDTH} from './../constants';
+import {COLORS, HEIGHT, STYLES, WIDTH} from './../constants';
 
-const LoginScreen = () => {
+const LoginScreen = (props, context) => {
+  const {navigation, lang} = props;
+
   return (
     <View style={{flex: 1}}>
       <StatusBar backgroundColor={COLORS.statusbar} />
@@ -26,53 +30,79 @@ const LoginScreen = () => {
         source={backgroundImage}
         resizeMode="cover">
         <Image
-          style={{width: WIDTH * 0.6, height: HEIGHT * 0.32}}
+          style={{width: WIDTH * 0.6, height: HEIGHT * 0.3}}
           source={logo}
           resizeMode="contain"
         />
         <CustomTextInput
           image={email}
-          placeholder={'Email'}
+          placeholder={context.t('email')}
           onChangeText={(text) => {}}
         />
         <CustomTextInput
           image={password}
-          placeholder={'Password'}
+          placeholder={context.t('password')}
           onChangeText={() => {}}
         />
         <View
-          style={{
-            alignSelf: 'stretch',
-            alignItems: 'flex-end',
-          }}>
-          <Pressable>
+          style={[
+            {
+              alignSelf: 'stretch',
+            },
+            STYLES.alignItems(lang == 'ar' ? 'en' : 'ar'),
+          ]}>
+          <Pressable
+            onPress={() => navigation.navigate('ForgotPasswordScreen')}>
             <Text style={{color: COLORS.white, fontSize: 21}}>
-              Forgot Password?
+              {`${context.t('forgot_password')}?`}
             </Text>
           </Pressable>
         </View>
-        <CustomButton title="LOGIN" />
+        <CustomButton
+          title={context.t('login')}
+          onPress={() => {
+            navigation.navigate('OtpScreen');
+          }}
+        />
         <Pressable
-          style={{
-            height: HEIGHT * 0.08,
-            alignSelf: 'stretch',
-            borderRadius: HEIGHT * 0.04,
-            backgroundColor: COLORS.buttondark,
-            alignItems: 'center',
-            justifyContent: 'center',
-            //flexDirection: 'row',
-          }}>
+          style={[
+            {
+              height: HEIGHT * 0.076,
+              alignSelf: 'stretch',
+              borderRadius: HEIGHT * 0.038,
+              backgroundColor: COLORS.buttondark,
+              alignItems: 'center',
+              justifyContent: 'center',
+            },
+            STYLES.flexDirection(lang),
+          ]}>
           <Text style={{color: COLORS.white, fontSize: 15}}>
-            {`Don't Have A Account? `}
-            <Text
-              style={{color: COLORS.primary, fontSize: 15, fontWeight: 'bold'}}>
-              REGISTER HERE!
-            </Text>
+            {`${context.t('dont_have_account')} `}
           </Text>
+          <Pressable onPress={() => navigation.navigate('SignupScreen')}>
+            <Text
+              style={{
+                color: COLORS.primary,
+                fontSize: 15,
+                fontWeight: 'bold',
+              }}>
+              {`${context.t('register_here')} `}
+            </Text>
+          </Pressable>
         </Pressable>
       </ImageBackground>
     </View>
   );
 };
 
-export default LoginScreen;
+LoginScreen.contextTypes = {
+  t: PropTypes.func,
+};
+const mapStateToProps = ({i18nState}) => {
+  return {
+    lang: i18nState.lang,
+  };
+};
+const mapDispatchToProps = {};
+
+export default connect(mapStateToProps, mapDispatchToProps)(LoginScreen);

@@ -16,6 +16,7 @@
     "@react-navigation/material-bottom-tabs": "^5.3.14",
     "@react-navigation/native": "^5.9.3",
     "@react-navigation/stack": "^5.14.3",
+    "prop-types": "^15.7.2",
     "react": "16.13.1",
     "react-native": "0.63.4",
     "react-native-best-viewpager": "^1.0.4",
@@ -30,7 +31,10 @@
     "react-native-responsive-screen": "^1.4.2",
     "react-native-safe-area-context": "^3.2.0",
     "react-native-screens": "^2.18.1",
-    "react-native-vector-icons": "^8.1.0"
+    "react-native-vector-icons": "^8.1.0",
+    "react-redux": "^7.2.3",
+    "redux-i18n": "^1.5.22",
+    "redux-thunk": "^2.3.0"
   },
   "devDependencies": {
     "@babel/core": "7.13.8",

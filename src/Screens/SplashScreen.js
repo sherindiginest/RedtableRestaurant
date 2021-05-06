@@ -1,10 +1,17 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {View, Text, ImageBackground, StatusBar, Image} from 'react-native';
 
 import {backgroundImage, logo} from './../../assets/images';
 import {COLORS} from './../constants';
 
-const SplashScreen = () => {
+const SplashScreen = (props) => {
+  const {navigation} = props;
+  useEffect(() => {
+    setTimeout(() => {
+      navigation.replace('LanguageSwitchScreen');
+    }, 1000);
+  }, []);
+
   return (
     <View style={{flex: 1}}>
       <StatusBar backgroundColor={COLORS.statusbar} />
