@@ -32,6 +32,22 @@
 		EBF2E38F800B4C9983A7CCB2 /* Octicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 073E5E598053455BACAA76D3 /* Octicons.ttf */; };
 		35259BE228084BEAAB24815D /* SimpleLineIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3E714E359A2F49BDBCA9E553 /* SimpleLineIcons.ttf */; };
 		3E8749F6966249E4B5E1DBF8 /* Zocial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D0EE2177D0F74DF4A38B690E /* Zocial.ttf */; };
+		873A9753639B426C94737A02 /* BerkshireSwash-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B6BF74AD031D43838AE0E5C3 /* BerkshireSwash-Regular.ttf */; };
+		5D3142A2C8CE47458AD4BA06 /* Proxima Nova Alt Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = F3ADB463B43C43D3AC9E6601 /* Proxima Nova Alt Regular.otf */; };
+		8519B65F6E674C79A3C689E2 /* ProximaNova-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 2C789883C593411B96330BC7 /* ProximaNova-Regular.otf */; };
+		17D784659D114499909EDC8D /* Rene Bieder  Milliard Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 794E739ACF5F4FB5B52251F0 /* Rene Bieder  Milliard Bold.otf */; };
+		AFAE8744FD57456E8BB56757 /* Rene Bieder  Milliard ExtraBold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 64DBD6C28C184466BBD1D740 /* Rene Bieder  Milliard ExtraBold.otf */; };
+		AA1669BC8D6E47F5AFECAF3B /* Rene Bieder  Milliard Hairline.otf in Resources */ = {isa = PBXBuildFile; fileRef = 48155B5EA7134EB496F3C45C /* Rene Bieder  Milliard Hairline.otf */; };
+		9C96428AF33A4DBDA984EAA7 /* Rene Bieder  Milliard Heavy.otf in Resources */ = {isa = PBXBuildFile; fileRef = 66C106A8CCE7479780B0D74E /* Rene Bieder  Milliard Heavy.otf */; };
+		AB4AC30F2198421F8A181B78 /* Rene Bieder  Milliard Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = E504A8F520A54189B9822811 /* Rene Bieder  Milliard Medium.otf */; };
+		A23CE2C385AB469195285027 /* Rene Bieder  Milliard SemiBold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 8036AD2A419A4ECCA981598A /* Rene Bieder  Milliard SemiBold.otf */; };
+		C8AD99C85DB94CE28755D0D9 /* ProximaNovaAlt-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 820C7A58624347908BCF70A4 /* ProximaNovaAlt-Regular.otf */; };
+		AC02F305D287468CA8B3AD3D /* ReneBiederMilliard-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = BA985537BA0A468891854384 /* ReneBiederMilliard-Bold.otf */; };
+		E0667DDBED6B47699474C0FB /* ReneBiederMilliard-ExtraBold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 6A69723B677D40899BD1987F /* ReneBiederMilliard-ExtraBold.otf */; };
+		79D691AA6D88484EA642A1C3 /* ReneBiederMilliard-Hairline.otf in Resources */ = {isa = PBXBuildFile; fileRef = 1A9C6DDAA2BE4F7F92C0D9A8 /* ReneBiederMilliard-Hairline.otf */; };
+		0B0E25CAC8F74A9D8F3CD35B /* ReneBiederMilliard-Heavy.otf in Resources */ = {isa = PBXBuildFile; fileRef = 910A93A72F264DA2B774A6AE /* ReneBiederMilliard-Heavy.otf */; };
+		356532C47A384295A398E1F7 /* ReneBiederMilliard-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = E81511A1648B41239C85EEC3 /* ReneBiederMilliard-Medium.otf */; };
+		71D45AFC3834424C8645BB2F /* ReneBiederMilliard-SemiBold.otf in Resources */ = {isa = PBXBuildFile; fileRef = EE3EECA1FE7249BB97458857 /* ReneBiederMilliard-SemiBold.otf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -83,6 +99,22 @@
 		073E5E598053455BACAA76D3 /* Octicons.ttf */ = {isa = PBXFileReference; name = "Octicons.ttf"; path = "../node_modules/react-native-vector-icons/Fonts/Octicons.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 		3E714E359A2F49BDBCA9E553 /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; name = "SimpleLineIcons.ttf"; path = "../node_modules/react-native-vector-icons/Fonts/SimpleLineIcons.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 		D0EE2177D0F74DF4A38B690E /* Zocial.ttf */ = {isa = PBXFileReference; name = "Zocial.ttf"; path = "../node_modules/react-native-vector-icons/Fonts/Zocial.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		B6BF74AD031D43838AE0E5C3 /* BerkshireSwash-Regular.ttf */ = {isa = PBXFileReference; name = "BerkshireSwash-Regular.ttf"; path = "../assets/fonts/BerkshireSwash-Regular.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		F3ADB463B43C43D3AC9E6601 /* Proxima Nova Alt Regular.otf */ = {isa = PBXFileReference; name = "Proxima Nova Alt Regular.otf"; path = "../assets/fonts/Proxima Nova Alt Regular.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		2C789883C593411B96330BC7 /* ProximaNova-Regular.otf */ = {isa = PBXFileReference; name = "ProximaNova-Regular.otf"; path = "../assets/fonts/ProximaNova-Regular.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		794E739ACF5F4FB5B52251F0 /* Rene Bieder  Milliard Bold.otf */ = {isa = PBXFileReference; name = "Rene Bieder  Milliard Bold.otf"; path = "../assets/fonts/Rene Bieder  Milliard Bold.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		64DBD6C28C184466BBD1D740 /* Rene Bieder  Milliard ExtraBold.otf */ = {isa = PBXFileReference; name = "Rene Bieder  Milliard ExtraBold.otf"; path = "../assets/fonts/Rene Bieder  Milliard ExtraBold.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		48155B5EA7134EB496F3C45C /* Rene Bieder  Milliard Hairline.otf */ = {isa = PBXFileReference; name = "Rene Bieder  Milliard Hairline.otf"; path = "../assets/fonts/Rene Bieder  Milliard Hairline.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		66C106A8CCE7479780B0D74E /* Rene Bieder  Milliard Heavy.otf */ = {isa = PBXFileReference; name = "Rene Bieder  Milliard Heavy.otf"; path = "../assets/fonts/Rene Bieder  Milliard Heavy.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		E504A8F520A54189B9822811 /* Rene Bieder  Milliard Medium.otf */ = {isa = PBXFileReference; name = "Rene Bieder  Milliard Medium.otf"; path = "../assets/fonts/Rene Bieder  Milliard Medium.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		8036AD2A419A4ECCA981598A /* Rene Bieder  Milliard SemiBold.otf */ = {isa = PBXFileReference; name = "Rene Bieder  Milliard SemiBold.otf"; path = "../assets/fonts/Rene Bieder  Milliard SemiBold.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		820C7A58624347908BCF70A4 /* ProximaNovaAlt-Regular.otf */ = {isa = PBXFileReference; name = "ProximaNovaAlt-Regular.otf"; path = "../assets/fonts/ProximaNovaAlt-Regular.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		BA985537BA0A468891854384 /* ReneBiederMilliard-Bold.otf */ = {isa = PBXFileReference; name = "ReneBiederMilliard-Bold.otf"; path = "../assets/fonts/ReneBiederMilliard-Bold.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		6A69723B677D40899BD1987F /* ReneBiederMilliard-ExtraBold.otf */ = {isa = PBXFileReference; name = "ReneBiederMilliard-ExtraBold.otf"; path = "../assets/fonts/ReneBiederMilliard-ExtraBold.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		1A9C6DDAA2BE4F7F92C0D9A8 /* ReneBiederMilliard-Hairline.otf */ = {isa = PBXFileReference; name = "ReneBiederMilliard-Hairline.otf"; path = "../assets/fonts/ReneBiederMilliard-Hairline.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		910A93A72F264DA2B774A6AE /* ReneBiederMilliard-Heavy.otf */ = {isa = PBXFileReference; name = "ReneBiederMilliard-Heavy.otf"; path = "../assets/fonts/ReneBiederMilliard-Heavy.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		E81511A1648B41239C85EEC3 /* ReneBiederMilliard-Medium.otf */ = {isa = PBXFileReference; name = "ReneBiederMilliard-Medium.otf"; path = "../assets/fonts/ReneBiederMilliard-Medium.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		EE3EECA1FE7249BB97458857 /* ReneBiederMilliard-SemiBold.otf */ = {isa = PBXFileReference; name = "ReneBiederMilliard-SemiBold.otf"; path = "../assets/fonts/ReneBiederMilliard-SemiBold.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -209,6 +241,22 @@
 				073E5E598053455BACAA76D3 /* Octicons.ttf */,
 				3E714E359A2F49BDBCA9E553 /* SimpleLineIcons.ttf */,
 				D0EE2177D0F74DF4A38B690E /* Zocial.ttf */,
+				B6BF74AD031D43838AE0E5C3 /* BerkshireSwash-Regular.ttf */,
+				F3ADB463B43C43D3AC9E6601 /* Proxima Nova Alt Regular.otf */,
+				2C789883C593411B96330BC7 /* ProximaNova-Regular.otf */,
+				794E739ACF5F4FB5B52251F0 /* Rene Bieder  Milliard Bold.otf */,
+				64DBD6C28C184466BBD1D740 /* Rene Bieder  Milliard ExtraBold.otf */,
+				48155B5EA7134EB496F3C45C /* Rene Bieder  Milliard Hairline.otf */,
+				66C106A8CCE7479780B0D74E /* Rene Bieder  Milliard Heavy.otf */,
+				E504A8F520A54189B9822811 /* Rene Bieder  Milliard Medium.otf */,
+				8036AD2A419A4ECCA981598A /* Rene Bieder  Milliard SemiBold.otf */,
+				820C7A58624347908BCF70A4 /* ProximaNovaAlt-Regular.otf */,
+				BA985537BA0A468891854384 /* ReneBiederMilliard-Bold.otf */,
+				6A69723B677D40899BD1987F /* ReneBiederMilliard-ExtraBold.otf */,
+				1A9C6DDAA2BE4F7F92C0D9A8 /* ReneBiederMilliard-Hairline.otf */,
+				910A93A72F264DA2B774A6AE /* ReneBiederMilliard-Heavy.otf */,
+				E81511A1648B41239C85EEC3 /* ReneBiederMilliard-Medium.otf */,
+				EE3EECA1FE7249BB97458857 /* ReneBiederMilliard-SemiBold.otf */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -368,6 +416,22 @@
 				EBF2E38F800B4C9983A7CCB2 /* Octicons.ttf in Resources */,
 				35259BE228084BEAAB24815D /* SimpleLineIcons.ttf in Resources */,
 				3E8749F6966249E4B5E1DBF8 /* Zocial.ttf in Resources */,
+				873A9753639B426C94737A02 /* BerkshireSwash-Regular.ttf in Resources */,
+				5D3142A2C8CE47458AD4BA06 /* Proxima Nova Alt Regular.otf in Resources */,
+				8519B65F6E674C79A3C689E2 /* ProximaNova-Regular.otf in Resources */,
+				17D784659D114499909EDC8D /* Rene Bieder  Milliard Bold.otf in Resources */,
+				AFAE8744FD57456E8BB56757 /* Rene Bieder  Milliard ExtraBold.otf in Resources */,
+				AA1669BC8D6E47F5AFECAF3B /* Rene Bieder  Milliard Hairline.otf in Resources */,
+				9C96428AF33A4DBDA984EAA7 /* Rene Bieder  Milliard Heavy.otf in Resources */,
+				AB4AC30F2198421F8A181B78 /* Rene Bieder  Milliard Medium.otf in Resources */,
+				A23CE2C385AB469195285027 /* Rene Bieder  Milliard SemiBold.otf in Resources */,
+				C8AD99C85DB94CE28755D0D9 /* ProximaNovaAlt-Regular.otf in Resources */,
+				AC02F305D287468CA8B3AD3D /* ReneBiederMilliard-Bold.otf in Resources */,
+				E0667DDBED6B47699474C0FB /* ReneBiederMilliard-ExtraBold.otf in Resources */,
+				79D691AA6D88484EA642A1C3 /* ReneBiederMilliard-Hairline.otf in Resources */,
+				0B0E25CAC8F74A9D8F3CD35B /* ReneBiederMilliard-Heavy.otf in Resources */,
+				356532C47A384295A398E1F7 /* ReneBiederMilliard-Medium.otf in Resources */,
+				71D45AFC3834424C8645BB2F /* ReneBiederMilliard-SemiBold.otf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

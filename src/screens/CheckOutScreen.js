@@ -1,16 +1,20 @@
 import React, { useRef, useEffect, useState } from 'react'
-import { FlatList } from 'react-native'
-import { View, Text, ScrollView, Image, Animated, Pressable, Modal } from 'react-native'
+import { View, Text, ScrollView, Image, Animated, Pressable, Modal, FlatList, Switch } from 'react-native'
+import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
+import { isEmpty, has, isNull } from "lodash"
 
-import { restaurant, payment, backarrow, dummy, money, visa, bank, close, thankyou } from '../../assets/images'
+import { restaurant, payment, backarrow, dummy, money, visa, bank, close, thankyou, homeaddress } from '../../assets/images'
 import { CustomTextInput, Header } from '../components'
-import { COLORS, HEIGHT, WIDTH } from '../constants'
+import { API, Axios, COLORS, HEIGHT, STYLES, WIDTH } from '../constants'
+import { profileAction } from '../redux/actions'
+import { Alert } from 'react-native'
 
 const list = [
     {
-        name: "Cash on delivery",
+        name: "Cash On Delivery",
         image: money
-    },
+    }/* ,
     {
         name: "**** **** **** 2187",
         image: visa
@@ -18,17 +22,72 @@ const list = [
     {
         name: "Netbanking",
         image: bank
-    }
+    } */
 ]
 
 const CheckOutScreen = (props) => {
-    const { navigation } = props
+    const { navigation, route, cartList, addressList, lang, userData, setCartList } = props
     //const AnimatedValue = useRef(new Animated.Value(useRef)
     const [animation, setAnimation] = useState(false)
-    const [paymentMode, setPaymentMode] = useState("")
+    const [paymentMode, setPaymentMode] = useState("Cash On Delivery")
     const [thankyouModal, setThankyouModal] = useState(false)
+    const [chooseAddressModal, setChooseAddressModal] = useState(false)
     const [addnewcardModal, setAddnewcardModal] = useState(false)
+    const [orderType, setOrderType] = useState(false)
+    const [selectedAddress, setSelectedAddress] = useState({})
     const AnimatedValue = useRef(new Animated.Value(0)).current
+
+
+    useEffect(() => {
+        if (!isEmpty(addressList)) {
+            const list = addressList.find((item) => item.is_default)
+            !isEmpty(list) && setSelectedAddress(list)
+        } else {
+            Alert.alert("Waring", "Add an address to continue")
+        }
+    }, [])
+
+    useEffect(() => {
+        slideDown(animation ? 1 : 0)
+    }, [animation])
+
+    const createOrder = async () => {
+        const { api_token, id } = userData
+        const { cartDetails, deliveryFee } = cartList
+        const foods = cartDetails.map(({ food_id, food, quantity }) => {
+            return { price: food.discount_price, quantity, food_id }
+        })
+        const data = {
+            api_token,
+            user_id: id,
+            order_status_id: 1,
+            order_type: 1,
+            payment: {
+                id: null,
+                status: null,
+                method: paymentMode
+            },
+            foods,
+            delivery_fee: deliveryFee,
+            restaurant_id: cartList.cartDetails[0].restaurant_id,
+            delivery_address_id: selectedAddress.id,
+            active: 1,
+            delivery_note: route.params.deliveryNotes || ""
+        }
+        await Axios.post(API.createOrder, data)
+            .then(async (response) => {
+                if (has(response, "success") && response.success) {
+                    setCartList({})
+                    setThankyouModal(true)
+                }
+            }).catch((error) => { })
+    }
+
+    const onClose = () => {
+        setThankyouModal(false)
+        navigation.popToTop()
+        navigation.navigate("HomeScreen")
+    }
 
     const slideDown = (toValue) => {
         // Will change fadeAnim value to 1 in 5 seconds
@@ -37,11 +96,6 @@ const CheckOutScreen = (props) => {
             duration: 300, useNativeDriver: false
         }).start()
     }
-
-    useEffect(() => {
-        slideDown(animation ? 1 : 0)
-    }, [animation])
-
     const height = AnimatedValue.interpolate({
         inputRange: [0, 1],
         outputRange: [0, ((HEIGHT * 0.075 * list.length) + HEIGHT * 0.03)]
@@ -59,26 +113,25 @@ const CheckOutScreen = (props) => {
             <ScrollView>
                 <View style={{ height: HEIGHT * 0.05, marginHorizontal: WIDTH * 0.05, flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
                     <Text style={{ fontSize: 12 }}>Deliver Order</Text>
+                    <Switch value={orderType} thumbColor={orderType ? COLORS.green2 : COLORS.addToCartButton} trackColor={{ false: COLORS.color4, true: COLORS.color1 }} onValueChange={(value) => setOrderType(value)} />
                     <Text style={{ fontSize: 12 }}>Pick Up Order</Text>
                 </View>
                 <View style={{ marginHorizontal: WIDTH * 0.05, marginVertical: HEIGHT * 0.02, flexDirection: "row" }}>
                     <Image source={restaurant} resizeMode="contain" />
                     <View style={{ marginHorizontal: WIDTH * 0.05, }}>
                         <Text style={{ fontSize: 12, marginBottom: HEIGHT * 0.01 }}>Restaurant</Text>
-                        <Text style={{ fontSize: 15, fontWeight: "bold" }}>RedTable - Dammam</Text>
-                        <Text style={{ fontSize: 10 }}>8931 Prince Mohammed Bin Fahad Road,
-Abdullah Fouad, Dammam</Text>
+                        <Text style={{ fontSize: 15, fontWeight: "bold" }}>{has(cartList, "cartDetails") && cartList?.cartDetails[0].restaurant?.name}</Text>
+                        <Text style={{ fontSize: 10 }}>{has(cartList, "cartDetails") && cartList?.cartDetails[0].restaurant?.address}</Text>
                     </View>
                 </View>
                 <View style={{ marginHorizontal: WIDTH * 0.05, marginVertical: HEIGHT * 0.02, }}>
                     <View style={{ flexDirection: "row", alignItems: "center", flex: 1 }}>
-                        <Image source={restaurant} resizeMode="contain" />
+                        <Image source={homeaddress} resizeMode="contain" />
                         <Text style={{ fontSize: 12, marginHorizontal: WIDTH * 0.01 }}>Delivery Address</Text>
                     </View>
                     <View style={{ flexDirection: "row", justifyContent: "space-between", marginTop: HEIGHT * 0.01 }}>
-                        <Text style={{ fontSize: 15, fontWeight: "bold", width: WIDTH * 0.6 }}>8931 Prince Mohammed Bin Fahad Road,
-Abdullah Fouad, Dammam</Text>
-                        <Pressable style={{ width: WIDTH * 0.2, height: HEIGHT * 0.04, alignItems: "center", justifyContent: "center" }}>
+                        <Text style={{ fontSize: 15, fontWeight: "bold", width: WIDTH * 0.6 }}>{selectedAddress?.address}</Text>
+                        <Pressable onPress={() => setChooseAddressModal(true)} style={{ width: WIDTH * 0.2, height: HEIGHT * 0.04, alignItems: "center", justifyContent: "center" }}>
                             <Text style={{ fontSize: 14, fontWeight: "bold", color: COLORS.green1 }}>Change</Text>
                         </Pressable>
                     </View>
@@ -95,9 +148,7 @@ Abdullah Fouad, Dammam</Text>
                     </View>
                     <Animated.View style={{ height, overflow: "hidden" }}>
                         <Pressable onPress={() => setAddnewcardModal(true)} style={{ height: HEIGHT * 0.03, alignSelf: "flex-end" }}>
-                            <Text style={{ color: COLORS.green2 }}>
-                                + Add Card
-                        </Text>
+                            <Text style={{ color: COLORS.green2 }}> + Add Card</Text>
                         </Pressable>
                         <FlatList
                             data={list}
@@ -107,18 +158,14 @@ Abdullah Fouad, Dammam</Text>
                                     <Image source={item.image} style={{ width: WIDTH * 0.1 }} resizeMode="contain" />
                                     <Text style={{ marginHorizontal: WIDTH * 0.05 }}>{item.name}</Text>
                                 </View>
-
                                 <View style={{ borderWidth: 0.5, width: WIDTH * 0.05, height: WIDTH * 0.05, borderRadius: WIDTH * 0.025, justifyContent: "center", alignItems: "center", borderColor: COLORS.statusbar }}>
                                     <View style={{ width: WIDTH * 0.04, height: WIDTH * 0.04, borderRadius: WIDTH * 0.02, backgroundColor: paymentMode == item.name ? COLORS.statusbar : "transparent" }}>
-
                                     </View>
                                 </View>
                             </Pressable>}
                         />
                     </Animated.View>
-
                 </View>
-
                 <View style={{ marginHorizontal: WIDTH * 0.05, elevation: 3, backgroundColor: COLORS.white, borderRadius: HEIGHT * 0.038, marginBottom: HEIGHT * 0.02 }}>
                     <View style={{ padding: HEIGHT * 0.015, flexDirection: "row", }}>
                         <View style={{ flex: 1 }}>
@@ -127,23 +174,17 @@ Abdullah Fouad, Dammam</Text>
                             <Text>Delivery Fee</Text>
                         </View>
                         <View style={{ width: WIDTH * 0.2, alignItems: "flex-end" }}>
-                            <Text>50 QAR</Text>
-                            <Text>50 QAR</Text>
-                            <Text>50 QAR</Text>
+                            <Text>{cartList.cartTotal} QAR</Text>
+                            <Text>{cartList.cartDiscount} QAR</Text>
+                            <Text>{cartList.deliveryFee} QAR</Text>
                         </View>
                     </View>
                     <View style={{ flexDirection: "row", justifyContent: "space-between", marginHorizontal: HEIGHT * 0.015, paddingVertical: HEIGHT * 0.01, borderTopWidth: 0.5 }}>
-                        <Text>
-                            Total Bill
-                        </Text>
-                        <Text>
-                            45SR
-                        </Text>
+                        <Text>Total Bill</Text>
+                        <Text>{cartList.totalBill} QAR</Text>
                     </View>
-                    <Pressable onPress={() => setThankyouModal(true)} style={{ height: HEIGHT * 0.07, backgroundColor: COLORS.addToCartButton, borderRadius: HEIGHT * 0.035, justifyContent: "center", alignItems: "center", bottom: -1 }}>
-                        <Text style={{ color: COLORS.white, fontWeight: "bold" }}>
-                            CONFIRM ORDER
-                        </Text>
+                    <Pressable onPress={() => createOrder()} style={{ height: HEIGHT * 0.07, backgroundColor: COLORS.addToCartButton, borderRadius: HEIGHT * 0.035, justifyContent: "center", alignItems: "center", bottom: -1 }}>
+                        <Text style={{ color: COLORS.white, fontWeight: "bold" }}>CONFIRM ORDER</Text>
                     </Pressable>
                 </View>
             </ScrollView>
@@ -210,16 +251,16 @@ Abdullah Fouad, Dammam</Text>
                     </View>
                 </View>
             </Modal>
-
+            {/* THANK YOU MODAL */}
             <Modal animationType="slide" visible={thankyouModal}
-                onRequestClose={() => setThankyouModal(false)}
+                onRequestClose={() => onClose()}
                 transparent
             >
                 <View style={{ flex: 1, backgroundColor: "#00000030", }}>
-                    <Pressable onPress={() => setThankyouModal(false)} style={{ flex: 1 }}>
+                    <Pressable onPress={() => onClose()} style={{ flex: 1 }}>
                     </Pressable>
                     <View style={{ backgroundColor: COLORS.white, height: HEIGHT * 0.6, borderTopLeftRadius: WIDTH * 0.05, borderTopRightRadius: WIDTH * 0.05, overflow: "hidden", alignItems: "center", justifyContent: "space-evenly" }}>
-                        <Pressable style={{ alignSelf: "flex-end", margin: WIDTH * 0.015, }} onPress={() => setThankyouModal(false)}>
+                        <Pressable style={{ alignSelf: "flex-end", margin: WIDTH * 0.015, }} onPress={() => onClose()}>
                             <Image style={{ width: WIDTH * 0.03, height: WIDTH * 0.03, margin: WIDTH * 0.015, }} source={close} resizeMode="contain" />
                         </Pressable>
                         <Image style={{ width: WIDTH, height: HEIGHT * 0.25, }} source={thankyou} resizeMode="contain" />
@@ -236,9 +277,7 @@ Abdullah Fouad, Dammam</Text>
                         </View>
                         { }
                         <Pressable onPress={() => {
-                            setThankyouModal(false)
-                            navigation.navigate("HomeScreen")
-                            navigation.popToTop()
+                            onClose()
                         }} style={{ height: HEIGHT * 0.06, backgroundColor: COLORS.addToCartButton, borderRadius: HEIGHT * 0.036, justifyContent: "center", alignItems: "center", width: WIDTH * 0.9 }}>
                             <Text style={{ color: COLORS.white, fontWeight: "bold" }}>
                                 Back To Home
@@ -247,10 +286,66 @@ Abdullah Fouad, Dammam</Text>
                     </View>
                 </View>
             </Modal>
+            {/* CHOOSE ADDRESS */}
+            <Modal animationType="slide" visible={chooseAddressModal}
+                onRequestClose={() => setChooseAddressModal(false)}
+                transparent
+            >
+                <View style={{ flex: 1, backgroundColor: "#00000030", }}>
+                    <Pressable onPress={() => setChooseAddressModal(false)} style={{ flex: 1 }}>
+                    </Pressable>
+                    <View style={{ backgroundColor: COLORS.white, height: HEIGHT * 0.7, borderTopLeftRadius: WIDTH * 0.05, borderTopRightRadius: WIDTH * 0.05, overflow: "hidden" }}>
+                        <View style={{ height: HEIGHT * 0.07, alignItems: "center", paddingHorizontal: WIDTH * 0.05, flexDirection: "row", justifyContent: "space-between", backgroundColor: `${COLORS.activeTabColor}15` }}>
+                            <Text>Saved Addresses</Text>
+                            <Pressable style={{}} onPress={() => setChooseAddressModal(false)}>
+                                <Image style={{ width: WIDTH * 0.03, height: WIDTH * 0.03, margin: WIDTH * 0.015, }} source={close} resizeMode="contain" />
+                            </Pressable>
+                        </View>
+                        <View style={{ flex: 1 }}>
+                            <FlatList
+                                showsVerticalScrollIndicator={false}
+                                style={{}}
+                                data={addressList}
+                                keyExtractor={(item, index) => index.toString()}
+                                renderItem={({ item, index }) => <Pressable onPress={() => setSelectedAddress(item)} style={[{ height: HEIGHT * 0.13, paddingHorizontal: WIDTH * 0.05, borderTopWidth: 0.5, justifyContent: "space-between", alignItems: "center" }, STYLES.flexDirection(lang)]}>
+                                    <View style={{ width: WIDTH * 0.6, justifyContent: "space-evenly", }}>
+                                        <Text style={[STYLES.textAlign(lang), { color: COLORS.title3, fontWeight: "bold" }]}>{item.description}</Text>
+                                        <Text style={[STYLES.textAlign(lang), { color: `${COLORS.title3}70`, fontWeight: "bold" }]}>{item.address}</Text>
+                                    </View>
+                                    <View style={{ borderWidth: 0.5, width: WIDTH * 0.05, height: WIDTH * 0.05, borderRadius: WIDTH * 0.025, justifyContent: "center", alignItems: "center", borderColor: COLORS.statusbar }}>
+                                        <View style={{ width: WIDTH * 0.04, height: WIDTH * 0.04, borderRadius: WIDTH * 0.02, backgroundColor: selectedAddress.id == item.id ? COLORS.statusbar : "transparent" }}>
+                                        </View>
+                                    </View>
+                                </Pressable>}
+                            />
+                        </View>
+                        <View style={{ marginHorizontal: WIDTH * 0.05, marginVertical: HEIGHT * 0.01 }}>
+                            <Pressable onPress={() => setChooseAddressModal(false)} style={{ height: HEIGHT * 0.06, backgroundColor: COLORS.addToCartButton, borderRadius: HEIGHT * 0.036, justifyContent: "center", alignItems: "center", bottom: -1 }}>
+                                <Text style={{ color: COLORS.white, fontWeight: "bold" }}>{`DONE`}</Text>
+                            </Pressable>
+                        </View>
+                    </View>
+                </View>
+            </Modal>
         </Header>
-
     </>
     )
 }
 
-export default CheckOutScreen
+CheckOutScreen.contextTypes = {
+    t: PropTypes.func,
+}
+
+const mapStateToProps = ({ i18nState, ProfileReducer }) => {
+    return {
+        lang: i18nState.lang,
+        cartList: ProfileReducer.cartList,
+        userData: ProfileReducer.userData,
+        addressList: ProfileReducer.addressList
+    }
+}
+const mapDispatchToProps = {
+    setCartList: (cart) => profileAction.setCartList(cart),
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(CheckOutScreen)

@@ -1,55 +1,97 @@
 import React from 'react';
-import {View, Text, Image, FlatList} from 'react-native';
+import { View, Text, Image, FlatList } from 'react-native';
+import PropTypes from 'prop-types';
+import { connect, useDispatch } from 'react-redux';
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
-import {HEIGHT, COLORS, WIDTH} from './../constants';
-import {logo, email} from './../../assets/images';
+import { SetLanguageAction } from './../redux/actions';
+import { HEIGHT, COLORS, WIDTH, STYLES } from './../constants';
+import { logo, email, shop, offers, myorders, settings, language, logout } from './../../assets/images';
+import { Pressable } from 'react-native';
 
-const MENULIST = [
-  {
-    label: 'Discover',
-    icon: email,
-  },
-  {
-    label: 'Offers',
-    icon: email,
-  },
-  {
-    label: 'My Orders',
-    icon: email,
-  },
-];
 
-const DrawerMenu = () => {
+
+const DrawerMenu = (props, context) => {
+
+  const { navigation, setLang, lang, userData } = props
+  const dispatch = useDispatch()
+
+  const MENULIST = [
+    {
+      label: 'Discover',
+      icon: shop,
+      onPress: () => {
+        navigation.navigate("Bottom")
+      }
+    },
+    {
+      label: 'Offers',
+      icon: offers,
+    },
+    {
+      label: 'My Orders',
+      icon: myorders,
+    },
+    {
+      label: 'Settings',
+      icon: settings,
+      onPress: () => {
+        navigation.navigate("Settings")
+      }
+    },
+    {
+      label: context.t('language'),
+      icon: language,
+      onPress: async () => {
+        const ln = lang == "ar" ? "en" : "ar"
+        setLang(ln)
+        await AsyncStorage.setItem('lang', ln)
+        navigation.closeDrawer()
+      }
+    },
+    {
+      label: 'Logout',
+      icon: logout,
+      onPress: async () => {
+        navigation.replace("SplashScreen")
+        await AsyncStorage.removeItem("api_token")
+        dispatch({ type: "LOGOUT" })
+        navigation.closeDrawer()
+      }
+    },
+  ];
+
   return (
-    <View style={{flex: 1}}>
+    <View style={{ flex: 1 }}>
       <View
-        style={{
+        style={[{
           height: HEIGHT * 0.15,
-          flexDirection: 'row',
           alignItems: 'center',
           borderBottomWidth: 1,
           borderColor: COLORS.borderColor,
-        }}>
+        }, STYLES.flexDirection(lang)]}>
         <Image
           source={logo}
           resizeMode="contain"
-          style={{height: HEIGHT * 0.1, width: WIDTH * 0.3, borderWidth: 1}}
+          style={{ height: HEIGHT * 0.1, width: WIDTH * 0.3 }}
         />
-        <View>
-          <Text>Ezio Auditore</Text>
-          <Text>ezio@gmail.com</Text>
+        <View style={[STYLES.alignItems(lang)]}>
+          <Text>{userData?.name}</Text>
+          <Text>{userData?.email}</Text>
+          <Text>{userData?.phone}</Text>
         </View>
       </View>
       <FlatList
-        style={{marginTop: HEIGHT * 0.02}}
+        style={{ marginTop: HEIGHT * 0.02 }}
         keyExtractor={(item) => item.label}
         data={MENULIST}
-        renderItem={({item}) => (
-          <View
-            style={{
+        renderItem={({ item, index }) => (
+          <Pressable
+            onPress={() => item.onPress && item?.onPress()}
+            style={[{
               height: HEIGHT * 0.07,
-              flexDirection: 'row',
-            }}>
+              backgroundColor: index == 0 ? COLORS.borderColor : COLORS.white
+            }, STYLES.flexDirection(lang)]}>
             <View
               style={{
                 width: WIDTH * 0.2,
@@ -62,15 +104,31 @@ const DrawerMenu = () => {
                 resizeMode="contain"
               />
             </View>
-
-            <View style={{flex: 1, justifyContent: 'center'}}>
-              <Text>{item.label}</Text>
+            <View style={[{ flex: 1, justifyContent: 'center', }, STYLES.alignItems(lang)]}>
+              <Text style={{ color: index == 0 ? COLORS.addToCartButton : COLORS.black }}>{item.label}</Text>
             </View>
-          </View>
+          </Pressable>
         )}
       />
     </View>
   );
 };
 
-export default DrawerMenu;
+DrawerMenu.contextTypes = {
+  t: PropTypes.func,
+};
+
+const mapStateToProps = (state) => {
+  const { ProfileReducer, i18nState } = state
+  return {
+    lang: i18nState.lang,
+    userData: ProfileReducer.userData
+  };
+};
+
+const mapDispatchToProps = {
+  setLang: SetLanguageAction.setLang,
+  setProfileData: (userData) => profileAction.setProfileData(userData),
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(DrawerMenu);

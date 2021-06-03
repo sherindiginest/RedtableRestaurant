@@ -9,7 +9,7 @@ import { COLORS, HEIGHT, STYLES, WIDTH } from '../constants'
 import { logo, menu, notification, backarrow } from "./../../assets/images"
 import { StatusBar } from 'react-native'
 
-const Header = (props) => {
+const Header = (props, context) => {
     const navigation = useNavigation()
     const { backgroundColor = COLORS.white, transparent = false, lang, title, titleColor = COLORS.white } = props
 
@@ -28,9 +28,11 @@ const Header = (props) => {
             </View>}
             <View style={{ flex: 1 }}>
                 {title && <View style={[{ height: HEIGHT * 0.07, paddingHorizontal: WIDTH * 0.05, alignItems: "center" }, STYLES.flexDirection(lang)]}>
-                    <Image source={backarrow} style={{ height: HEIGHT * 0.04, width: WIDTH * 0.05, tintColor: titleColor, transform: [{ scaleX: lang == "ar" ? -1 : 1 }] }} />
+                    <Pressable onPress={() => navigation.goBack()}>
+                        <Image source={backarrow} style={{ height: HEIGHT * 0.04, width: WIDTH * 0.05, tintColor: titleColor, transform: [{ scaleX: lang == "ar" ? -1 : 1 }] }} />
+                    </Pressable>
                     <Text style={{ color: titleColor, marginHorizontal: WIDTH * 0.05, fontSize: 20 }}>
-                        {title}
+                        {context.t(title)}
                     </Text>
                 </View>}
                 {props.children}

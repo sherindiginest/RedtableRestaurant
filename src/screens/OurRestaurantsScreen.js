@@ -1,54 +1,43 @@
 import React, { useEffect, useState } from 'react'
-import { View, Text, Image, FlatList } from 'react-native'
+import { View, FlatList } from 'react-native'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
+import { has } from "lodash"
 
-import { backarrow, dummy } from '../../assets/images'
 import { Header, RestaurantComponent } from '../components'
-import { COLORS, HEIGHT, STYLES, WIDTH } from '../constants'
+import { API, Axios, COLORS, HEIGHT, STYLES, WIDTH } from '../constants'
 
-const newItems = [{
-    name: "Test",
-    starValue: 4.5,
-    image: dummy,
-    status: "Best"
-},
-{
-    name: "test2",
-    starValue: 4.5,
-    image: dummy,
-    status: "New"
-},
-{
-    name: "test3",
-    starValue: 4.5,
-    image: dummy,
-    status: "New"
-}]
 
-const OurRestaurantsScreen = (props) => {
+const OurRestaurantsScreen = (props, context) => {
     const { route, navigation, lang } = props
-    const [title, setTitle] = useState(route.params?.title || "Our Restaurants")
+    const [restaurantList, setRestaurantList] = useState([])
 
     useEffect(() => {
-        //console.log(route?.params?.title || "empreer")
-        setTitle(route.params?.title || "Our Restaurants")
-    }, [props])
+        getData()
+    }, [])
 
-    return (<Header
-        backgroundColor={`${COLORS.statusbar}50`}
-        title={title}
-    >
+    const getData = async () => {
+        await Axios.get(API.restaurants())
+            .then(async (response) => {
+                if (has(response, "success") && response.success) {
+                    setRestaurantList(response.data)
+                }
+            }).catch((error) => {
+                //error?.message && Alert.alert("Error", error?.message)
+                // setloading(false)
+            })
+    }
 
+    return (<Header backgroundColor={`${COLORS.statusbar}50`} title="our_restaurants">
         <View style={{ flex: 1 }}>
             <FlatList
                 showsVerticalScrollIndicator={false}
                 style={{}}
                 contentContainerStyle={{ alignItems: "center" }}
-                data={newItems}
+                data={restaurantList}
                 keyExtractor={(item, index) => index.toString()}
                 renderItem={({ item, index }) => <RestaurantComponent item={item}
-                    style={{ width: WIDTH * 0.75, height: HEIGHT * 0.3 }}
+                    style={{ width: WIDTH * 0.75, height: HEIGHT * 0.3 }} vertLast={restaurantList.length - 1 == index}
                 />}
             />
         </View>

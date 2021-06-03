@@ -1,31 +1,37 @@
-import { Platform } from "react-native"
-import AsyncStorage from "@react-native-community/async-storage";
-
-import { PROFILE_INFO } from "../../constants/constants"
-import { url, urlEndPoints } from "../../http/apiConfig"
-import { networkApi } from "../../http/api"
+import { SETADDRESSLIST, SETCARTLIST, SETPROFILEDATA } from "../../constants/constants"
 
 
-const getProfileData = () => {
-    return async dispatch => {
-        const push_token = await AsyncStorage.getItem("deviceToken")
-        const apiUrl = `${url.baseUrl}${urlEndPoints.profile(push_token, Platform.OS == "ios" ? "IOS" : "Android")}`
-        const accessToken = await AsyncStorage.getItem("access_token")
-        if (accessToken) {
-            const header = {
-                Authorization: `Bearer ${accessToken}`
-            }
-            const response = await networkApi(apiUrl, "GET", null, header)
-            dispatch({
-                type: PROFILE_INFO,
-                payload: response.response.result.data
-            })
-        }
+
+const setProfileData = (payload) => {
+    return async (dispatch) => {
+        dispatch({
+            type: SETPROFILEDATA,
+            payload,
+        })
     }
+}
 
+const setAddressList = (payload) => {
+    return async (dispatch) => {
+        dispatch({
+            type: SETADDRESSLIST,
+            payload,
+        })
+    }
+}
+
+const setCartList = (payload) => {
+    return async (dispatch) => {
+        dispatch({
+            type: SETCARTLIST,
+            payload,
+        })
+    }
 }
 
 
 export default {
-    getProfileData
+    setProfileData,
+    setAddressList,
+    setCartList
 }

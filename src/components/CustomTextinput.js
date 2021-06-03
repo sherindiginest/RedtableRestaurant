@@ -7,38 +7,43 @@ import { HEIGHT, COLORS, WIDTH, STYLES } from '../constants'
 import { Pressable } from 'react-native'
 
 const CustomTextinput = (props) => {
-  const { image, placeholder, onChangeText, style, lang, secureEntry = false, secureEntryIcon, placeholderTextColor = COLORS.white, textColor = COLORS.white } = props
+  const { image, placeholder, onChangeText, style, lang, secureEntry = false, secureEntryIcon, placeholderTextColor = COLORS.white, textColor = COLORS.white, keyboardType = "default", returnKeyType = "done", currentRef, nextRef = null, onSubmitAction, error, maxLength = 50, outerStyle, value, editable = true } = props
   const [secureTextEntry, setSecureTextEntry] = useState(secureEntry)
 
-  return (
-    <View
-      style={[
-        {
-          borderWidth: 2,
-          height: HEIGHT * 0.076,
-          alignSelf: 'stretch',
-          borderRadius: HEIGHT * 0.038,
-          borderColor: COLORS.textInputBorder,
-          backgroundColor: COLORS.textInputBackground,
-          alignItems: 'center',
-        },
-        { ...style },
-        STYLES.flexDirection(lang),
-      ]}>
+  return (<View style={[{ alignSelf: "stretch" }, outerStyle]}>
+    <View style={[{
+      borderWidth: 2,
+      height: HEIGHT * 0.076,
+      alignSelf: 'stretch',
+      borderRadius: HEIGHT * 0.038,
+      borderColor: COLORS.textInputBorder,
+      backgroundColor: COLORS.textInputBackground,
+      alignItems: 'center',
+    },
+    { ...style },
+    STYLES.flexDirection(lang),
+    ]}>
       <Image
         style={{ marginHorizontal: WIDTH * 0.05 }}
         source={image}
         resizeMode="contain"
       />
       <TextInput
+        editable={editable}
         secureTextEntry={secureTextEntry}
         onChangeText={onChangeText}
         placeholder={placeholder}
         placeholderTextColor={placeholderTextColor}
-        style={[
-          { flex: 1, fontSize: 19, color: textColor },
-          STYLES.textAlign(lang),
-        ]}
+        style={[{ fontSize: 15, color: textColor, flex: 1 }, STYLES.textAlign(lang),]}
+        keyboardType={keyboardType}
+        autoCapitalize="none"
+        returnKeyType={returnKeyType}
+        ref={currentRef}
+        onSubmitEditing={() => {
+          nextRef?.current != null ? nextRef.current.focus() : onSubmitAction && onSubmitAction()
+        }}
+        maxLength={maxLength}
+        value={value}
       />
       {secureEntry && <Pressable onPress={() => setSecureTextEntry(!secureTextEntry)}>
         <Image
@@ -47,6 +52,8 @@ const CustomTextinput = (props) => {
           resizeMode="contain"
         /></Pressable>}
     </View>
+    {error && <Text style={{ textAlign: lang == "ar" ? "right" : "left", fontSize: 12, color: COLORS.white, marginHorizontal: WIDTH * 0.1 }}>{error}</Text>}
+  </View>
   )
 }
 

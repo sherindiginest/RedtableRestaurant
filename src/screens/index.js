@@ -11,6 +11,11 @@ import MyOrdersScreen from './MyOrdersScreen'
 import SetLocationScreen from './SetLocationScreen'
 import RestaurantDetailsScreen from './RestaurantDetailsScreen'
 import CheckOutScreen from './CheckOutScreen'
+import SettingsScreen from './SettingsScreen'
+import ChangePasswordScreen from './ChangePasswordScreen'
+import EditProfileScreen from './EditProfileScreen'
+import ManageAddressScreen from './ManageAddressScreen'
+import ChooseRestaurantsScreen from './ChooseRestaurantsScreen'
 
 export {
   SplashScreen,
@@ -25,5 +30,10 @@ export {
   MyOrdersScreen,
   SetLocationScreen,
   RestaurantDetailsScreen,
-  CheckOutScreen
+  CheckOutScreen,
+  SettingsScreen,
+  ChangePasswordScreen,
+  EditProfileScreen,
+  ManageAddressScreen,
+  ChooseRestaurantsScreen
 }

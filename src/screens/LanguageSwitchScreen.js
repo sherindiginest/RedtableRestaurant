@@ -8,22 +8,24 @@ import {
   ImageBackground,
 } from 'react-native';
 import PropTypes from 'prop-types';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
-import {COLORS, HEIGHT, WIDTH} from './../constants';
-import {backgroundImage, logo} from './../../assets/images';
-import {SetLanguageAction} from './../redux/actions';
+import { COLORS, HEIGHT, STYLES, WIDTH } from './../constants';
+import { backgroundImage, logo } from './../../assets/images';
+import { SetLanguageAction } from './../redux/actions';
 
 const LanguageSwitchScreen = (props, context) => {
-  const {navigation} = props;
+  const { navigation } = props;
 
-  const setLanguage = (lang) => {
+  const setLanguage = async (lang) => {
+    await AsyncStorage.setItem('lang', lang)
     props.setLang(lang);
     navigation.replace('LoginScreen');
   };
 
   return (
-    <View style={{flex: 1}}>
+    <View style={{ flex: 1 }}>
       <StatusBar backgroundColor={COLORS.statusbar} />
       <ImageBackground
         style={{
@@ -42,13 +44,7 @@ const LanguageSwitchScreen = (props, context) => {
           source={logo}
           resizeMode="contain"
         />
-        <Text
-          style={{
-            color: COLORS.white,
-            textAlign: 'center',
-            fontSize: 22,
-            fontWeight: 'bold',
-          }}>
+        <Text style={[{ color: COLORS.white, textAlign: 'center', fontSize: 15, }, STYLES.fontBold()]}>
           {context.t('choose_your_language')}
         </Text>
 
@@ -70,7 +66,7 @@ const LanguageSwitchScreen = (props, context) => {
               justifyContent: 'center',
             }}>
             <Text
-              style={{color: COLORS.white, fontSize: 18, fontWeight: 'bold'}}>
+              style={[{ color: COLORS.white, fontSize: 15, }, STYLES.fontBold()]}>
               {context.t('english')}
             </Text>
           </Pressable>
@@ -85,20 +81,20 @@ const LanguageSwitchScreen = (props, context) => {
               justifyContent: 'center',
             }}>
             <Text
-              style={{color: COLORS.black, fontSize: 18, fontWeight: 'bold'}}>
+              style={[{ color: COLORS.black, fontSize: 15 }, STYLES.fontBold()]}>
               {context.t('arabic')}
             </Text>
           </Pressable>
         </View>
       </ImageBackground>
-    </View>
+    </View >
   );
 };
 
 LanguageSwitchScreen.contextTypes = {
   t: PropTypes.func,
 };
-const mapStateToProps = ({i18nState, loadingReducer}) => {
+const mapStateToProps = ({ i18nState, loadingReducer }) => {
   return {
     lang: i18nState.lang,
     loading: loadingReducer.loading,

@@ -1,19 +1,31 @@
-import { PROFILE_INFO } from "../../constants/constants";
+import { SETPROFILEDATA, SETADDRESSLIST, SETCARTLIST } from "../../constants/constants"
 
 const initialState = {
-    profileInfo: []
-};
+    userData: {},
+    addressList: [],
+    cartList: {}
+}
 
 const profileReducer = (state = initialState, action) => {
     switch (action.type) {
-        case PROFILE_INFO:
+        case SETPROFILEDATA:
             return {
                 ...state,
-                profileInfo: action.payload
-            };
+                userData: action.payload
+            }
+        case SETADDRESSLIST:
+            return {
+                ...state,
+                addressList: action.payload
+            }
+        case SETCARTLIST:
+            return {
+                ...state,
+                cartList: action.payload
+            }
         default:
-            return { ...state };
+            return { ...state }
     }
-};
+}
 
-export default profileReducer;
+export default profileReducer

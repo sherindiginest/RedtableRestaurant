@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, SafeAreaView, Text } from 'react-native'
+import { View, SafeAreaView, Text, LogBox } from 'react-native'
 import { Provider } from 'react-redux'
 import I18n from 'redux-i18n'
 
@@ -7,7 +7,8 @@ import Route from './src/Route'
 import configureStore from './src/redux/store'
 import { translations } from './src/constants/translations'
 import { COLORS } from './src/constants'
-
+import { Loader } from './src/components'
+LogBox.ignoreLogs(["Warning: Can't perform a React state update on an unmounted component", "VirtualizedLists should never be nested inside plain ScrollViews with the same orientation"])
 let store = configureStore()
 
 const App = () => {
@@ -17,6 +18,7 @@ const App = () => {
         <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.statusbar }}>
           <Route />
         </SafeAreaView>
+        <Loader />
       </I18n>
     </Provider>
   )

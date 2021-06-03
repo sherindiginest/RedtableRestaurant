@@ -1,12 +1,13 @@
 import React from 'react';
-import {View, Text, Pressable} from 'react-native';
+import { View, Text, Pressable, ActivityIndicator } from 'react-native';
 
-import {HEIGHT, COLORS, WIDTH} from '../constants';
+import { HEIGHT, COLORS, WIDTH, STYLES } from '../constants';
 
 const CustomButton = (props) => {
-  const {title, style, onPress = () => {}} = props;
+  const { title, style, onPress = () => { }, loading = false } = props;
   return (
     <Pressable
+      disabled={loading}
       onPress={onPress}
       style={[
         {
@@ -18,9 +19,9 @@ const CustomButton = (props) => {
           justifyContent: 'center',
           //flexDirection: 'row',
         },
-        {...style},
+        { ...style },
       ]}>
-      <Text style={{color: COLORS.white, fontSize: 18}}>{title}</Text>
+      {loading ? <ActivityIndicator color={COLORS.white} size="large" /> : <Text style={[{ color: COLORS.white, fontSize: 15 }, STYLES.fontMedium()]}>{title}</Text>}
     </Pressable>
   );
 };

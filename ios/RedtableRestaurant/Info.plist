@@ -71,6 +71,14 @@
 		<string>Octicons.ttf</string>
 		<string>SimpleLineIcons.ttf</string>
 		<string>Zocial.ttf</string>
+		<string>BerkshireSwash-Regular.ttf</string>
+		<string>ProximaNovaAlt-Regular.otf</string>
+		<string>ReneBiederMilliard-Bold.otf</string>
+		<string>ReneBiederMilliard-ExtraBold.otf</string>
+		<string>ReneBiederMilliard-Hairline.otf</string>
+		<string>ReneBiederMilliard-Heavy.otf</string>
+		<string>ReneBiederMilliard-Medium.otf</string>
+		<string>ReneBiederMilliard-SemiBold.otf</string>
 	</array>
 </dict>
 </plist>

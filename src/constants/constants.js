@@ -1,1 +1,5 @@
 export const LOADER = 'LOADER';
+export const SETPROFILEDATA = 'SETPROFILEDATA';
+export const SETADDRESSLIST = 'SETADDRESSLIST';
+export const SETCARTLIST = 'SETCARTLIST';
+

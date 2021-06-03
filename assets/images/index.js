@@ -32,6 +32,12 @@ const visa = require('./visa/visa.png')
 const bank = require('./bank/bank.png')
 const payment = require('./payment/payment.png')
 const thankyou = require('./thankyou/thankyou.png')
+const language = require('./language/language.png')
+const logout = require('./logout/logout.png')
+const myorders = require('./myorders/myorders.png')
+const offers = require('./offers/offers.png')
+const settings = require('./settings/settings.png')
+const shop = require('./shop/shop.png')
 
 
 
@@ -71,5 +77,11 @@ export {
   money,
   bank,
   visa,
-  thankyou
+  thankyou,
+  language,
+  myorders,
+  offers,
+  settings,
+  shop,
+  logout
 }
