@@ -8,10 +8,10 @@ import { backarrow, dummy } from '../../assets/images'
 import { Header, RestaurantComponent, AddAddressModal } from '../components'
 import { API, Axios, COLORS, HEIGHT, STYLES, WIDTH } from '../constants'
 import { Alert } from 'react-native'
-import { profileAction } from '../redux/actions'
+import { LoadingAction, profileAction } from '../redux/actions'
 
 const ManageAddressScreen = (props) => {
-    const { route, navigation, lang, userData, addressList, setAddressList } = props
+    const { route, navigation, lang, userData, addressList, setAddressList, showLoader, hideLoader } = props
     // const [addressList, setaddressList] = useState([])
     const [addnewAddress, setaddnewAddress] = useState(false)
     const [addressData, setaddressData] = useState({})
@@ -32,21 +32,28 @@ const ManageAddressScreen = (props) => {
             }).catch((error) => { })
     }
 
-    const handleDelete = (id) => {
-        Alert.alert("Warning", "Are you sure?", [{ text: "Delete", onPress: () => deleteAction(id) }, { text: "Cancel", style: "cancel" }])
+    const handleDelete = (item) => {
+        if (item?.is_default) {
+            return Alert.alert("Warning", "Make another addess as default and try again")
+        } else {
+            Alert.alert("Warning", "Are you sure?", [{ text: "Delete", onPress: () => deleteAction(item) }, { text: "Cancel", style: "cancel" }])
+        }
     }
 
-    const deleteAction = async (id) => {
+    const deleteAction = async (item) => {
         const { api_token } = userData
-        await Axios.delete(API.addresses(id), { params: { api_token } })
+        showLoader()
+        await Axios.delete(API.addresses(item.id), { params: { api_token } })
             .then(async (response) => {
                 if (has(response, "success") && response.success) {
                     await getAddresses()
                 }
-            }).catch((error) => { })
+                hideLoader()
+            }).catch((error) => { hideLoader() })
     }
 
     const defaultAction = async (data) => {
+        showLoader()
         const { api_token } = userData
         if (has(data, "is_default") && data.is_default) {
             const list = addressList.filter((item) => item.is_default)
@@ -55,7 +62,8 @@ const ManageAddressScreen = (props) => {
                     if (has(res, "success") && res.success) {
                         await getAddresses()
                     }
-                }).catch((error) => { })
+                    hideLoader()
+                }).catch((error) => { hideLoader() })
             } else {
                 return Alert.alert("Warning", "Make another addess as default and try again")
             }
@@ -64,7 +72,11 @@ const ManageAddressScreen = (props) => {
                 if (has(res, "success") && res.success) {
                     await getAddresses()
                 }
-            }).catch((error) => { console.log(error); })
+                hideLoader()
+            }).catch((error) => {
+                console.log(error)
+                hideLoader()
+            })
         }
     }
 
@@ -101,7 +113,7 @@ const ManageAddressScreen = (props) => {
                                     <Text style={[{ color: COLORS.green2, fontWeight: "bold" }]}>EDIT</Text>
                                 </Pressable>
                                 <View style={{ width: 1, borderWidth: 1 }} />
-                                <Pressable onPress={() => handleDelete(item.id)}>
+                                <Pressable onPress={() => handleDelete(item)}>
                                     <Text style={[{ color: COLORS.primary, fontWeight: "bold" }]}>DELETE</Text>
                                 </Pressable>
                             </View>
@@ -133,6 +145,8 @@ const mapStateToProps = ({ i18nState, ProfileReducer }) => {
 
 const mapDispatchToProps = {
     setAddressList: (address) => profileAction.setAddressList(address),
+    showLoader: () => LoadingAction.showLoader(),
+    hideLoader: () => LoadingAction.hideLoader(),
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ManageAddressScreen)

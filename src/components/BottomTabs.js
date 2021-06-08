@@ -15,7 +15,8 @@ import {
     MyOrdersScreen,
     CartScreen,
     RestaurantDetailsScreen,
-    ChooseRestaurantsScreen
+    ChooseRestaurantsScreen,
+    CheckOutScreen
 } from './../screens'
 
 import { HEIGHT, WIDTH, COLORS } from '../constants'
@@ -108,6 +109,18 @@ const OurRestaurantsScreenRoute = () => {
     )
 }
 
+const CheckoutScreenStack = createStackNavigator()
+const CheckoutScreenRoute = () => {
+    return (
+        <CheckoutScreenStack.Navigator
+            screenOptions={{ headerShown: false, }}
+            initialRouteName="CartScreen">
+            <CheckoutScreenStack.Screen name="CartScreen" component={CartScreen} />
+            <CheckoutScreenStack.Screen name="CheckOutScreen" component={CheckOutScreen} />
+        </CheckoutScreenStack.Navigator>
+    )
+}
+
 const BottomTabsStack = createBottomTabNavigator()
 
 const BottomTabs = (props) => {
@@ -167,8 +180,8 @@ const BottomTabs = (props) => {
                 }}
             />
             <BottomTabsStack.Screen
-                name="CartScreen"
-                component={CartScreen}
+                name="CartTab"
+                component={CheckoutScreenRoute}
                 options={{
                     tabBarIcon: (props) => (
                         <TabBarButton

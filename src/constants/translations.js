@@ -32,7 +32,8 @@ continue to reset your password`,
     settings: "Settings",
     edit_profile: "Edit Profile",
     manage_addess: "Manage addess",
-    change_password: "Change Password"
+    change_password: "Change Password",
+    checkout: "Checkout"
   },
   ar: {
     choose_your_language: 'CHOOSE YOUR LANGUAGE',
@@ -67,6 +68,7 @@ continue to reset your password`,
     settings: "Settings",
     edit_profile: "Edit Profile",
     manage_addess: "Manage addess",
-    change_password: "Change Password"
+    change_password: "Change Password",
+    checkout: "Checkout"
   },
 }

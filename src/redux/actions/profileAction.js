@@ -1,4 +1,4 @@
-import { SETADDRESSLIST, SETCARTLIST, SETPROFILEDATA } from "../../constants/constants"
+import { SETADDRESSLIST, SETADDRESSSELECT, SETCARTLIST, SETPROFILEDATA, SETNEWADDRESS } from "../../constants/constants"
 
 
 
@@ -29,9 +29,29 @@ const setCartList = (payload) => {
     }
 }
 
+const showAddressSelect = (payload = false) => {
+    return async (dispatch) => {
+        dispatch({
+            type: SETADDRESSSELECT,
+            payload,
+        })
+    }
+}
+
+const showAddNewAddress = (payload = false) => {
+    return async (dispatch) => {
+        dispatch({
+            type: SETNEWADDRESS,
+            payload,
+        })
+    }
+}
+
 
 export default {
     setProfileData,
     setAddressList,
-    setCartList
+    setCartList,
+    showAddressSelect,
+    showAddNewAddress
 }

@@ -26,7 +26,7 @@ const list = [
 ]
 
 const CheckOutScreen = (props) => {
-    const { navigation, route, cartList, addressList, lang, userData, setCartList } = props
+    const { navigation, route, cartList, addressList, lang, userData, setCartList, showAddressSelect } = props
     //const AnimatedValue = useRef(new Animated.Value(useRef)
     const [animation, setAnimation] = useState(false)
     const [paymentMode, setPaymentMode] = useState("Cash On Delivery")
@@ -70,7 +70,7 @@ const CheckOutScreen = (props) => {
             foods,
             delivery_fee: deliveryFee,
             restaurant_id: cartList.cartDetails[0].restaurant_id,
-            delivery_address_id: selectedAddress.id,
+            delivery_address_id: addressList.find((add) => add?.is_default)?.id,
             active: 1,
             delivery_note: route.params.deliveryNotes || ""
         }
@@ -107,7 +107,7 @@ const CheckOutScreen = (props) => {
 
     return (<>
         <Header
-            title="Checkout"
+            title="checkout"
             titleColor={COLORS.black}
         >
             <ScrollView>
@@ -130,8 +130,8 @@ const CheckOutScreen = (props) => {
                         <Text style={{ fontSize: 12, marginHorizontal: WIDTH * 0.01 }}>Delivery Address</Text>
                     </View>
                     <View style={{ flexDirection: "row", justifyContent: "space-between", marginTop: HEIGHT * 0.01 }}>
-                        <Text style={{ fontSize: 15, fontWeight: "bold", width: WIDTH * 0.6 }}>{selectedAddress?.address}</Text>
-                        <Pressable onPress={() => setChooseAddressModal(true)} style={{ width: WIDTH * 0.2, height: HEIGHT * 0.04, alignItems: "center", justifyContent: "center" }}>
+                        <Text style={{ fontSize: 15, fontWeight: "bold", width: WIDTH * 0.6 }}>{!isEmpty(addressList) && addressList.find((add) => add?.is_default)?.address}</Text>
+                        <Pressable onPress={() => showAddressSelect(true)} style={{ width: WIDTH * 0.2, height: HEIGHT * 0.04, alignItems: "center", justifyContent: "center" }}>
                             <Text style={{ fontSize: 14, fontWeight: "bold", color: COLORS.green1 }}>Change</Text>
                         </Pressable>
                     </View>
@@ -171,11 +171,13 @@ const CheckOutScreen = (props) => {
                         <View style={{ flex: 1 }}>
                             <Text>Item Total</Text>
                             <Text>Discount</Text>
+                            <Text>Tax</Text>
                             <Text>Delivery Fee</Text>
                         </View>
                         <View style={{ width: WIDTH * 0.2, alignItems: "flex-end" }}>
                             <Text>{cartList.cartTotal} QAR</Text>
                             <Text>{cartList.cartDiscount} QAR</Text>
+                            <Text>{(cartList.totalBill - cartList.cartTotal).toFixed(2)} QAR</Text>
                             <Text>{cartList.deliveryFee} QAR</Text>
                         </View>
                     </View>
@@ -286,47 +288,6 @@ const CheckOutScreen = (props) => {
                     </View>
                 </View>
             </Modal>
-            {/* CHOOSE ADDRESS */}
-            <Modal animationType="slide" visible={chooseAddressModal}
-                onRequestClose={() => setChooseAddressModal(false)}
-                transparent
-            >
-                <View style={{ flex: 1, backgroundColor: "#00000030", }}>
-                    <Pressable onPress={() => setChooseAddressModal(false)} style={{ flex: 1 }}>
-                    </Pressable>
-                    <View style={{ backgroundColor: COLORS.white, height: HEIGHT * 0.7, borderTopLeftRadius: WIDTH * 0.05, borderTopRightRadius: WIDTH * 0.05, overflow: "hidden" }}>
-                        <View style={{ height: HEIGHT * 0.07, alignItems: "center", paddingHorizontal: WIDTH * 0.05, flexDirection: "row", justifyContent: "space-between", backgroundColor: `${COLORS.activeTabColor}15` }}>
-                            <Text>Saved Addresses</Text>
-                            <Pressable style={{}} onPress={() => setChooseAddressModal(false)}>
-                                <Image style={{ width: WIDTH * 0.03, height: WIDTH * 0.03, margin: WIDTH * 0.015, }} source={close} resizeMode="contain" />
-                            </Pressable>
-                        </View>
-                        <View style={{ flex: 1 }}>
-                            <FlatList
-                                showsVerticalScrollIndicator={false}
-                                style={{}}
-                                data={addressList}
-                                keyExtractor={(item, index) => index.toString()}
-                                renderItem={({ item, index }) => <Pressable onPress={() => setSelectedAddress(item)} style={[{ height: HEIGHT * 0.13, paddingHorizontal: WIDTH * 0.05, borderTopWidth: 0.5, justifyContent: "space-between", alignItems: "center" }, STYLES.flexDirection(lang)]}>
-                                    <View style={{ width: WIDTH * 0.6, justifyContent: "space-evenly", }}>
-                                        <Text style={[STYLES.textAlign(lang), { color: COLORS.title3, fontWeight: "bold" }]}>{item.description}</Text>
-                                        <Text style={[STYLES.textAlign(lang), { color: `${COLORS.title3}70`, fontWeight: "bold" }]}>{item.address}</Text>
-                                    </View>
-                                    <View style={{ borderWidth: 0.5, width: WIDTH * 0.05, height: WIDTH * 0.05, borderRadius: WIDTH * 0.025, justifyContent: "center", alignItems: "center", borderColor: COLORS.statusbar }}>
-                                        <View style={{ width: WIDTH * 0.04, height: WIDTH * 0.04, borderRadius: WIDTH * 0.02, backgroundColor: selectedAddress.id == item.id ? COLORS.statusbar : "transparent" }}>
-                                        </View>
-                                    </View>
-                                </Pressable>}
-                            />
-                        </View>
-                        <View style={{ marginHorizontal: WIDTH * 0.05, marginVertical: HEIGHT * 0.01 }}>
-                            <Pressable onPress={() => setChooseAddressModal(false)} style={{ height: HEIGHT * 0.06, backgroundColor: COLORS.addToCartButton, borderRadius: HEIGHT * 0.036, justifyContent: "center", alignItems: "center", bottom: -1 }}>
-                                <Text style={{ color: COLORS.white, fontWeight: "bold" }}>{`DONE`}</Text>
-                            </Pressable>
-                        </View>
-                    </View>
-                </View>
-            </Modal>
         </Header>
     </>
     )
@@ -346,6 +307,8 @@ const mapStateToProps = ({ i18nState, ProfileReducer }) => {
 }
 const mapDispatchToProps = {
     setCartList: (cart) => profileAction.setCartList(cart),
+    showAddressSelect: (value) => profileAction.showAddressSelect(value),
+    showAddNewAddress: (value) => profileAction.showAddNewAddress(value),
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(CheckOutScreen)

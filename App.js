@@ -7,7 +7,7 @@ import Route from './src/Route'
 import configureStore from './src/redux/store'
 import { translations } from './src/constants/translations'
 import { COLORS } from './src/constants'
-import { Loader } from './src/components'
+import { ChooseAddress, Loader } from './src/components'
 LogBox.ignoreLogs(["Warning: Can't perform a React state update on an unmounted component", "VirtualizedLists should never be nested inside plain ScrollViews with the same orientation"])
 let store = configureStore()
 
@@ -19,6 +19,7 @@ const App = () => {
           <Route />
         </SafeAreaView>
         <Loader />
+        <ChooseAddress />
       </I18n>
     </Provider>
   )

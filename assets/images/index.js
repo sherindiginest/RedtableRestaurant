@@ -38,6 +38,7 @@ const myorders = require('./myorders/myorders.png')
 const offers = require('./offers/offers.png')
 const settings = require('./settings/settings.png')
 const shop = require('./shop/shop.png')
+const emptyCart = require('./emptyCart/emptyCart.png')
 
 
 
@@ -83,5 +84,6 @@ export {
   offers,
   settings,
   shop,
-  logout
+  logout,
+  emptyCart
 }

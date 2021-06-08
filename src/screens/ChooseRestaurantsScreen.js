@@ -7,9 +7,10 @@ import { isEmpty, has } from "lodash"
 import { backarrow, dummy } from '../../assets/images'
 import { Header, RestaurantComponent } from '../components'
 import { API, Axios, COLORS, HEIGHT, STYLES, WIDTH } from '../constants'
+import { LoadingAction } from '../redux/actions'
 
 const ChooseRestaurantsScreen = (props) => {
-    const { route, navigation, lang } = props
+    const { route, navigation, lang, hideLoader, showLoader } = props
     const [restaurantList, setRestaurantList] = useState([])
 
     useEffect(() => {
@@ -17,6 +18,7 @@ const ChooseRestaurantsScreen = (props) => {
     }, [])
 
     const getData = async () => {
+        showLoader()
         const { item: { id }, type } = route.params
         const url = type == "meal" ? API.mealRestaurants(id) : API.restaurantsCategories(id)
         await Axios.get(url).then(async (response) => {
@@ -24,7 +26,9 @@ const ChooseRestaurantsScreen = (props) => {
             if (has(response, "success") && response.success) {
                 setRestaurantList(response.data)
             }
+            hideLoader()
         }).catch((error) => {
+            hideLoader()
             console.log("error ==>", error);
             //error?.message && Alert.alert("Error", error?.message)
             // setloading(false)
@@ -40,7 +44,7 @@ const ChooseRestaurantsScreen = (props) => {
                 data={restaurantList}
                 keyExtractor={(item, index) => index.toString()}
                 renderItem={({ item, index }) => <RestaurantComponent item={item}
-                    style={{ width: WIDTH * 0.75, height: HEIGHT * 0.3 }} vertLast={restaurantList.length - 1 == index} type={route.params.type} mealId={route.params.type == "meal" ? route.params.item.id : null}
+                    style={{ width: WIDTH * 0.75, height: HEIGHT * 0.3 }} vertLast={restaurantList.length - 1 == index} type={route.params.type} mealId={route.params.type == "meal" ? route.params.item.id : null} categoryId={route.params.type == "category" ? route.params.item.id : null}
                 />}
             />
         </View>
@@ -57,6 +61,10 @@ const mapStateToProps = ({ i18nState }) => {
         lang: i18nState.lang,
     }
 }
-const mapDispatchToProps = {}
+
+const mapDispatchToProps = {
+    hideLoader: () => LoadingAction.hideLoader(),
+    showLoader: () => LoadingAction.showLoader()
+}
 
 export default connect(mapStateToProps, mapDispatchToProps)(ChooseRestaurantsScreen)

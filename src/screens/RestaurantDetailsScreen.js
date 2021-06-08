@@ -9,42 +9,19 @@ import { Header, CustomTextInput, RenderItem } from '../components'
 import { API, Axios, COLORS, HEIGHT, STYLES, WIDTH } from '../constants'
 import { LoadingAction } from '../redux/actions'
 
-const newItems = [{
-    name: "Test",
-    starValue: 4.5,
-    image: dummy,
-    status: "Best"
-},
-{
-    name: "test2",
-    starValue: 4.5,
-    image: dummy,
-    status: "New"
-},
-{
-    name: "test3",
-    starValue: 4.5,
-    image: dummy,
-    status: "New"
-}]
-
-
 const RestaurantDetailsScreen = (props) => {
-    const { lang, route: { params: { item, type, mealId } }, showLoader, hideLoader } = props
+    const { lang, route: { params: { item, type, mealId = null, categoryId = null } }, showLoader, hideLoader } = props
     let scrollViewref = useRef(null)
+    let scrollViewref1 = useRef(null)
     const [tab, setTab] = useState(0)
     const [categoryList, setcategoryList] = useState([])
     const [foodList, setfoodList] = useState([])
-    const [reviewList, setreviewList] = useState([])
     const [bestoffers, setBestoffers] = useState([])
     const [todaylist, setTodaylist] = useState([])
     const [details, setDetails] = useState(item)
     const [selectdCategory, setSelectdCategory] = useState(null)
-    const [restaurant_id, setrestaurant_id] = useState(null)
 
     useEffect(() => {
-        showLoader()
-        setrestaurant_id(item?.id)
         getDetails()
         getBestoffers()
         getTodayspecials()
@@ -54,14 +31,20 @@ const RestaurantDetailsScreen = (props) => {
         if (has(details, "foods") && !isEmpty(details.foods)) {
             const list = details.foods.filter((data) => data.category_id == selectdCategory)
             setfoodList(list)
+            try {
+                const index = categoryList.findIndex((data) => data.id == selectdCategory)
+                scrollViewref1 != null && scrollViewref1.current.scrollToIndex({ index, animted: true, viewPosition: 0.5 })
+            } catch (error) {
+                console.log(error);
+            }
         }
     }, [selectdCategory])
 
     useEffect(() => {
-        if (has(details, "categories") && !isEmpty(details.categories)) {
-            setSelectdCategory(details.categories[0].id)
+        if (!isEmpty(categoryList) && categoryId == null) {
+            setSelectdCategory(categoryList[0].id)
         }
-    }, [details])
+    }, [categoryList])
 
     useEffect(() => {
         try {
@@ -70,13 +53,17 @@ const RestaurantDetailsScreen = (props) => {
     }, [tab])
 
     const getDetails = async () => {
+        showLoader()
         await Axios.get(API.restaurantDetails(item.restaurant_id || item.id)).then(async (response) => {
             if (has(response, "success") && response.success) {
                 setDetails(response.data)
                 setcategoryList(response.data.categories || [])
-                mealId ? await getFoods() : hideLoader()
+                categoryId && categoryId != null && setSelectdCategory(categoryId)
+                mealId && mealId != null && await getFoods()
+                hideLoader()
+            } else {
+                hideLoader()
             }
-            hideLoader()
         }).catch((error) => {
             console.log("error ==>", error);
             hideLoader()
@@ -90,8 +77,9 @@ const RestaurantDetailsScreen = (props) => {
             if (has(response, "success") && response.success) {
                 const { categories } = response.data
                 setcategoryList(categories || [])
+            } else {
+                hideLoader()
             }
-            hideLoader()
         }).catch((error) => {
             hideLoader()
             console.log("error ==>", JSON.stringify(error));
@@ -209,7 +197,15 @@ const RestaurantDetailsScreen = (props) => {
                             <Text style={[{ marginHorizontal: WIDTH * 0.05, fontSize: 20, marginBottom: HEIGHT * 0.01 }, STYLES.textAlign(lang), STYLES.fontSpecial()]}>
                                 Categories</Text>
                             <FlatList
-                                extraData={categoryList}
+                                onContentSizeChange={() => {
+                                    try {
+                                        const index = categoryList.findIndex((data) => data.id == selectdCategory)
+                                        if (index > -1 && scrollViewref1 != null && categoryId && categoryId != null) { scrollViewref1.current.scrollToIndex({ index, animted: true, viewPosition: 0.5 }) }
+                                    } catch (error) {
+                                        console.log(error);
+                                    }
+                                }}
+                                ref={scrollViewref1}
                                 horizontal
                                 inverted={lang == "ar"}
                                 data={categoryList}
@@ -224,7 +220,6 @@ const RestaurantDetailsScreen = (props) => {
                             />
                         </View>
                         <FlatList
-                            extraData={foodList}
                             scrollEnabled={false}
                             data={foodList}
                             showsVerticalScrollIndicator={false}

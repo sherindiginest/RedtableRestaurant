@@ -70,9 +70,6 @@ const Route = () => {
         <RouteStack.Screen name="OtpScreen" component={OtpScreen} />
         <RouteStack.Screen name="Home" component={Home} />
         <RouteStack.Screen name="CheckOutScreen" component={CheckOutScreen} />
-        <RouteStack.Screen name="EditProfileScreen" component={EditProfileScreen} />
-        <RouteStack.Screen name="ManageAddressScreen" component={ManageAddressScreen} />
-        <RouteStack.Screen name="ChangePasswordScreen" component={ChangePasswordScreen} />
       </RouteStack.Navigator>
     </NavigationContainer>
   )

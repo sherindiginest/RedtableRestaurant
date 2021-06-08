@@ -20,5 +20,7 @@ export const API = {
     restaurantSpecials: (id) => `restaurant_specials/${id}`,
     restaurantsCategories: (id) => `restaurants_categories/${id}`,
     restaurantFoods: (id) => `restaurant_foods/${id}`,
-    restaurantReviews: (id) => `restaurant_reviews`
+    restaurantReviews: (id) => `restaurant_reviews`,
+    areaCodes: (id) => id ? `get_area_restaurants/${id}` : `area`,
+
 }

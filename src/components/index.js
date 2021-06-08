@@ -9,5 +9,6 @@ import AddAddressModal from './AddAddressModal'
 import RenderItem from './RenderItem'
 import BottomTabs from './BottomTabs'
 import Loader from './Loader'
+import ChooseAddress from './ChooseAddress'
 
-export { CustomTextInput, CustomButton, DrawerMenu, Header, RestaurantComponent, RenderMealItem, AddAddressModal, RenderItem, BottomTabs, Loader }
+export { CustomTextInput, CustomButton, DrawerMenu, Header, RestaurantComponent, RenderMealItem, AddAddressModal, RenderItem, BottomTabs, Loader, ChooseAddress }

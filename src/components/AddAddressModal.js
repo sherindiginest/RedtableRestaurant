@@ -3,17 +3,23 @@ import { View, Text, Modal, Pressable, Image, Switch } from 'react-native'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { isEmpty, has, isNull } from "lodash"
+import RNPickerSelect from 'react-native-picker-select'
 
 import { CustomTextInput } from '.'
-import { close } from '../../assets/images'
+import { backarrow, close } from '../../assets/images'
 import { API, Axios, COLORS, HEIGHT, STYLES, WIDTH } from '../constants'
-import { profileAction } from '../redux/actions'
+import { LoadingAction, profileAction } from '../redux/actions'
 
 const AddAddressModal = (props) => {
-    const { visible, onClose, lang, addressData, userData, setAddressList } = props
+    const { visible, onClose, lang, addressData, userData, setAddressList, restaurantSpecific = false, cartList, setCartList } = props
 
     const [address, setaddress] = useState(addressData)
+    const [areaList, setareaList] = useState([])
     const [error, setError] = useState(false)
+
+    useEffect(() => {
+        getAreacodes()
+    }, [])
 
     useEffect(() => {
         if (isEmpty(addressData)) {
@@ -22,7 +28,7 @@ const AddAddressModal = (props) => {
                 default: false,
                 user_id: userData.id,
                 api_token: userData.api_token,
-                area_id: "3",
+                area_id: null,
                 address: ""
             })
         } else {
@@ -47,31 +53,53 @@ const AddAddressModal = (props) => {
             }).catch((error) => { })
     }
 
-    const handleAction = async () => {
+    const getCartList = async () => {
+        const { api_token } = userData
+        await Axios.get(API.carts(), { params: { api_token } })
+            .then(async (response) => {
+                if (has(response, "success") && response.success) {
+                    setCartList(response.data)
+                }
+                hideLoader()
+            }).catch((error) => {
+                hideLoader()
+            })
+    }
 
+    const getAreacodes = async () => {
+        const { api_token } = userData
+        await Axios.get(API.areaCodes(restaurantSpecific && has(cartList, "cartDetails") ? cartList?.cartDetails[0]?.restaurant_id : null), { params: { api_token } })
+            .then(async (response) => {
+                if (has(response, "success") && response.success) {
+                    setareaList(response.data)
+                }
+            }).catch((error) => {
+            })
+    }
+
+    const handleAction = async () => {
         if (has(address, "address") && !isEmpty(address.address)) {
             const data = { ...address, default: address.default ? 1 : 0 }
             if (isEmpty(addressData)) {
                 await Axios.post(API.createAddress, data).then(async (res) => {
                     console.log(res);
                     if (has(res, "success") && res.success) {
-                        getAddresses()
+                        await getAddresses()
+                        await getCartList()
                     }
                 }).catch((error) => { })
             } else {
                 await Axios.put(API.editAddress, data).then(async (res) => {
                     if (has(res, "success") && res.success) {
-                        getAddresses()
+                        await getAddresses()
+                        await getCartList()
                     }
                 }).catch((error) => { })
             }
         } else {
             setError(true)
         }
-
     }
-
-
 
     return (<Modal animationType="slide" visible={visible}
         onRequestClose={() => onClose()}
@@ -80,14 +108,14 @@ const AddAddressModal = (props) => {
         <View style={{ flex: 1, backgroundColor: "#00000030", }}>
             <Pressable onPress={() => onClose()} style={{ flex: 1 }}>
             </Pressable>
-            <View style={{ backgroundColor: COLORS.white, height: HEIGHT * 0.5, borderTopLeftRadius: WIDTH * 0.05, borderTopRightRadius: WIDTH * 0.05, overflow: "hidden" }}>
+            <View style={{ backgroundColor: COLORS.white, height: HEIGHT * 0.62, borderTopLeftRadius: WIDTH * 0.05, borderTopRightRadius: WIDTH * 0.05, overflow: "hidden" }}>
                 <View style={{ height: HEIGHT * 0.07, alignItems: "center", paddingHorizontal: WIDTH * 0.05, flexDirection: "row", justifyContent: "space-between", backgroundColor: `${COLORS.activeTabColor}15` }}>
                     <Text>{isEmpty(addressData) ? "Add New Address" : "Edit Address"}</Text>
                     <Pressable style={{}} onPress={() => onClose()}>
                         <Image style={{ width: WIDTH * 0.03, height: WIDTH * 0.03, margin: WIDTH * 0.015, }} source={close} resizeMode="contain" />
                     </Pressable>
                 </View>
-                <View style={{ marginHorizontal: WIDTH * 0.05 }}>
+                <View style={{ marginHorizontal: WIDTH * 0.05, flex: 1, justifyContent: "space-evenly" }}>
                     <CustomTextInput
                         placeholder="House / Flat / Apartment"
                         placeholderTextColor={COLORS.placeHolderColor}
@@ -96,13 +124,23 @@ const AddAddressModal = (props) => {
                         textColor={COLORS.black}
                         onChangeText={(value) => setData("address", value)}
                     />
-                    <CustomTextInput
-                        editable={false}
-                        placeholder="Area"
-                        placeholderTextColor={COLORS.placeHolderColor}
-                        style={{ borderWidth: 0, backgroundColor: COLORS.backgroundColor, height: HEIGHT * 0.06, marginVertical: HEIGHT * 0.01 }}
-                        value={"3"}
-                        textColor={COLORS.black}
+                    <RNPickerSelect
+                        placeholder={{ label: "Select area" }}
+                        onValueChange={(value) => { setData("area_id", value) }}
+                        items={areaList}
+                        Icon={() => <Image source={backarrow} style={{ alignSelf: "center", width: HEIGHT * 0.04, height: HEIGHT * 0.04, transform: [{ rotate: "270 deg" }], tintColor: COLORS.textInputBorder }} resizeMode="contain" />}
+                        style={{
+                            viewContainer: { justifyContent: "center", backgroundColor: "#00000010", borderRadius: HEIGHT * 0.038, },
+                            iconContainer: { width: WIDTH * 0.1 },
+                            inputAndroid: {
+                                color: COLORS.black
+                            },
+                            inputAndroidContainer: {
+                                //backgroundColor: COLORS.textInputBackground
+                            },
+
+                        }}
+                        value={address?.area_id}
                     />
                     {/*  <CustomTextInput
                         placeholder="Landmark"
@@ -122,10 +160,10 @@ const AddAddressModal = (props) => {
                                 <Text style={{ textTransform: "uppercase", color: address?.description == "OTHER" ? COLORS.primary : COLORS.black, fontWeight: "bold" }}>OTHER</Text>
                             </Pressable>
                         </View>
-                        <View style={[STYLES.flexDirection(lang), { justifyContent: "space-between" }]}>
-                            <Text style={{}}>Set as Default address for all purchases</Text>
-                            <Switch value={address?.default} thumbColor={address?.default ? COLORS.green2 : COLORS.color3} trackColor={{ false: COLORS.color2, true: COLORS.color1 }} onValueChange={(value) => setData("default", value)} />
-                        </View>
+                    </View>
+                    <View style={[STYLES.flexDirection(lang), { justifyContent: "space-between" }]}>
+                        <Text style={{}}>Set as Default address for all purchases</Text>
+                        <Switch value={address?.default} thumbColor={address?.default ? COLORS.green2 : COLORS.color3} trackColor={{ false: COLORS.color2, true: COLORS.color1 }} onValueChange={(value) => setData("default", value)} />
                     </View>
                     <Pressable onPress={() => handleAction()} style={{ height: HEIGHT * 0.06, backgroundColor: COLORS.addToCartButton, borderRadius: HEIGHT * 0.036, justifyContent: "center", alignItems: "center", bottom: -1 }}>
                         <Text style={{ color: COLORS.white, fontWeight: "bold" }}>
@@ -133,7 +171,6 @@ const AddAddressModal = (props) => {
                         </Text>
                     </Pressable>
                 </View>
-
             </View>
         </View>
     </Modal>)
@@ -146,11 +183,15 @@ AddAddressModal.contextTypes = {
 const mapStateToProps = ({ i18nState, ProfileReducer }) => {
     return {
         lang: i18nState.lang,
-        userData: ProfileReducer.userData
+        userData: ProfileReducer.userData,
+        cartList: ProfileReducer.cartList
     }
 }
 const mapDispatchToProps = {
     setAddressList: (address) => profileAction.setAddressList(address),
+    showLoader: () => LoadingAction.showLoader(),
+    hideLoader: () => LoadingAction.hideLoader(),
+    setCartList: (cart) => profileAction.setCartList(cart)
 }
 
 
