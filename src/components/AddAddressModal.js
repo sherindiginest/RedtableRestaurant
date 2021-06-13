@@ -11,7 +11,7 @@ import { API, Axios, COLORS, HEIGHT, STYLES, WIDTH } from '../constants'
 import { LoadingAction, profileAction } from '../redux/actions'
 
 const AddAddressModal = (props) => {
-    const { visible, onClose, lang, addressData, userData, setAddressList, restaurantSpecific = false, cartList, setCartList } = props
+    const { visible, onClose, lang, addressData, userData, setAddressList, restaurantSpecific = false, cartList, setCartList, resId } = props
 
     const [address, setaddress] = useState(addressData)
     const [areaList, setareaList] = useState([])
@@ -68,7 +68,15 @@ const AddAddressModal = (props) => {
 
     const getAreacodes = async () => {
         const { api_token } = userData
-        await Axios.get(API.areaCodes(restaurantSpecific && has(cartList, "cartDetails") ? cartList?.cartDetails[0]?.restaurant_id : null), { params: { api_token } })
+        let restaurant_id = null
+        if (restaurantSpecific) {
+            if (has(cartList, "cartDetails")) {
+                restaurant_id = cartList?.cartDetails[0]?.restaurant_id
+            } else if (resId) {
+                restaurant_id = resId
+            }
+        }
+        await Axios.get(API.areaCodes(restaurant_id), { params: { api_token } })
             .then(async (response) => {
                 if (has(response, "success") && response.success) {
                     setareaList(response.data)

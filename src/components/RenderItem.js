@@ -4,37 +4,33 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { isEmpty, has } from "lodash"
 
-import { dummy, close, heart } from '../../assets/images'
-import { Header, CustomTextInput } from '../components'
+import { dummy, close, heart, logo } from '../../assets/images'
 import { API, Axios, COLORS, HEIGHT, STYLES, WIDTH } from '../constants'
 import { LoadingAction, profileAction } from '../redux/actions'
 
-const RenderItem = (props) => {
-    const { item, lang, restaurant_id, setCartList, userData, cartList, vertLast, cart, bestOffer, hideLoader, showLoader } = props
+const RenderItem = (props, context) => {
+    const { item, lang, restaurant_id, setCartList, userData, cartList, vertLast, cart, bestOffer, hideLoader, showLoader, setshowAddAddress = () => { }, setshowPickupModal = () => { }, pickupMode, addressList } = props
     const [visible, setVisible] = useState(false)
     const [quantity, setQuantity] = useState(null)
 
     useEffect(() => {
         if (has(cartList, "cartDetails") && !isEmpty(cartList.cartDetails)) {
             const list = cartList.cartDetails.find((i) => i.food_id == item.food_id && i.restaurant_id == restaurant_id)
-            list && setQuantity(list?.quantity)
+            list ? setQuantity(list?.quantity) : setQuantity(null)
+        } else {
+            setQuantity(null)
         }
     }, [])
 
     useEffect(() => {
         if (has(cartList, "cartDetails") && !isEmpty(cartList.cartDetails)) {
             const list = cartList.cartDetails.find((i) => i.food_id == item.food_id && i.restaurant_id == restaurant_id)
-            list && setQuantity(list?.quantity)
+            list ? setQuantity(list?.quantity) : setQuantity(null)
+        } else {
+            setQuantity(null)
         }
-    }, [cartList.cartDetails])
+    }, [cartList])
 
-    useEffect(() => {
-        if (quantity != null && quantity == 0) {
-            deleteCart()
-        } else if (quantity > 0) {
-            addToCart()
-        }
-    }, [quantity])
 
     const deleteCart = async () => {
         showLoader()
@@ -51,15 +47,15 @@ const RenderItem = (props) => {
             })
     }
 
-    const addToCart = async () => {
-        const data = { user_id: userData.id.toString(), food_id: item.food_id, quantity, restaurant_id }
+    const addToCart = async (qty) => {
+        const data = { user_id: userData.id.toString(), food_id: item.food_id, quantity: qty, restaurant_id }
         let list = {}
         if (has(cartList, "cartDetails") && !isEmpty(cartList.cartDetails)) {
             list = cartList.cartDetails.find((i) => i.food_id == item.food_id && i.restaurant_id == restaurant_id)
         }
         if (!isEmpty(list)) {
             const { id } = list
-            await Axios.put(API.carts(), { id, quantity })
+            await Axios.put(API.carts(), { id, quantity: qty })
                 .then(async (response) => {
                     if (has(response, "success") && response.success) {
                         await getCartList()
@@ -91,6 +87,24 @@ const RenderItem = (props) => {
         return true
     }
 
+    const manageCart = (qty = 0) => {
+        if (pickupMode == null) {
+            setshowPickupModal(true)
+        } else {
+            if (isEmpty(addressList) && pickupMode != "pickup") {
+                setshowAddAddress(true)
+            } else {
+                if (validateRes()) {
+                    if (qty == 0) {
+                        deleteCart()
+                    } else if (qty > 0) {
+                        addToCart(qty)
+                    }
+                }
+            }
+        }
+    }
+
     const getCartList = async () => {
         const { api_token } = userData
         await Axios.get(API.carts(), { params: { api_token } })
@@ -104,90 +118,27 @@ const RenderItem = (props) => {
             })
     }
 
-    const RenderFood = () => {
-        return (<View style={{ marginLeft: lang == "en" ? WIDTH * 0.07 : vertLast ? WIDTH * 0.07 : 0, marginRight: lang == "ar" ? WIDTH * 0.07 : vertLast ? WIDTH * 0.07 : 0, marginBottom: WIDTH * 0.025, }}>
-            <Pressable
-                onPress={() => setVisible(true)}
-                style={{ height: WIDTH * 0.4, width: WIDTH * 0.4, marginVertical: WIDTH * 0.025, borderRadius: WIDTH * 0.07, backgroundColor: COLORS.white, elevation: 3, alignItems: "center", }}>
-                <Image key={item?.media[0]?.url} style={{ width: WIDTH * 0.27, height: WIDTH * 0.23, marginTop: WIDTH * 0.01, }} source={item?.media && item?.media.length > 0 ? { uri: item?.media[0]?.url } : dummy} resizeMode="contain" />
-                <Text style={[{ textAlign: "center", fontSize: 12 }, STYLES.fontRegular()]}>{item?.name}</Text>
-                <Text style={[{}, STYLES.fontBold()]}>{item?.discount_price}</Text>
-            </Pressable>
-            <View style={{ width: WIDTH * 0.25, height: WIDTH * 0.07, borderRadius: WIDTH * 0.035, backgroundColor: COLORS.statusbar, position: "absolute", bottom: 0, elevation: 4, alignSelf: "center" }}>
-                {quantity > 0 ? <View style={{ flex: 1, flexDirection: "row" }}>
-                    <Pressable onPress={() => { validateRes() && setQuantity(quantity - 1) }} style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-                        <Text style={{ color: COLORS.white, fontSize: 25 }}>-</Text>
-                    </Pressable>
-                    <View style={{ backgroundColor: COLORS.white, flex: 1, justifyContent: "center", alignItems: "center", borderWidth: 2, borderColor: COLORS.textInputBorder }}>
-                        <Text style={[{ color: COLORS.black, fontSize: 14 }, STYLES.fontMedium()]}>{quantity}</Text>
-                    </View>
-                    <Pressable onPress={() => { validateRes() && setQuantity(quantity + 1) }} style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-                        <Text style={{ color: COLORS.white, fontSize: 15 }}>+</Text>
-                    </Pressable>
-                </View> : <Pressable onPress={() => validateRes() && setQuantity(1)} style={{ justifyContent: "center", alignItems: "center", flex: 1 }}>
-                    <Text style={[{ color: COLORS.white, fontSize: 11, }, STYLES.fontRegular()]}>Add to order</Text>
-                </Pressable>
-                }
-            </View>
-        </View>)
-    }
-
-    const RenderBestoffer = () => {
-        return (<Pressable onPress={() => setVisible(true)} style={{ height: WIDTH * 0.4, width: WIDTH * 0.6, marginLeft: lang == "en" ? WIDTH * 0.07 : vertLast ? WIDTH * 0.07 : 0, marginRight: lang == "ar" ? WIDTH * 0.07 : vertLast ? WIDTH * 0.07 : 0, borderRadius: WIDTH * 0.07, backgroundColor: COLORS.white, elevation: 3, marginBottom: HEIGHT * 0.02, marginTop: WIDTH * 0.03 }}>
-            <Image style={{ height: WIDTH * 0.25, width: WIDTH * 0.6, marginTop: WIDTH * 0.01, borderTopRightRadius: WIDTH * 0.05, borderTopLeftRadius: WIDTH * 0.05 }} source={item?.media && item?.media.length > 0 ? { uri: item?.media[0]?.url } : dummy} resizeMode="cover" />
-            <View style={{ flex: 1, marginHorizontal: WIDTH * 0.05, justifyContent: "center" }}>
-                <Text style={[STYLES.textAlign(lang)]}>{item?.name}</Text>
-            </View>
-            <View style={[{ backgroundColor: COLORS.green, width: WIDTH * 0.1, height: WIDTH * 0.1, borderRadius: WIDTH * 0.05, position: "absolute", top: -WIDTH * 0.03, justifyContent: "center", alignItems: "center" }, lang == "ar" ? { right: -WIDTH * 0.02, } : { left: -WIDTH * 0.02, }]}>
-                <Text>50 %</Text>
-            </View>
-        </Pressable>)
-    }
-
-
-    const RenderCart = () => {
-        return (<View key={item?.food?.name} style={{ marginHorizontal: WIDTH * 0.05, flexDirection: "row", borderTopWidth: 0.5, height: HEIGHT * 0.05, justifyContent: "center", alignItems: "center" }}>
-            <View style={{ flex: 1, justifyContent: "center" }}>
-                <Text>{item?.food?.name}</Text>
-            </View>
-            <View style={{ width: WIDTH * 0.3, flexDirection: "row", backgroundColor: COLORS.statusbar, height: HEIGHT * 0.03, borderRadius: HEIGHT * 0.02 }}>
-                <Pressable onPress={() => { validateRes() && setQuantity(quantity - 1) }} style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-                    <Text style={{ color: COLORS.white, fontSize: 25 }}>-</Text>
-                </Pressable>
-                <View style={{ backgroundColor: COLORS.white, flex: 1, justifyContent: "center", alignItems: "center", borderWidth: 2, borderColor: COLORS.textInputBorder }}>
-                    <Text style={{ color: COLORS.black, fontSize: 14 }}>{quantity}</Text>
-                </View>
-                <Pressable onPress={() => { validateRes() && setQuantity(quantity + 1) }} style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-                    <Text style={{ color: COLORS.white, fontSize: 15 }}>+</Text>
-                </Pressable>
-            </View>
-            <View style={{ width: WIDTH * 0.2, alignItems: "flex-end", justifyContent: "center" }}>
-                <Text>{item?.food?.price} Qar</Text>
-            </View>
-        </View>)
-    }
-
     return (<>
         {cart ? <View key={item?.food?.name} style={{ marginHorizontal: WIDTH * 0.05, flexDirection: "row", borderTopWidth: 0.5, height: HEIGHT * 0.05, justifyContent: "center", alignItems: "center" }}>
             <View style={{ flex: 1, justifyContent: "center" }}>
                 <Text>{item?.food?.name}</Text>
             </View>
             <View style={{ width: WIDTH * 0.3, flexDirection: "row", backgroundColor: COLORS.statusbar, height: HEIGHT * 0.03, borderRadius: HEIGHT * 0.02 }}>
-                <Pressable onPress={() => { validateRes() && setQuantity(quantity - 1) }} style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+                <Pressable onPress={() => manageCart(quantity - 1)} style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
                     <Text style={{ color: COLORS.white, fontSize: 25 }}>-</Text>
                 </Pressable>
                 <View style={{ backgroundColor: COLORS.white, flex: 1, justifyContent: "center", alignItems: "center", borderWidth: 2, borderColor: COLORS.textInputBorder }}>
                     <Text style={{ color: COLORS.black, fontSize: 14 }}>{quantity}</Text>
                 </View>
-                <Pressable onPress={() => { validateRes() && setQuantity(quantity + 1) }} style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+                <Pressable onPress={() => manageCart(quantity + 1)} style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
                     <Text style={{ color: COLORS.white, fontSize: 15 }}>+</Text>
                 </Pressable>
             </View>
             <View style={{ width: WIDTH * 0.2, alignItems: "flex-end", justifyContent: "center" }}>
-                <Text>{item?.food?.price} Qar</Text>
+                <Text>{context.t("price", { price: item?.food?.price })}</Text>
             </View>
         </View> : bestOffer ? <Pressable onPress={() => setVisible(true)} style={{ height: WIDTH * 0.4, width: WIDTH * 0.6, marginLeft: lang == "en" ? WIDTH * 0.07 : vertLast ? WIDTH * 0.07 : 0, marginRight: lang == "ar" ? WIDTH * 0.07 : vertLast ? WIDTH * 0.07 : 0, borderRadius: WIDTH * 0.07, backgroundColor: COLORS.white, elevation: 3, marginBottom: HEIGHT * 0.02, marginTop: WIDTH * 0.03 }}>
-            <Image style={{ height: WIDTH * 0.25, width: WIDTH * 0.6, marginTop: WIDTH * 0.01, borderTopRightRadius: WIDTH * 0.05, borderTopLeftRadius: WIDTH * 0.05 }} source={item?.media && item?.media.length > 0 ? { uri: item?.media[0]?.url } : dummy} resizeMode="cover" />
+            <Image style={{ height: WIDTH * 0.25, width: WIDTH * 0.6, marginTop: WIDTH * 0.01, borderTopRightRadius: WIDTH * 0.05, borderTopLeftRadius: WIDTH * 0.05 }} source={item?.media && item?.media.length > 0 ? { uri: item?.media[0]?.url } : logo} defaultSource={logo} resizeMode="cover" />
             <View style={{ flex: 1, marginHorizontal: WIDTH * 0.05, justifyContent: "center" }}>
                 <Text style={[STYLES.textAlign(lang)]}>{item?.name}</Text>
             </View>
@@ -198,22 +149,23 @@ const RenderItem = (props) => {
             <Pressable
                 onPress={() => setVisible(true)}
                 style={{ height: WIDTH * 0.4, width: WIDTH * 0.4, marginVertical: WIDTH * 0.025, borderRadius: WIDTH * 0.07, backgroundColor: COLORS.white, elevation: 3, alignItems: "center", }}>
-                <Image key={item?.media[0]?.url} style={{ width: WIDTH * 0.27, height: WIDTH * 0.23, marginTop: WIDTH * 0.01, }} source={item?.media && item?.media.length > 0 ? { uri: item?.media[0]?.url } : dummy} resizeMode="contain" />
+                <Image key={item?.media[0]?.url} style={{ width: WIDTH * 0.27, height: WIDTH * 0.23, marginTop: WIDTH * 0.01, }}
+                    source={item?.media && item?.media.length > 0 ? { uri: item?.media[0]?.url } : logo} defaultSource={logo} resizeMode="contain" />
                 <Text style={[{ textAlign: "center", fontSize: 12 }, STYLES.fontRegular()]}>{item?.name}</Text>
                 <Text style={[{}, STYLES.fontBold()]}>{item?.discount_price}</Text>
             </Pressable>
             <View style={{ width: WIDTH * 0.25, height: WIDTH * 0.07, borderRadius: WIDTH * 0.035, backgroundColor: COLORS.statusbar, position: "absolute", bottom: 0, elevation: 4, alignSelf: "center" }}>
                 {quantity > 0 ? <View style={{ flex: 1, flexDirection: "row" }}>
-                    <Pressable onPress={() => { validateRes() && setQuantity(quantity - 1) }} style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+                    <Pressable onPress={() => manageCart(quantity - 1)} style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
                         <Text style={{ color: COLORS.white, fontSize: 25 }}>-</Text>
                     </Pressable>
                     <View style={{ backgroundColor: COLORS.white, flex: 1, justifyContent: "center", alignItems: "center", borderWidth: 2, borderColor: COLORS.textInputBorder }}>
                         <Text style={[{ color: COLORS.black, fontSize: 14 }, STYLES.fontMedium()]}>{quantity}</Text>
                     </View>
-                    <Pressable onPress={() => { validateRes() && setQuantity(quantity + 1) }} style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+                    <Pressable onPress={() => manageCart(quantity + 1)} style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
                         <Text style={{ color: COLORS.white, fontSize: 15 }}>+</Text>
                     </Pressable>
-                </View> : <Pressable onPress={() => validateRes() && setQuantity(1)} style={{ justifyContent: "center", alignItems: "center", flex: 1 }}>
+                </View> : <Pressable onPress={() => manageCart(1)} style={{ justifyContent: "center", alignItems: "center", flex: 1 }}>
                     <Text style={[{ color: COLORS.white, fontSize: 11, }, STYLES.fontRegular()]}>Add to order</Text>
                 </Pressable>
                 }
@@ -245,7 +197,7 @@ const RenderItem = (props) => {
                             <Text style={{ color: COLORS.titleColor }}>{item?.description}</Text>
                             <Text style={{ color: COLORS.titleColor }}>{item?.ingredients}</Text>
                         </View>
-                        <Pressable onPress={() => { validateRes() && setQuantity(quantity + 1) }} style={{ marginHorizontal: WIDTH * 0.05, height: HEIGHT * 0.07, backgroundColor: COLORS.addToCartButton, marginBottom: HEIGHT * 0.01, borderRadius: HEIGHT * 0.035, justifyContent: "center", alignItems: "center" }}>
+                        <Pressable onPress={() => manageCart(quantity + 1)} style={{ marginHorizontal: WIDTH * 0.05, height: HEIGHT * 0.07, backgroundColor: COLORS.addToCartButton, marginBottom: HEIGHT * 0.01, borderRadius: HEIGHT * 0.035, justifyContent: "center", alignItems: "center" }}>
                             <Text style={{ color: COLORS.white, fontWeight: "bold" }}> Add To Order</Text>
                         </Pressable>
                     </View>
@@ -264,6 +216,8 @@ const mapStateToProps = ({ i18nState, ProfileReducer }) => {
         lang: i18nState.lang,
         userData: ProfileReducer.userData,
         cartList: ProfileReducer.cartList,
+        pickupMode: ProfileReducer.pickupMode,
+        addressList: ProfileReducer.addressList,
     }
 }
 const mapDispatchToProps = {
@@ -272,4 +226,4 @@ const mapDispatchToProps = {
     showLoader: () => LoadingAction.showLoader()
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(React.memo(RenderItem))
+export default connect(mapStateToProps, mapDispatchToProps)(RenderItem)

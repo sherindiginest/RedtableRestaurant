@@ -7,7 +7,7 @@ import { HEIGHT, COLORS, WIDTH, STYLES } from '../constants'
 import { Pressable } from 'react-native'
 
 const CustomTextinput = (props) => {
-  const { image, placeholder, onChangeText, style, lang, secureEntry = false, secureEntryIcon, placeholderTextColor = COLORS.white, textColor = COLORS.white, keyboardType = "default", returnKeyType = "done", currentRef, nextRef = null, onSubmitAction, error, maxLength = 50, outerStyle, value, editable = true } = props
+  const { image, placeholder, onChangeText, style, lang, secureEntry = false, secureEntryIcon, placeholderTextColor = COLORS.white, textColor = COLORS.white, keyboardType = "default", returnKeyType = "done", currentRef, nextRef = null, onSubmitAction, error, errorTextColor = COLORS.white, maxLength = 50, outerStyle, value, editable = true, tintColor } = props
   const [secureTextEntry, setSecureTextEntry] = useState(secureEntry)
 
   return (<View style={[{ alignSelf: "stretch" }, outerStyle]}>
@@ -24,7 +24,7 @@ const CustomTextinput = (props) => {
     STYLES.flexDirection(lang),
     ]}>
       <Image
-        style={{ marginHorizontal: WIDTH * 0.05 }}
+        style={[{ marginHorizontal: WIDTH * 0.05, }, tintColor && { tintColor }]}
         source={image}
         resizeMode="contain"
       />
@@ -52,7 +52,7 @@ const CustomTextinput = (props) => {
           resizeMode="contain"
         /></Pressable>}
     </View>
-    {error && <Text style={{ textAlign: lang == "ar" ? "right" : "left", fontSize: 12, color: COLORS.white, marginHorizontal: WIDTH * 0.1 }}>{error}</Text>}
+    {error && <Text style={{ textAlign: lang == "ar" ? "right" : "left", fontSize: 12, color: errorTextColor, marginHorizontal: WIDTH * 0.1 }}>{error}</Text>}
   </View>
   )
 }

@@ -29,10 +29,6 @@ const DrawerMenu = (props, context) => {
       icon: offers,
     },
     {
-      label: 'My Orders',
-      icon: myorders,
-    },
-    {
       label: 'Settings',
       icon: settings,
       onPress: () => {
@@ -73,11 +69,11 @@ const DrawerMenu = (props, context) => {
         <Image
           source={logo}
           resizeMode="contain"
-          style={{ height: HEIGHT * 0.1, width: WIDTH * 0.3 }}
+          style={{ height: HEIGHT * 0.1, width: WIDTH * 0.2, marginLeft: WIDTH * 0.05 }}
         />
-        <View style={[STYLES.alignItems(lang)]}>
+        <View style={[STYLES.alignItems(lang), { width: WIDTH * 0.4, }]}>
           <Text>{userData?.name}</Text>
-          <Text>{userData?.email}</Text>
+          <Text numberOfLines={1}>{userData?.email}</Text>
           <Text>{userData?.phone}</Text>
         </View>
       </View>

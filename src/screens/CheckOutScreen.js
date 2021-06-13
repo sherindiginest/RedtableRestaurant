@@ -25,26 +25,24 @@ const list = [
     } */
 ]
 
-const CheckOutScreen = (props) => {
-    const { navigation, route, cartList, addressList, lang, userData, setCartList, showAddressSelect } = props
+const CheckOutScreen = (props, context) => {
+    const { navigation, route, cartList, addressList, lang, userData, setCartList, showAddressSelect, pickupMode } = props
     //const AnimatedValue = useRef(new Animated.Value(useRef)
     const [animation, setAnimation] = useState(false)
     const [paymentMode, setPaymentMode] = useState("Cash On Delivery")
     const [thankyouModal, setThankyouModal] = useState(false)
-    const [chooseAddressModal, setChooseAddressModal] = useState(false)
     const [addnewcardModal, setAddnewcardModal] = useState(false)
-    const [orderType, setOrderType] = useState(false)
-    const [selectedAddress, setSelectedAddress] = useState({})
+    //const [selectedAddress, setSelectedAddress] = useState({})
     const AnimatedValue = useRef(new Animated.Value(0)).current
 
 
     useEffect(() => {
-        if (!isEmpty(addressList)) {
+        /* if (!isEmpty(addressList)) {
             const list = addressList.find((item) => item.is_default)
             !isEmpty(list) && setSelectedAddress(list)
         } else {
             Alert.alert("Waring", "Add an address to continue")
-        }
+        } */
     }, [])
 
     useEffect(() => {
@@ -61,7 +59,7 @@ const CheckOutScreen = (props) => {
             api_token,
             user_id: id,
             order_status_id: 1,
-            order_type: 1,
+            order_type: 2,
             payment: {
                 id: null,
                 status: null,
@@ -70,10 +68,15 @@ const CheckOutScreen = (props) => {
             foods,
             delivery_fee: deliveryFee,
             restaurant_id: cartList.cartDetails[0].restaurant_id,
-            delivery_address_id: addressList.find((add) => add?.is_default)?.id,
             active: 1,
             delivery_note: route.params.deliveryNotes || ""
         }
+
+        if (pickupMode != "pickup") {
+            data.order_type = 1
+            data.delivery_address_id = addressList.find((add) => add?.is_default)?.id
+        }
+
         await Axios.post(API.createOrder, data)
             .then(async (response) => {
                 if (has(response, "success") && response.success) {
@@ -111,11 +114,11 @@ const CheckOutScreen = (props) => {
             titleColor={COLORS.black}
         >
             <ScrollView>
-                <View style={{ height: HEIGHT * 0.05, marginHorizontal: WIDTH * 0.05, flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
+                {/* <View style={{ height: HEIGHT * 0.05, marginHorizontal: WIDTH * 0.05, flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
                     <Text style={{ fontSize: 12 }}>Deliver Order</Text>
                     <Switch value={orderType} thumbColor={orderType ? COLORS.green2 : COLORS.addToCartButton} trackColor={{ false: COLORS.color4, true: COLORS.color1 }} onValueChange={(value) => setOrderType(value)} />
                     <Text style={{ fontSize: 12 }}>Pick Up Order</Text>
-                </View>
+                </View> */}
                 <View style={{ marginHorizontal: WIDTH * 0.05, marginVertical: HEIGHT * 0.02, flexDirection: "row" }}>
                     <Image source={restaurant} resizeMode="contain" />
                     <View style={{ marginHorizontal: WIDTH * 0.05, }}>
@@ -124,7 +127,7 @@ const CheckOutScreen = (props) => {
                         <Text style={{ fontSize: 10 }}>{has(cartList, "cartDetails") && cartList?.cartDetails[0].restaurant?.address}</Text>
                     </View>
                 </View>
-                <View style={{ marginHorizontal: WIDTH * 0.05, marginVertical: HEIGHT * 0.02, }}>
+                {/* <View style={{ marginHorizontal: WIDTH * 0.05, marginVertical: HEIGHT * 0.02, }}>
                     <View style={{ flexDirection: "row", alignItems: "center", flex: 1 }}>
                         <Image source={homeaddress} resizeMode="contain" />
                         <Text style={{ fontSize: 12, marginHorizontal: WIDTH * 0.01 }}>Delivery Address</Text>
@@ -135,7 +138,7 @@ const CheckOutScreen = (props) => {
                             <Text style={{ fontSize: 14, fontWeight: "bold", color: COLORS.green1 }}>Change</Text>
                         </Pressable>
                     </View>
-                </View>
+                </View> */}
                 <View style={{ marginHorizontal: WIDTH * 0.05, marginVertical: HEIGHT * 0.02, }}>
                     <View style={{ flexDirection: "row" }}>
                         <View style={{ flexDirection: "row", alignItems: "center", flex: 1 }}>
@@ -172,18 +175,18 @@ const CheckOutScreen = (props) => {
                             <Text>Item Total</Text>
                             <Text>Discount</Text>
                             <Text>Tax</Text>
-                            <Text>Delivery Fee</Text>
+                            {pickupMode != "pickup" && <Text>Delivery Fee</Text>}
                         </View>
                         <View style={{ width: WIDTH * 0.2, alignItems: "flex-end" }}>
-                            <Text>{cartList.cartTotal} QAR</Text>
-                            <Text>{cartList.cartDiscount} QAR</Text>
-                            <Text>{(cartList.totalBill - cartList.cartTotal).toFixed(2)} QAR</Text>
-                            <Text>{cartList.deliveryFee} QAR</Text>
+                            <Text>{context.t("price", { price: cartList.cartTotal })}</Text>
+                            <Text>{context.t("price", { price: cartList.cartDiscount })}</Text>
+                            <Text>{context.t("price", { price: cartList.tax })}</Text>
+                            {pickupMode != "pickup" && <Text>{context.t("price", { price: cartList.deliveryFee })}</Text>}
                         </View>
                     </View>
                     <View style={{ flexDirection: "row", justifyContent: "space-between", marginHorizontal: HEIGHT * 0.015, paddingVertical: HEIGHT * 0.01, borderTopWidth: 0.5 }}>
                         <Text>Total Bill</Text>
-                        <Text>{cartList.totalBill} QAR</Text>
+                        <Text>{context.t("price", { price: pickupMode != "pickup" ? cartList.totalBill + cartList.deliveryFee : cartList.totalBill })}</Text>
                     </View>
                     <Pressable onPress={() => createOrder()} style={{ height: HEIGHT * 0.07, backgroundColor: COLORS.addToCartButton, borderRadius: HEIGHT * 0.035, justifyContent: "center", alignItems: "center", bottom: -1 }}>
                         <Text style={{ color: COLORS.white, fontWeight: "bold" }}>CONFIRM ORDER</Text>
@@ -214,9 +217,7 @@ const CheckOutScreen = (props) => {
                                 style={{ borderWidth: 0, backgroundColor: COLORS.backgroundColor, height: HEIGHT * 0.06, marginVertical: HEIGHT * 0.01 }}
                             />
                             <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
-                                <Text>
-                                    Expiry
-                            </Text>
+                                <Text>Expiry</Text>
                                 <CustomTextInput
                                     placeholder="MM"
                                     placeholderTextColor={COLORS.placeHolderColor}
@@ -241,7 +242,7 @@ const CheckOutScreen = (props) => {
                             <View style={{ marginVertical: HEIGHT * 0.03 }}>
                                 <Text>
                                     Set as Default Card for all purchases
-                            </Text>
+                                </Text>
                             </View>
                             <Pressable onPress={() => navigation.navigate("CheckOutScreen")} style={{ height: HEIGHT * 0.06, backgroundColor: COLORS.addToCartButton, borderRadius: HEIGHT * 0.036, justifyContent: "center", alignItems: "center", bottom: -1 }}>
                                 <Text style={{ color: COLORS.white, fontWeight: "bold" }}>
@@ -249,7 +250,6 @@ const CheckOutScreen = (props) => {
                                 </Text>
                             </Pressable>
                         </View>
-
                     </View>
                 </View>
             </Modal>
@@ -302,7 +302,8 @@ const mapStateToProps = ({ i18nState, ProfileReducer }) => {
         lang: i18nState.lang,
         cartList: ProfileReducer.cartList,
         userData: ProfileReducer.userData,
-        addressList: ProfileReducer.addressList
+        addressList: ProfileReducer.addressList,
+        pickupMode: ProfileReducer.pickupMode
     }
 }
 const mapDispatchToProps = {

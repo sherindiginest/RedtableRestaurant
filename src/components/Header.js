@@ -11,7 +11,7 @@ import { StatusBar } from 'react-native'
 
 const Header = (props, context) => {
     const navigation = useNavigation()
-    const { backgroundColor = COLORS.white, transparent = false, lang, title, titleColor = COLORS.white } = props
+    const { backgroundColor = COLORS.white, transparent = false, lang, title, titleColor = COLORS.white, cartAction, cartButton = false } = props
 
     return (
         <View style={{ flex: 1, backgroundColor, }}>
@@ -28,12 +28,19 @@ const Header = (props, context) => {
             </View>}
             <View style={{ flex: 1 }}>
                 {title && <View style={[{ height: HEIGHT * 0.07, paddingHorizontal: WIDTH * 0.05, alignItems: "center" }, STYLES.flexDirection(lang)]}>
-                    <Pressable onPress={() => navigation.goBack()}>
-                        <Image source={backarrow} style={{ height: HEIGHT * 0.04, width: WIDTH * 0.05, tintColor: titleColor, transform: [{ scaleX: lang == "ar" ? -1 : 1 }] }} />
-                    </Pressable>
-                    <Text style={{ color: titleColor, marginHorizontal: WIDTH * 0.05, fontSize: 20 }}>
-                        {context.t(title)}
-                    </Text>
+                    <View style={[STYLES.flexDirection(lang), { flex: 1 }]}>
+                        <Pressable onPress={() => navigation.goBack()}>
+                            <Image source={backarrow} style={{ height: HEIGHT * 0.04, width: WIDTH * 0.05, tintColor: titleColor, transform: [{ scaleX: lang == "ar" ? -1 : 1 }] }} />
+                        </Pressable>
+                        <Text style={{ color: titleColor, marginHorizontal: WIDTH * 0.05, fontSize: 20 }}>
+                            {context.t(title)}
+                        </Text>
+                    </View>
+                    {cartButton && cartAction && <Pressable onPress={() => cartAction && cartAction()}>
+                        <Text style={{ color: COLORS.statusbar, fontSize: 15 }}>
+                            Clear all
+                        </Text>
+                    </Pressable>}
                 </View>}
                 {props.children}
             </View>

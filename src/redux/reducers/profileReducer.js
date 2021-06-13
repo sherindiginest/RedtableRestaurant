@@ -1,11 +1,12 @@
-import { SETPROFILEDATA, SETADDRESSLIST, SETCARTLIST, SETADDRESSSELECT, SETNEWADDRESS } from "../../constants/constants"
+import { SETPROFILEDATA, SETADDRESSLIST, SETCARTLIST, SETADDRESSSELECT, SETNEWADDRESS, SETPICKUPMODE } from "../../constants/constants"
 
 const initialState = {
     userData: {},
     addressList: [],
     cartList: {},
     visibleSelectAddress: false,
-    visibleAddnewAddress: false
+    visibleAddnewAddress: false,
+    pickupMode: null
 }
 
 const profileReducer = (state = initialState, action) => {
@@ -34,6 +35,11 @@ const profileReducer = (state = initialState, action) => {
             return {
                 ...state,
                 visibleAddnewAddress: action.payload
+            }
+        case SETPICKUPMODE:
+            return {
+                ...state,
+                pickupMode: action.payload
             }
         default:
             return { ...state }

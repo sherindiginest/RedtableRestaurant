@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { View, Text, FlatList, Image, Modal, Pressable, ImageBackground } from 'react-native'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
@@ -11,8 +11,7 @@ import { ScrollView } from 'react-native'
 import { LoadingAction } from '../redux/actions'
 
 const RenderItem = (props) => {
-    const { item, getOrders, userData, last } = props
-
+    const { item, getOrders, userData, last, context } = props
     const [visible, setVisible] = useState(false)
     const [priceDetails, setPriceDetails] = useState({})
 
@@ -113,7 +112,7 @@ const RenderItem = (props) => {
                                 <Text style={{}}>{i.quantity}</Text>
                             </View>
                             <View style={{ width: WIDTH * 0.25, alignItems: "flex-end" }}>
-                                <Text style={{ color: COLORS.primary }}>{i.food.price} QAR</Text>
+                                <Text style={{ color: COLORS.primary }}>{context.t("price", { price: i?.food?.price })}</Text>
                             </View>
                         </View>)}
                         <View style={{ marginHorizontal: WIDTH * 0.05, borderBottomWidth: 0.5, paddingVertical: HEIGHT * 0.015, flexDirection: "row", }}>
@@ -123,19 +122,19 @@ const RenderItem = (props) => {
                                 <Text>Delivery Fee</Text>
                             </View>
                             <View style={{ width: WIDTH * 0.2, alignItems: "flex-end" }}>
-                                <Text style={{ color: COLORS.primary }}>{priceDetails.itemTotal} QAR</Text>
-                                <Text style={{ color: COLORS.primary }}>- {priceDetails.discount} QAR</Text>
-                                <Text style={{ color: COLORS.primary }}>{item.delivery_fee || 0} QAR</Text>
+                                <Text style={{ color: COLORS.primary }}>{context.t("price", { price: priceDetails.itemTotal })}</Text>
+                                <Text style={{ color: COLORS.primary }}>{context.t("price", { price: priceDetails.discount })}</Text>
+                                <Text style={{ color: COLORS.primary }}>{context.t("price", { price: item.delivery_fee })}</Text>
                             </View>
                         </View>
                         <View style={{ flexDirection: "row", justifyContent: "space-between", marginHorizontal: WIDTH * 0.05, marginVertical: HEIGHT * 0.02 }}>
                             <Text style={{ fontWeight: "bold" }}>Total Bill</Text>
-                            <Text style={{ fontWeight: "bold", color: COLORS.primary }}>{priceDetails.totalBill + item.delivery_fee} QAR </Text>
+                            <Text style={{ fontWeight: "bold", color: COLORS.primary }}>{context.t("price", { price: priceDetails.totalBill + item.delivery_fee })}</Text>
                         </View>
                         {item.order_status_id == 1 && <Pressable onPress={() => cancelOrder()} style={{ marginHorizontal: WIDTH * 0.05, height: HEIGHT * 0.07, backgroundColor: COLORS.addToCartButton, marginBottom: HEIGHT * 0.01, borderRadius: HEIGHT * 0.035, justifyContent: "center", alignItems: "center" }}>
                             <Text style={{ color: COLORS.white, fontWeight: "bold" }}>
                                 CANCEL ORDER
-                        </Text>
+                            </Text>
                         </Pressable>}
                     </ScrollView>
                 </View>
@@ -177,7 +176,7 @@ const MyOrdersScreen = (props, context) => {
             <FlatList
                 data={orderList}
                 keyExtractor={(item, index) => index.toString()}
-                renderItem={({ item, index }) => <RenderItem last={index == orderList.length - 1} item={item} userData={userData} getOrders={() => getOrders()} />}
+                renderItem={({ item, index }) => <RenderItem context={context} last={index == orderList.length - 1} item={item} userData={userData} getOrders={() => getOrders()} />}
             />
 
         </Header>

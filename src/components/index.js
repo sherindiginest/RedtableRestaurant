@@ -10,5 +10,6 @@ import RenderItem from './RenderItem'
 import BottomTabs from './BottomTabs'
 import Loader from './Loader'
 import ChooseAddress from './ChooseAddress'
+import PickupMethodModal from './PickupMethodModal'
 
-export { CustomTextInput, CustomButton, DrawerMenu, Header, RestaurantComponent, RenderMealItem, AddAddressModal, RenderItem, BottomTabs, Loader, ChooseAddress }
+export { CustomTextInput, CustomButton, DrawerMenu, Header, RestaurantComponent, RenderMealItem, AddAddressModal, RenderItem, BottomTabs, Loader, ChooseAddress, PickupMethodModal }

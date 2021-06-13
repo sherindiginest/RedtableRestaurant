@@ -22,6 +22,7 @@ const SplashScreen = (props) => {
       await Axios.get(API.userProfile, { params: { api_token } })
         .then(async (response) => {
           if (has(response, "success") && response.success) {
+            console.log(JSON.stringify(response));
             setProfileData(response.data)
             route = "Home"
             await Axios.get(API.addresses(), { params: { api_token, "search": `user_id:${response?.data?.id}` } })

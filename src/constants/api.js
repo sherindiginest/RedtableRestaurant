@@ -2,6 +2,7 @@ export const API = {
     login: "login",
     register: "register",
     userProfile: "user",
+    userUpdate: (id) => `users/${id}`,
     home: "home",
     categories: "categories",
     createAddress: "create_address",
@@ -22,5 +23,6 @@ export const API = {
     restaurantFoods: (id) => `restaurant_foods/${id}`,
     restaurantReviews: (id) => `restaurant_reviews`,
     areaCodes: (id) => id ? `get_area_restaurants/${id}` : `area`,
+    clearCart: "clear_cart"
 
 }

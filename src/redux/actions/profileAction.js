@@ -1,4 +1,4 @@
-import { SETADDRESSLIST, SETADDRESSSELECT, SETCARTLIST, SETPROFILEDATA, SETNEWADDRESS } from "../../constants/constants"
+import { SETADDRESSLIST, SETADDRESSSELECT, SETCARTLIST, SETPROFILEDATA, SETNEWADDRESS, SETPICKUPMODE } from "../../constants/constants"
 
 
 
@@ -46,6 +46,14 @@ const showAddNewAddress = (payload = false) => {
         })
     }
 }
+const setPickupMode = (payload) => {
+    return async (dispatch) => {
+        dispatch({
+            type: SETPICKUPMODE,
+            payload,
+        })
+    }
+}
 
 
 export default {
@@ -53,5 +61,6 @@ export default {
     setAddressList,
     setCartList,
     showAddressSelect,
-    showAddNewAddress
+    showAddNewAddress,
+    setPickupMode
 }
