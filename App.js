@@ -15,7 +15,6 @@ const App = () => {
   return (
     <Provider store={store}>
       <I18n translations={translations} initialLang="en">
-
         <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.white }}>
           <Route />
         </SafeAreaView>
