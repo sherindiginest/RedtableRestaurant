@@ -120,7 +120,7 @@ const ManageAddressScreen = (props) => {
                         </View>
                     </View>}
                 />
-                <Pressable onPress={() => setaddnewAddress(true)} style={{ height: HEIGHT * 0.06, backgroundColor: COLORS.addToCartButton, borderRadius: HEIGHT * 0.036, justifyContent: "center", alignItems: "center", margin: WIDTH * 0.05 }}>
+                <Pressable onPress={() => setaddnewAddress(true)} style={{ height: HEIGHT * 0.06, backgroundColor: COLORS.primary, borderRadius: HEIGHT * 0.036, justifyContent: "center", alignItems: "center", margin: WIDTH * 0.05 }}>
                     <Text style={{ color: COLORS.white, fontWeight: "bold" }}>
                         {`+ ADD ADDRESS`}
                     </Text>

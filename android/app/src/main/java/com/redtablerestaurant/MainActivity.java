@@ -1,4 +1,4 @@
-package com.redtablerestaurant;
+package com.diginest.salkara;
 
 import com.facebook.react.ReactActivity;
 

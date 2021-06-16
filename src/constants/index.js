@@ -9,8 +9,8 @@ const WIDTH = width
 const HEIGHT = height
 
 const COLORS = {
-  primary: '#FF0000',
-  statusbar: '#E8262E',
+  primary: '#EF2023',
+  statusbar: '#EA5D41',
   textInputBorder: '#00000044',
   textInputBackground: '#FFFFFF33',
   white: '#FFFFFF',

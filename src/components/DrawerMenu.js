@@ -34,7 +34,7 @@ const DrawerMenu = (props, context) => {
       onPress: () => {
         navigation.navigate("Settings")
       }
-    },
+    }/* ,
     {
       label: context.t('language'),
       icon: language,
@@ -44,7 +44,7 @@ const DrawerMenu = (props, context) => {
         await AsyncStorage.setItem('lang', ln)
         navigation.closeDrawer()
       }
-    },
+    } */,
     {
       label: 'Logout',
       icon: logout,

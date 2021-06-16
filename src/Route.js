@@ -62,8 +62,8 @@ const Route = () => {
     <NavigationContainer>
       <RouteStack.Navigator screenOptions={{ headerShown: false, animationTypeForReplace: 'pop' }}
         initialRouteName="SplashScreen">
-        <RouteStack.Screen name="SplashScreen" component={SplashScreen} />
-        <RouteStack.Screen name="LanguageSwitchScreen" component={LanguageSwitchScreen} />
+        <RouteStack.Screen name="SplashScreen" component={SplashScreen} />{/* 
+        <RouteStack.Screen name="LanguageSwitchScreen" component={LanguageSwitchScreen} /> */}
         <RouteStack.Screen name="LoginScreen" component={LoginScreen} />
         <RouteStack.Screen name="ForgotPasswordScreen" component={ForgotPasswordScreen} />
         <RouteStack.Screen name="SignupScreen" component={SignupScreen} />

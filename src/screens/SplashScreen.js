@@ -7,7 +7,6 @@ import { profileAction, SetLanguageAction } from "./../redux/actions"
 
 import { backgroundImage, logo } from './../../assets/images';
 import { COLORS, Axios, API, } from './../constants';
-import { log } from 'react-native-reanimated';
 
 const SplashScreen = (props) => {
   const { navigation, setProfileData, setLang, setAddressList, setCartList } = props;
@@ -43,7 +42,7 @@ const SplashScreen = (props) => {
           //error?.message && Alert.alert("Error", error?.message)
         })
     }
-    getLanguage(route)
+    navigation.replace(route)
   }
 
   const getLanguage = async (route) => {
@@ -58,14 +57,9 @@ const SplashScreen = (props) => {
   }
 
   return (
-    <View style={{ flex: 1 }}>
-      <StatusBar backgroundColor={COLORS.statusbar} />
-      <ImageBackground
-        style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
-        source={backgroundImage}
-        resizeMode="cover">
-        <Image source={logo} resizeMode="contain" />
-      </ImageBackground>
+    <View style={{ flex: 1, backgroundColor: COLORS.white, justifyContent: 'center', alignItems: 'center' }}>
+      <StatusBar backgroundColor={COLORS.white} />
+      <Image source={logo} resizeMode="contain" />
     </View>
   );
 };

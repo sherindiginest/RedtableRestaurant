@@ -132,10 +132,10 @@ const ChooseAddress = (props) => {
                     />
                 </View>
                 <View style={{ marginHorizontal: WIDTH * 0.05, marginVertical: HEIGHT * 0.01, height: HEIGHT * 0.15, flexDirection: "row" }}>
-                    <Pressable onPress={() => showAddressSelect()} style={{ height: HEIGHT * 0.06, backgroundColor: COLORS.addToCartButton, borderRadius: HEIGHT * 0.036, justifyContent: "center", alignItems: "center", flex: 1, marginRight: WIDTH * 0.02 }}>
+                    <Pressable onPress={() => showAddressSelect()} style={{ height: HEIGHT * 0.06, backgroundColor: COLORS.primary, borderRadius: HEIGHT * 0.036, justifyContent: "center", alignItems: "center", flex: 1, marginRight: WIDTH * 0.02 }}>
                         <Text style={{ color: COLORS.white, fontWeight: "bold" }}>{`DONE`}</Text>
                     </Pressable>
-                    <Pressable onPress={() => showAddNewAddress(true)} style={{ height: HEIGHT * 0.06, backgroundColor: COLORS.addToCartButton, borderRadius: HEIGHT * 0.036, justifyContent: "center", alignItems: "center", flex: 1 }}>
+                    <Pressable onPress={() => showAddNewAddress(true)} style={{ height: HEIGHT * 0.06, backgroundColor: COLORS.primary, borderRadius: HEIGHT * 0.036, justifyContent: "center", alignItems: "center", flex: 1 }}>
                         <Text style={{ color: COLORS.white, fontWeight: "bold" }}>{`+ ADD NEW ADDRESS`}</Text>
                     </Pressable>
                 </View>

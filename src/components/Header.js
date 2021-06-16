@@ -11,7 +11,7 @@ import { StatusBar } from 'react-native'
 
 const Header = (props, context) => {
     const navigation = useNavigation()
-    const { backgroundColor = COLORS.white, transparent = false, lang, title, titleColor = COLORS.white, cartAction, cartButton = false } = props
+    const { backgroundColor = COLORS.white, transparent = false, lang, title, titleColor = COLORS.borderColor2, cartAction, cartButton = false } = props
 
     return (
         <View style={{ flex: 1, backgroundColor, }}>

@@ -188,7 +188,7 @@ const CheckOutScreen = (props, context) => {
                         <Text>Total Bill</Text>
                         <Text>{context.t("price", { price: pickupMode != "pickup" ? cartList.totalBill + cartList.deliveryFee : cartList.totalBill })}</Text>
                     </View>
-                    <Pressable onPress={() => createOrder()} style={{ height: HEIGHT * 0.07, backgroundColor: COLORS.addToCartButton, borderRadius: HEIGHT * 0.035, justifyContent: "center", alignItems: "center", bottom: -1 }}>
+                    <Pressable onPress={() => createOrder()} style={{ height: HEIGHT * 0.07, backgroundColor: COLORS.primary, borderRadius: HEIGHT * 0.035, justifyContent: "center", alignItems: "center", bottom: -1 }}>
                         <Text style={{ color: COLORS.white, fontWeight: "bold" }}>CONFIRM ORDER</Text>
                     </Pressable>
                 </View>
@@ -280,7 +280,7 @@ const CheckOutScreen = (props, context) => {
                         { }
                         <Pressable onPress={() => {
                             onClose()
-                        }} style={{ height: HEIGHT * 0.06, backgroundColor: COLORS.addToCartButton, borderRadius: HEIGHT * 0.036, justifyContent: "center", alignItems: "center", width: WIDTH * 0.9 }}>
+                        }} style={{ height: HEIGHT * 0.06, backgroundColor: COLORS.primary, borderRadius: HEIGHT * 0.036, justifyContent: "center", alignItems: "center", width: WIDTH * 0.9 }}>
                             <Text style={{ color: COLORS.white, fontWeight: "bold" }}>
                                 Back To Home
                             </Text>

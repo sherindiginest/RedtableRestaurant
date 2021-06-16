@@ -56,7 +56,7 @@ const TabBarButton = (props) => {
                 style={{
                     top,
                     borderRadius: TABBAR_HEIGHT,
-                    backgroundColor: focused ? COLORS.activeTabColor : COLORS.primary,
+                    backgroundColor: focused ? COLORS.primary : COLORS.statusbar,
                     width: TABBAR_HEIGHT,
                     height: TABBAR_HEIGHT,
                     justifyContent: 'center',
@@ -130,7 +130,7 @@ const BottomTabs = (props) => {
             screenOptions={{ headerShown: false }}
             initialRouteName="HomeTab"
             tabBarOptions={{
-                activeTintColor: COLORS.activeTabColor,
+                activeTintColor: COLORS.primary,
                 inactiveTintColor: COLORS.inactiveTabColor,
                 style: {
                     height: TABBAR_HEIGHT,
@@ -159,7 +159,6 @@ const BottomTabs = (props) => {
                 component={OurRestaurantsScreenRoute}
                 initialParams={{ title: "Our Restaurants" }}
                 options={{
-
                     tabBarIcon: (props) => <TabBarButton {...props} icon={tabmenu} />,
                 }}
             />

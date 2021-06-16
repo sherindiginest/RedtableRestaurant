@@ -129,7 +129,7 @@ const CartScreen = (props, context) => {
                     <Text>Total Bill</Text>
                     <Text>{context.t("price", { price: pickupMode != "pickup" ? (cartList.totalBill + cartList.deliveryFee) : cartList.totalBill })}</Text>
                 </View>
-                <Pressable onPress={() => navigation.navigate("CheckOutScreen", { deliveryNotes })} style={{ height: HEIGHT * 0.07, backgroundColor: COLORS.addToCartButton, borderRadius: HEIGHT * 0.035, justifyContent: "center", alignItems: "center", bottom: -1 }}>
+                <Pressable onPress={() => navigation.navigate("CheckOutScreen", { deliveryNotes })} style={{ height: HEIGHT * 0.07, backgroundColor: COLORS.primary, borderRadius: HEIGHT * 0.035, justifyContent: "center", alignItems: "center", bottom: -1 }}>
                     <Text style={{ color: COLORS.white, fontWeight: "bold" }}>
                         CHECKOUT
                     </Text>

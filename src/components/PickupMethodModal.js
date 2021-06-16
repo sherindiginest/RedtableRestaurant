@@ -45,7 +45,7 @@ const PickupMethodModal = (props) => {
                         <Text style={{ fontSize: 12 }}>Pick Up Order</Text>
                     </View>
                 </View>
-                <Pressable onPress={() => handleClose()} style={{ height: HEIGHT * 0.06, backgroundColor: COLORS.addToCartButton, borderRadius: HEIGHT * 0.036, justifyContent: "center", alignItems: "center", margin: WIDTH * 0.05, marginBottom: HEIGHT * 0.05 }}>
+                <Pressable onPress={() => handleClose()} style={{ height: HEIGHT * 0.06, backgroundColor: COLORS.primary, borderRadius: HEIGHT * 0.036, justifyContent: "center", alignItems: "center", margin: WIDTH * 0.05, marginBottom: HEIGHT * 0.05 }}>
                     <Text style={{ color: COLORS.white, fontWeight: "bold" }}>Done</Text>
                 </Pressable>
             </View>

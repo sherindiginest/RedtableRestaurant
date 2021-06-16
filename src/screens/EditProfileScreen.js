@@ -82,7 +82,7 @@ const EditProfileScreen = (props, context) => {
                 nextRef={refList.email}
                 error={errors?.name}
                 placeholderTextColor={COLORS.title3}
-                tintColor={COLORS.activeTabColor}
+                tintColor={COLORS.black}
                 value={form.name}
                 textColor={COLORS.title3}
                 errorTextColor={COLORS.statusbar}
@@ -98,7 +98,7 @@ const EditProfileScreen = (props, context) => {
                 nextRef={refList.phone}
                 error={errors?.email}
                 placeholderTextColor={COLORS.title3}
-                tintColor={COLORS.activeTabColor}
+                tintColor={COLORS.black}
                 value={form.email}
                 textColor={COLORS.title3}
                 errorTextColor={COLORS.statusbar}
@@ -116,7 +116,7 @@ const EditProfileScreen = (props, context) => {
                 onSubmitAction={() => handleLogin()}
                 maxLength={10}
                 placeholderTextColor={COLORS.title3}
-                tintColor={COLORS.activeTabColor}
+                tintColor={COLORS.black}
                 value={form.phone}
                 textColor={COLORS.title3}
                 errorTextColor={COLORS.statusbar}
@@ -127,7 +127,7 @@ const EditProfileScreen = (props, context) => {
                 style={{
                     marginTop: HEIGHT * 0.02,
                     marginBottom: HEIGHT * 0.03,
-                    backgroundColor: COLORS.statusbar
+                    backgroundColor: COLORS.primary
                 }}
                 loading={loading}
             />

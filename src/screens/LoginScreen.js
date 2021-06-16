@@ -64,24 +64,22 @@ const LoginScreen = (props, context) => {
     return isEmpty(error)
   }
 
-  return (<View style={{ flex: 1 }}>
-    <StatusBar backgroundColor={COLORS.statusbar} />
+  return (<View style={{ flex: 1, backgroundColor: COLORS.white }}>
+    <StatusBar backgroundColor={COLORS.white} barStyle="dark-content" />
     <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS == "ios" ? "padding" : null} >
       <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-        <ScrollView style={{ backgroundColor: COLORS.primary }}>
-          <ImageBackground
+        <ScrollView style={{}}>
+          <View
             style={{
               height: HEIGHT * 0.91,
               justifyContent: 'space-evenly',
               alignItems: 'center',
               paddingHorizontal: WIDTH * 0.07,
-            }}
-            source={backgroundImage}
-            resizeMode="cover">
+            }}>
             <Image
-              style={{ width: WIDTH * 0.6, height: HEIGHT * 0.3 }}
+              style={{ width: WIDTH, height: HEIGHT * 0.3, }}
               source={logo}
-              resizeMode="contain"
+              resizeMode="cover"
             />
             <CustomTextInput
               image={email}
@@ -105,7 +103,7 @@ const LoginScreen = (props, context) => {
             <View style={[{ alignSelf: 'stretch', }, STYLES.alignItems(lang == 'ar' ? 'en' : 'ar'),]}>
               <Pressable
                 onPress={() => navigation.navigate('ForgotPasswordScreen')}>
-                <Text style={[{ color: COLORS.white, fontSize: 15 }, STYLES.fontMedium()]}>
+                <Text style={[{ color: COLORS.borderColor2, fontSize: 15 }, STYLES.fontMedium()]}>
                   {`${context.t('forgot_password')}?`}
                 </Text>
               </Pressable>
@@ -122,7 +120,7 @@ const LoginScreen = (props, context) => {
               height: HEIGHT * 0.076,
               alignSelf: 'stretch',
               borderRadius: HEIGHT * 0.038,
-              backgroundColor: COLORS.buttondark,
+              backgroundColor: COLORS.textInputBorder,
               alignItems: 'center',
               justifyContent: 'center',
             },
@@ -141,7 +139,7 @@ const LoginScreen = (props, context) => {
                 </Text>
               </Pressable>
             </Pressable>
-          </ImageBackground>
+          </View>
         </ScrollView>
       </TouchableWithoutFeedback>
     </KeyboardAvoidingView>

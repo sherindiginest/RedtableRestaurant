@@ -14,7 +14,7 @@ const CustomButton = (props) => {
           height: HEIGHT * 0.076,
           alignSelf: 'stretch',
           borderRadius: HEIGHT * 0.038,
-          backgroundColor: COLORS.buttonYellow,
+          backgroundColor: COLORS.primary,
           alignItems: 'center',
           justifyContent: 'center',
           //flexDirection: 'row',

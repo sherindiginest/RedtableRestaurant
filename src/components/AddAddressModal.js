@@ -173,7 +173,7 @@ const AddAddressModal = (props) => {
                         <Text style={{}}>Set as Default address for all purchases</Text>
                         <Switch value={address?.default} thumbColor={address?.default ? COLORS.green2 : COLORS.color3} trackColor={{ false: COLORS.color2, true: COLORS.color1 }} onValueChange={(value) => setData("default", value)} />
                     </View>
-                    <Pressable onPress={() => handleAction()} style={{ height: HEIGHT * 0.06, backgroundColor: COLORS.addToCartButton, borderRadius: HEIGHT * 0.036, justifyContent: "center", alignItems: "center", bottom: -1 }}>
+                    <Pressable onPress={() => handleAction()} style={{ height: HEIGHT * 0.06, backgroundColor: COLORS.primary, borderRadius: HEIGHT * 0.036, justifyContent: "center", alignItems: "center", bottom: -1 }}>
                         <Text style={{ color: COLORS.white, fontWeight: "bold" }}>
                             {isEmpty(addressData) ? `+ ADD ADDRESS` : "SAVE ADDRESS"}
                         </Text>

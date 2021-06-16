@@ -169,7 +169,7 @@ const RestaurantDetailsScreen = (props) => {
                                 textColor={COLORS.black}
                             />
                         </View>
-                        <Image style={{ marginHorizontal: WIDTH * 0.05, }} source={filter} resizeMode="contain" />
+                        <Image style={{ marginHorizontal: WIDTH * 0.05, tintColor: COLORS.primary }} source={filter} resizeMode="contain" />
                     </View>
                     <View style={{ height: HEIGHT * 0.07, marginTop: HEIGHT * 0.01 }}>
                         <FlatList
@@ -199,7 +199,7 @@ const RestaurantDetailsScreen = (props) => {
                         {/* MENU */}
                         <View style={{ flex: 1, width: WIDTH, }}>
                             <View style={{ height: HEIGHT * 0.11, marginTop: HEIGHT * 0.01, }}>
-                                <Text style={[{ marginHorizontal: WIDTH * 0.05, fontSize: 20, marginBottom: HEIGHT * 0.01 }, STYLES.textAlign(lang), STYLES.fontSpecial()]}>
+                                <Text style={[{ marginHorizontal: WIDTH * 0.05, fontSize: 20, marginBottom: HEIGHT * 0.01, color: COLORS.title3 }, STYLES.textAlign(lang), STYLES.fontSpecial()]}>
                                     Categories</Text>
                                 <FlatList
                                     onContentSizeChange={() => {
@@ -252,8 +252,8 @@ const RestaurantDetailsScreen = (props) => {
                         {/* ABOUT */}
 
                         <View style={{ flex: 1, width: WIDTH }}>
-                            <View style={[{ height: HEIGHT * 0.07, paddingHorizontal: WIDTH * 0.05, justifyContent: "space-between", alignItems: "center" }, STYLES.flexDirection(lang)]}>
-                                <Text style={[{ fontSize: 20, }, STYLES.fontSpecial()]}>
+                            <View style={[{ height: HEIGHT * 0.07, paddingHorizontal: WIDTH * 0.05, justifyContent: "space-between", alignItems: "center", }, STYLES.flexDirection(lang)]}>
+                                <Text style={[{ fontSize: 20, color: COLORS.title3 }, STYLES.fontSpecial()]}>
                                     {details?.name}
                                 </Text>
                                 <View style={{ padding: WIDTH * 0.02, justifyContent: "center", borderRadius: HEIGHT * 0.0125, flexDirection: "row", alignItems: "center", backgroundColor: `${COLORS.activeTabColor}15`, }}>
@@ -263,25 +263,25 @@ const RestaurantDetailsScreen = (props) => {
                             </View>
                             <View style={[{ paddingHorizontal: WIDTH * 0.05, alignItems: "center" }, STYLES.flexDirection(lang)]}>
                                 <Image style={{ marginHorizontal: WIDTH * 0.05, width: WIDTH * 0.04, height: HEIGHT * 0.05 }} source={locationoutline} resizeMode="contain" />
-                                <Text style={[{ color: COLORS.activeTabColor, width: WIDTH * 0.8 }, STYLES.textAlign(lang), STYLES.fontMedium()]}>{details?.address}</Text>
+                                <Text style={[{ color: COLORS.arrowColor, width: WIDTH * 0.8 }, STYLES.textAlign(lang), STYLES.fontMedium()]}>{details?.address}</Text>
                             </View>
                             <View style={[{ paddingHorizontal: WIDTH * 0.05, alignItems: "center" }, STYLES.flexDirection(lang)]}>
                                 <Image style={{ marginHorizontal: WIDTH * 0.05, width: WIDTH * 0.05, height: HEIGHT * 0.05 }} source={calloutline} resizeMode="contain" />
-                                <Text style={[{ color: COLORS.activeTabColor }, STYLES.fontRegular()]}>{details?.phone}</Text>
+                                <Text style={[{ color: COLORS.arrowColor }, STYLES.fontRegular()]}>{details?.phone}</Text>
                             </View>
                             <View style={[{ paddingHorizontal: WIDTH * 0.05, alignItems: "center" }, STYLES.flexDirection(lang)]}>
                                 <Image style={{ marginHorizontal: WIDTH * 0.05, width: WIDTH * 0.05, height: HEIGHT * 0.05 }} source={mailoutline} resizeMode="contain" />
-                                <Text style={[{ color: COLORS.activeTabColor }, STYLES.fontRegular()]}>{details?.email}</Text>
+                                <Text style={[{ color: COLORS.arrowColor }, STYLES.fontRegular()]}>{details?.email}</Text>
                             </View>
                             <View style={[{ paddingHorizontal: WIDTH * 0.05, alignItems: "center" }, STYLES.flexDirection(lang)]}>
                                 <Image style={{ marginHorizontal: WIDTH * 0.05, width: WIDTH * 0.05, height: HEIGHT * 0.05 }} source={clockoutline} resizeMode="contain" />
-                                <Text style={[{ color: COLORS.activeTabColor }, STYLES.fontRegular()]}>{details?.working_hours}</Text>
+                                <Text style={[{ color: COLORS.arrowColor }, STYLES.fontRegular()]}>{details?.working_hours}</Text>
                             </View>
                         </View>
                         {/* FEATURED */}
                         <View style={{ flex: 1, width: WIDTH }}>
                             <ScrollView showsVerticalScrollIndicator={false}>
-                                <Text style={[{ marginHorizontal: WIDTH * 0.05, fontSize: 20, }, STYLES.textAlign(lang), STYLES.fontSpecial()]}>Today's Special</Text>
+                                <Text style={[{ marginHorizontal: WIDTH * 0.05, fontSize: 20, color: COLORS.title3 }, STYLES.textAlign(lang), STYLES.fontSpecial()]}>Today's Special</Text>
                                 <View>
                                     <FlatList
                                         inverted={lang == "ar"}
@@ -293,7 +293,7 @@ const RestaurantDetailsScreen = (props) => {
                                         renderItem={({ item, index }) => <RenderItem setshowPickupModal={(value) => setshowPickupModal(value)} setshowAddAddress={(value) => setshowAddAddress(value)} item={item} lang={lang} vertLast={todaylist?.length - 1 == index} restaurant_id={details.id} />}
                                     />
                                 </View>
-                                <Text style={[{ marginHorizontal: WIDTH * 0.05, fontSize: 20, }, STYLES.textAlign(lang), STYLES.fontSpecial()]}>Best Offers</Text>
+                                <Text style={[{ marginHorizontal: WIDTH * 0.05, fontSize: 20, color: COLORS.title3 }, STYLES.textAlign(lang), STYLES.fontSpecial()]}>Best Offers</Text>
                                 <View style={{}}>
                                     <FlatList
                                         horizontal
@@ -309,7 +309,7 @@ const RestaurantDetailsScreen = (props) => {
                         </View>
                         {/* REVIEW */}
                         <View style={{ flex: 1, width: WIDTH }}>
-                            <Text style={[{ marginHorizontal: WIDTH * 0.05, fontSize: 20, }, STYLES.textAlign(lang), STYLES.fontSpecial()]}>Reviews & Ratings</Text>
+                            <Text style={[{ marginHorizontal: WIDTH * 0.05, fontSize: 20, color: COLORS.title3 }, STYLES.textAlign(lang), STYLES.fontSpecial()]}>Reviews & Ratings</Text>
                             <View style={{ flex: 1 }}>
                                 <FlatList
                                     data={details?.restaurant_reviews}

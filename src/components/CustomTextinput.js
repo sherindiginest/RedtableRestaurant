@@ -7,7 +7,7 @@ import { HEIGHT, COLORS, WIDTH, STYLES } from '../constants'
 import { Pressable } from 'react-native'
 
 const CustomTextinput = (props) => {
-  const { image, placeholder, onChangeText, style, lang, secureEntry = false, secureEntryIcon, placeholderTextColor = COLORS.white, textColor = COLORS.white, keyboardType = "default", returnKeyType = "done", currentRef, nextRef = null, onSubmitAction, error, errorTextColor = COLORS.white, maxLength = 50, outerStyle, value, editable = true, tintColor } = props
+  const { image, placeholder, onChangeText, style, lang, secureEntry = false, secureEntryIcon, placeholderTextColor = COLORS.borderColor2, textColor = COLORS.borderColor2, keyboardType = "default", returnKeyType = "done", currentRef, nextRef = null, onSubmitAction, error, errorTextColor = COLORS.primary, maxLength = 50, outerStyle, value, editable = true, tintColor } = props
   const [secureTextEntry, setSecureTextEntry] = useState(secureEntry)
 
   return (<View style={[{ alignSelf: "stretch" }, outerStyle]}>

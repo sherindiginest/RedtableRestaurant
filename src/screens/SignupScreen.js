@@ -46,17 +46,13 @@ const SignupScreen = (props, context) => {
           if (has(response, "success") && response.success) {
             setProfileData(response.data)
             await AsyncStorage.setItem('api_token', response?.data?.api_token)
-            await Axios.get(API.addresses(), { params: { api_token: response?.data?.api_token, "search": `user_id:${response?.data?.id}` } }).then(async (res) => {
-              if (has(res, "success") && res.success) {
-                setAddressList(res.data)
-              }
-            }).catch((error) => { })
             //navigation.popToTop()
             navigation.replace('Home')
           }
           setloading(false)
         }).catch((error) => {
-          error?.message && Alert.alert("Error", error?.message)
+          console.log("ERROR =>", JSON.stringify(error));
+          // error?.message && Alert.alert("Error", error?.message)
           setloading(false)
         })
     }
@@ -89,18 +85,16 @@ const SignupScreen = (props, context) => {
   }
   return (
     <View style={{ flex: 1 }}>
-      <StatusBar backgroundColor={COLORS.statusbar} />
+      <StatusBar backgroundColor={COLORS.white} barStyle="dark-content" />
       <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS == "ios" ? "padding" : null} >
         <TouchableWithoutFeedback style={{ flex: 1 }} onPress={() => Keyboard.dismiss()}>
-          <ScrollView style={{ backgroundColor: COLORS.primary, flex: 1 }} showsVerticalScrollIndicator={false}>
-            <ImageBackground
+          <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
+            <View
               style={{
                 height: HEIGHT * 0.91,
                 justifyContent: 'space-evenly',
                 paddingHorizontal: WIDTH * 0.07,
-              }}
-              source={backgroundImage}
-              resizeMode="cover">
+              }}>
               <ScrollView showsVerticalScrollIndicator={false} style={{ flex: 1 }}>
                 <View
                   style={{
@@ -111,11 +105,11 @@ const SignupScreen = (props, context) => {
                   }}>
                   <Image
                     style={{
-                      width: WIDTH * 0.6,
+                      width: WIDTH,
                       height: HEIGHT * 0.3,
                     }}
                     source={logo}
-                    resizeMode="contain"
+                    resizeMode="cover"
                   />
                 </View>
                 <View style={{ flex: 1 }}>
@@ -189,7 +183,7 @@ const SignupScreen = (props, context) => {
                     <Pressable onPress={() => navigation.navigate('LoginScreen')}>
                       <Text
                         style={[{
-                          color: COLORS.green,
+                          color: COLORS.primary,
                           fontSize: 15,
                         }, STYLES.fontBold()]}>
                         {`${context.t('login')} `}
@@ -198,7 +192,7 @@ const SignupScreen = (props, context) => {
                   </View>
                 </View>
               </ScrollView>
-            </ImageBackground>
+            </View>
           </ScrollView>
         </TouchableWithoutFeedback>
       </KeyboardAvoidingView>
