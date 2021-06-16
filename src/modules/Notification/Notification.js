@@ -12,7 +12,6 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { Badge } from 'react-native-elements';
 import { NavigationEvents } from 'react-navigation';
 import ImagePicker from 'react-native-image-picker';
-import RNFS from 'react-native-fs';
 import Fontisto from "react-native-vector-icons/Fontisto";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
@@ -34,8 +33,8 @@ const NotificationArray = [
       time:'yesterday',
       status:2
     },
-    
-    
+
+
   ];
 
 
@@ -46,18 +45,18 @@ export default class Notification extends React.Component {
     };
     constructor(props) {
       super(props);
-  
+
       this.state = {
- 
+
       };
       this.arrayholder = [];
-    
+
     }
 
     back()
     {
         this.props.navigation.navigate('Home')
-    } 
+    }
     render(){
         return(
             <View style={{  flex: 1 }}>
@@ -65,7 +64,7 @@ export default class Notification extends React.Component {
                     onDidFocus={() => this.refresh()}
                 /> */}
                 <View style={{ backgroundColor: 'white', height: hp('100%'), width: wp('100%') }}>
-                                       
+
     <ScrollView>
     <View style={{flexDirection:'row',justifyContent: 'space-between',paddingRight:'40%',paddingBottom:'5%'}}>
                         <View style={{alignItems:'flex-start',paddingLeft:'10%',paddingTop:'2%'}}>
@@ -77,24 +76,24 @@ export default class Notification extends React.Component {
                                         <Text  style={{fontSize:30}} >Notification
                                         </Text>
                                         </View>
-                                        
+
                                         </View>
                                         {/* <View style={{backgroundColor:'#f0f8ff',width:'100%',paddingLeft:'10%'}}>
                                         <View style={{ width: wp('93%') }}>
 
-<TextInput 
-   
+<TextInput
+
     value={this.state.edit}
     underlineColorAndroid='transparent' placeholder='Saved Addresses'
     placeholderTextColor="#c4c3cb"
-    
-   
+
+
 />
 
 </View>
 
                                         </View> */}
-    
+
 
     <View>
                                     <FlatList
@@ -115,43 +114,43 @@ export default class Notification extends React.Component {
                                                     <View style={{ flexDirection: "row",marginLeft:'5%',marginBottom:'2%',marginTop:'2%' }}>
                                                         {item.status==1 &&
                                                     <View style={{ width: wp("15%"), alignItems: "center", justifyContent: "center", marginRight:'5%',backgroundColor:'blue',borderRadius:140 }}>
-                                                                 
+
                                                                  {/* <Icon name="edit" color="#0af745" size={15}></Icon> */}
                                                                  <MaterialIcons name="restaurant-menu" color='white' size={26} />
-                                                               
-                                                  
+
+
                                                          </View>
                                         }
                                          {item.status==2 &&
                                                     <View style={{ width: wp("15%"), alignItems: "center", justifyContent: "center", marginRight:'5%',backgroundColor:'#ffd700',borderRadius:140, }}>
-                                                                 
+
                                                                  {/* <Icon name="edit" color="#0af745" size={15}></Icon> */}
                                                                  <Ionicons name="alert" color='white' size={30} />
-                                                               
-                                                  
+
+
                                                          </View>
                                         }
                                                         <View style={{ width: wp("50%"),  borderRightWidth: 0, borderRightColor: "#c4c3cb" }}>
                                                             <Text style={{ fontSize: 18, textAlign: 'left',fontWeight:'bold' }}>{item.name}</Text>
                                                             <Text style={{ fontSize: 15, textAlign: 'left',color:'#c4c3cb' }}>{item.details}</Text>
                                                         </View>
-                                                        
 
-                                                        
 
-                                                       
-                                                       
 
-                                                            
+
+
+
+
+
                                                                 <View style={{ width: wp("17%"), alignItems: "center", justifyContent: "center", borderRightWidth: 0, borderRightColor: "#c4c3cb" }}>
-                                                                 
+
                                                                         {/* <Icon name="edit" color="#0af745" size={15}></Icon> */}
                                                                         <Text style={{ fontSize: 13, textAlign: "center",fontWeight:'bold',color:'#c4c3cb' }}>{item.time}</Text>
-                                                         
+
                                                                 </View>
-                                                           
-                                                        
-                                                       
+
+
+
 
 
                                                     </View>
@@ -166,14 +165,14 @@ export default class Notification extends React.Component {
                                 </View>
 
 
-                                    
-                                       
-                                        
-                                       
-                                        
-        
+
+
+
+
+
+
                 </ScrollView>
-                                                                           
+
 </View>
 
      </View>

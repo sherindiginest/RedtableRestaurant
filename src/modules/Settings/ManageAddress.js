@@ -11,7 +11,6 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { Badge } from 'react-native-elements';
 import { NavigationEvents } from 'react-navigation';
 import ImagePicker from 'react-native-image-picker';
-import RNFS from 'react-native-fs';
 import Fontisto from "react-native-vector-icons/Fontisto";
 import SimpleLineIcons from "react-native-vector-icons/SimpleLineIcons";
 
@@ -35,7 +34,7 @@ const Address = [
       addres:
         'Hari Vargheese HG Appartment 2nd floor trivandrum'
     },
-    
+
   ];
 
 
@@ -46,18 +45,18 @@ export default class ManageAddress extends React.Component {
     };
     constructor(props) {
       super(props);
-  
+
       this.state = {
- 
+
       };
       this.arrayholder = [];
-    
+
     }
 
     back()
     {
         this.props.navigation.navigate('Settings')
-    } 
+    }
     render(){
         return(
             <View style={{  flex: 1 }}>
@@ -65,7 +64,7 @@ export default class ManageAddress extends React.Component {
                     onDidFocus={() => this.refresh()}
                 /> */}
                 <View style={{ backgroundColor: 'white', height: hp('100%'), width: wp('100%') }}>
-                                       
+
     <ScrollView>
     <View style={{flexDirection:'row',justifyContent: 'space-between',paddingRight:'30%',paddingBottom:'5%'}}>
                         <View style={{alignItems:'flex-start',paddingLeft:'10%',paddingTop:'2%'}}>
@@ -74,27 +73,27 @@ export default class ManageAddress extends React.Component {
                                         </TouchableOpacity>
                                         </View>
                                 <View >
-                                        <Text  style={{fontSize:30}} >Manage Adress 
+                                        <Text  style={{fontSize:30}} >Manage Adress
                                         </Text>
                                         </View>
-                                        
+
                                         </View>
                                         <View style={{backgroundColor:'#f0f8ff',width:'100%',paddingLeft:'10%'}}>
                                         <View style={{ width: wp('93%') }}>
 
-<TextInput 
-   
+<TextInput
+
     value={this.state.edit}
     underlineColorAndroid='transparent' placeholder='Saved Addresses'
     placeholderTextColor="#c4c3cb"
-    
-   
+
+
 />
 
 </View>
 
                                         </View>
-    
+
 
     <View>
                                     <FlatList
@@ -113,27 +112,27 @@ export default class ManageAddress extends React.Component {
                                                             <Text style={{ fontSize: 15, textAlign: 'left',color:'#c4c3cb' }}>{item.addres}</Text>
                                                         </View>
 
-                                                        
 
-                                                       
-                                                       
 
-                                                            
+
+
+
+
                                                                 <View style={{ width: wp("12%"), alignItems: "center", justifyContent: "center", borderRightWidth: 1, borderRightColor: "#c4c3cb" }}>
                                                                     <TouchableOpacity onPress={() => this.Edit()}>
                                                                         {/* <Icon name="edit" color="#0af745" size={15}></Icon> */}
                                                                         <Text style={{ fontSize: 13, textAlign: "center",fontWeight:'bold',color:'green' }}>EDIT</Text>
                                                                     </TouchableOpacity>
                                                                 </View>
-                                                           
-                                                        
+
+
                                                         <View style={{ width: wp("12%"), alignItems: "center", justifyContent: "center",marginLeft:'2%' }}>
-                                                            
+
                                                                 <TouchableOpacity onPress={() => this.Delete()}>
                                                                 {/* <Icon name="ban" color="#f5020f" size={15}></Icon> */}
                                                                 <Text style={{ fontSize: 13, textAlign: "center",fontWeight:'bold',color:'red' }}>DELETE</Text>
                                                                 </TouchableOpacity>
-                                                            
+
                                                         </View>
 
 
@@ -149,14 +148,14 @@ export default class ManageAddress extends React.Component {
                                 </View>
 
 
-                                    
-                                       
-                                        
-                                       
-                                        
-        
+
+
+
+
+
+
                 </ScrollView>
-                                                                           
+
 </View>
 
      </View>

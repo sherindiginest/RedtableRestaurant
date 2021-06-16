@@ -1,82 +1,28 @@
+import React from 'react'
+import { View, SafeAreaView, Text, LogBox } from 'react-native'
+import { Provider } from 'react-redux'
+import I18n from 'redux-i18n'
 
-import React from 'react';
-import { StyleSheet, Image, View, ActivityIndicator,ImageBackground } from 'react-native';
-import RootNavigation from './src/navigation/RootNavigation';
-import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
-export default class App extends React.Component
-{
-    constructor(props) {
-        super(props);
+import Route from './src/Route'
+import configureStore from './src/redux/store'
+import { translations } from './src/constants/translations'
+import { COLORS } from './src/constants'
+import { ChooseAddress, Loader } from './src/components'
+LogBox.ignoreLogs(["Warning: Can't perform a React state update on an unmounted component", "VirtualizedLists should never be nested inside plain ScrollViews with the same orientation"])
+let store = configureStore()
 
-        this.state = { isLoading: true }
-    }
-    async   componentDidMount() {
-        const data = await this.performTimeConsumingTask();
-
-        if (data !== null) {
-            this.setState({ isLoading: false });
-        }
-    }
-    performTimeConsumingTask = async () => {
-        return new Promise((resolve) =>
-            setTimeout(
-                () => { resolve('result') },
-                1000
-            )
-        );
-    }
-    render()
-    {
-        if (this.state.isLoading == true)
-        {
-            
-            return <SplashScreen />;
-        }
-       
-
-        return (
-            
-                <RootNavigation />
-              
-            )
-        
-    }
+const App = () => {
+  return (
+    <Provider store={store}>
+      <I18n translations={translations} initialLang="en">
+        <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.statusbar }}>
+          <Route />
+        </SafeAreaView>
+        <Loader />
+        <ChooseAddress />
+      </I18n>
+    </Provider>
+  )
 }
-class SplashScreen extends React.Component {
-    render() {
-        const viewStyles = [
-            styles.container,
-            { backgroundColor: 'white' }
-        ];
-        return (
-            <View style={viewStyles}>
-                <ImageBackground source={require('./assets/images/img3.png')} style={{
-   //flex: 0,
-    resizeMode: "cover",
-    justifyContent: "center",
-    height: hp('100%'),
-    width:wp('100%')
-  }}>
-                <Image
-                    style={{
-                        resizeMode:'center',
-                        
-                        width: wp('100%'),
-                        height: hp(50),
-                        marginBottom: '5%',
-                    }}
-                    source={require('./assets/images/img1.png')} />
-                <ActivityIndicator size="large" color="white" />
-                </ImageBackground>
-            </View>
-        );
-    }
-}
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#fff',
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-});
+
+export { App, store }

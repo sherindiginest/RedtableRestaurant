@@ -1,0 +1,28 @@
+export const API = {
+    login: "login",
+    register: "register",
+    userProfile: "user",
+    userUpdate: (id) => `users/${id}`,
+    home: "home",
+    categories: "categories",
+    createAddress: "create_address",
+    editAddress: "edit_address",
+    createOrder: "create_order",
+    myorders: "myorders",
+    restaurantDetails: (id) => `restaurantdetails${id ? "/" + id : ""}`,
+    cancelOrder: (id) => `cancel_order${id ? "/" + id : ""}`,
+    carts: (id) => `carts${id ? "/" + id : ""}`,
+    addresses: (id) => `delivery_addresses${id ? "/" + id : ""}`,
+    restaurants: (id) => `restaurants${id ? "/" + id : ""}`,
+    mealRestaurants: (mealid, resId) => `getrestaurants${mealid ? "/" + mealid : ""}${resId ? "/" + resId : ""}`,
+    mealRestaurantFoods: (mealid, resId) => `getmeals_foods${mealid ? "/" + mealid : ""}${resId ? "/" + resId : ""}`,
+    restaurantCategories: (id) => `restaurant_categories/${id}`,
+    restaurantBestoffers: (id) => `restaurant_offers/${id}`,
+    restaurantSpecials: (id) => `restaurant_specials/${id}`,
+    restaurantsCategories: (id) => `restaurants_categories/${id}`,
+    restaurantFoods: (id) => `restaurant_foods/${id}`,
+    restaurantReviews: (id) => `restaurant_reviews`,
+    areaCodes: (id) => id ? `get_area_restaurants/${id}` : `area`,
+    clearCart: "clear_cart"
+
+}
