@@ -169,7 +169,7 @@ const RestaurantDetailsScreen = (props) => {
                                 textColor={COLORS.black}
                             />
                         </View>
-                        <Image style={{ marginHorizontal: WIDTH * 0.05, tintColor: COLORS.primary }} source={filter} resizeMode="contain" />
+                        {/* <Image style={{ marginHorizontal: WIDTH * 0.05, tintColor: COLORS.primary }} source={filter} resizeMode="contain" /> */}
                     </View>
                     <View style={{ height: HEIGHT * 0.07, marginTop: HEIGHT * 0.01 }}>
                         <FlatList

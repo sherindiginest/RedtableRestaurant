@@ -29,6 +29,20 @@ const RenderItem = (props) => {
         setPriceDetails(price)
     }, [])
 
+    useEffect(() => {
+        let price = {
+            itemTotal: 0,
+            discount: 0,
+            totalBill: 0
+        }
+        item.food_orders.map((data) => {
+            price.itemTotal = price.itemTotal + (data.quantity * data.food.price)
+            price.totalBill = price.totalBill + (data.quantity * data.food.discount_price)
+            price.discount = price.itemTotal - price.totalBill
+        })
+        setPriceDetails(price)
+    }, [item])
+
 
     const cancelOrder = async () => {
         const { api_token } = userData
@@ -118,13 +132,13 @@ const RenderItem = (props) => {
                         <View style={{ marginHorizontal: WIDTH * 0.05, borderBottomWidth: 0.5, paddingVertical: HEIGHT * 0.015, flexDirection: "row", }}>
                             <View style={{ flex: 1 }}>
                                 <Text>Item Total</Text>
-                                <Text>Discount</Text>
-                                <Text>Delivery Fee</Text>
+                                {priceDetails.discount > 0 && <Text>Discount</Text>}
+                                {item?.delivery_fee > 0 && <Text>Delivery Fee</Text>}
                             </View>
                             <View style={{ width: WIDTH * 0.2, alignItems: "flex-end" }}>
                                 <Text style={{ color: COLORS.primary }}>{context.t("price", { price: priceDetails.itemTotal })}</Text>
-                                <Text style={{ color: COLORS.primary }}>{context.t("price", { price: priceDetails.discount })}</Text>
-                                <Text style={{ color: COLORS.primary }}>{context.t("price", { price: item.delivery_fee })}</Text>
+                                {priceDetails.discount > 0 && <Text style={{ color: COLORS.primary }}>{context.t("price", { price: priceDetails.discount })}</Text>}
+                                {item?.delivery_fee > 0 && <Text style={{ color: COLORS.primary }}>{context.t("price", { price: item.delivery_fee })}</Text>}
                             </View>
                         </View>
                         <View style={{ flexDirection: "row", justifyContent: "space-between", marginHorizontal: WIDTH * 0.05, marginVertical: HEIGHT * 0.02 }}>

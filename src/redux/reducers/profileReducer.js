@@ -6,7 +6,7 @@ const initialState = {
     cartList: {},
     visibleSelectAddress: false,
     visibleAddnewAddress: false,
-    pickupMode: null
+    pickupMode: "delivery"
 }
 
 const profileReducer = (state = initialState, action) => {

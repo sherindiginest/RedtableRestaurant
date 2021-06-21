@@ -9,7 +9,7 @@ import { API, Axios, COLORS, HEIGHT, STYLES, WIDTH } from '../constants'
 import { LoadingAction, profileAction } from '../redux/actions'
 
 const RenderItem = (props, context) => {
-    const { item, lang, restaurant_id, setCartList, userData, cartList, vertLast, cart, bestOffer, hideLoader, showLoader, setshowAddAddress = () => { }, setshowPickupModal = () => { }, pickupMode, addressList } = props
+    const { item, lang, restaurant_id, setCartList, userData, cartList, vertLast, cart, bestOffer, hideLoader, showLoader } = props
     const [visible, setVisible] = useState(false)
     const [quantity, setQuantity] = useState(null)
 
@@ -90,19 +90,11 @@ const RenderItem = (props, context) => {
 
     const manageCart = (qty = 0) => {
         console.log("qty ===>", qty);
-        if (pickupMode == null) {
-            setshowPickupModal(true)
-        } else {
-            if (isEmpty(addressList) && pickupMode != "pickup") {
-                setshowAddAddress(true)
-            } else {
-                if (validateRes()) {
-                    if (qty == 0) {
-                        deleteCart()
-                    } else if (qty > 0) {
-                        addToCart(qty)
-                    }
-                }
+        if (validateRes()) {
+            if (qty == 0) {
+                deleteCart()
+            } else if (qty > 0) {
+                addToCart(qty)
             }
         }
     }
@@ -114,7 +106,6 @@ const RenderItem = (props, context) => {
                 if (has(response, "success") && response.success) {
                     setCartList(response.data)
                 }
-                console.log(JSON.stringify(response));
                 hideLoader()
             }).catch((error) => {
                 console.log(JSON.stringify(error));

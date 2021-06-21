@@ -6,10 +6,11 @@ import { has } from "lodash"
 
 import { Header, RestaurantComponent } from '../components'
 import { API, Axios, COLORS, HEIGHT, STYLES, WIDTH } from '../constants'
+import { LoadingAction } from '../redux/actions'
 
 
 const OurRestaurantsScreen = (props, context) => {
-    const { route, navigation, lang } = props
+    const { route, navigation, lang, showLoader, hideLoader } = props
     const [restaurantList, setRestaurantList] = useState([])
 
     useEffect(() => {
@@ -17,12 +18,15 @@ const OurRestaurantsScreen = (props, context) => {
     }, [])
 
     const getData = async () => {
+        showLoader()
         await Axios.get(API.restaurants())
             .then(async (response) => {
                 if (has(response, "success") && response.success) {
                     setRestaurantList(response.data)
                 }
+                hideLoader()
             }).catch((error) => {
+                hideLoader()
                 //error?.message && Alert.alert("Error", error?.message)
                 // setloading(false)
             })
@@ -54,6 +58,10 @@ const mapStateToProps = ({ i18nState }) => {
         lang: i18nState.lang,
     }
 }
-const mapDispatchToProps = {}
+
+const mapDispatchToProps = {
+    hideLoader: () => LoadingAction.hideLoader(),
+    showLoader: () => LoadingAction.showLoader()
+}
 
 export default connect(mapStateToProps, mapDispatchToProps)(OurRestaurantsScreen)

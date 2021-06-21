@@ -16,6 +16,7 @@ import ChangePasswordScreen from './ChangePasswordScreen'
 import EditProfileScreen from './EditProfileScreen'
 import ManageAddressScreen from './ManageAddressScreen'
 import ChooseRestaurantsScreen from './ChooseRestaurantsScreen'
+import OffersScreen from './OffersScreen'
 
 export {
   SplashScreen,
@@ -35,5 +36,6 @@ export {
   ChangePasswordScreen,
   EditProfileScreen,
   ManageAddressScreen,
-  ChooseRestaurantsScreen
+  ChooseRestaurantsScreen,
+  OffersScreen
 }

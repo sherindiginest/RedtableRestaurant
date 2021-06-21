@@ -49,7 +49,7 @@ const HomeScreen = (props, context) => {
                     data={homeList?.slides || []}
                     showsHorizontalScrollIndicator={false}
                     keyExtractor={(item, index) => index.toString()}
-                    renderItem={({ item, index }) => <RestaurantComponent item={item} lastelement={index == homeList?.slides.length - 1} />}
+                    renderItem={({ item, index }) => <RestaurantComponent slider item={item} lastelement={index == homeList?.slides.length - 1} />}
                 />
             </View>
             <View style={{ backgroundColor: COLORS.white, flex: 1 }}>
@@ -62,7 +62,6 @@ const HomeScreen = (props, context) => {
                             textColor={COLORS.black}
                         />
                     </View>
-                    <Image style={{ marginHorizontal: WIDTH * 0.05, width: WIDTH * 0.1, tintColor: COLORS.primary }} source={filter} resizeMode="contain" />
                 </View>
                 <View style={{ height: HEIGHT * 0.2, justifyContent: "space-evenly" }}>
                     <Text style={[{ color: COLORS.borderColor2, marginHorizontal: WIDTH * 0.05, marginVertical: WIDTH * 0.025, fontSize: 18 }, STYLES.textAlign(lang), STYLES.fontSpecial()]}>{context.t("meals")}</Text>

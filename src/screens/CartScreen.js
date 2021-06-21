@@ -39,6 +39,14 @@ const CartScreen = (props, context) => {
             })
     }
 
+    const onNavigate = () => {
+        if (pickupMode == "delivery" && isEmpty(addressList)) {
+            Alert.alert("Warning", "Add an address to continue", [{ text: "OKAY", onPress: () => showAddNewAddress(true) }, { text: "Cancel", style: "cancel" }])
+        } else {
+            navigation.navigate("CheckOutScreen", { deliveryNotes })
+        }
+    }
+
     return (<><Header
         title="cart"
         titleColor={COLORS.black}
@@ -48,7 +56,28 @@ const CartScreen = (props, context) => {
         }}
     >
         {has(cartList, "cartDetails") && !isEmpty(cartList.cartDetails) ? <ScrollView showsVerticalScrollIndicator={false}>
-            <View style={{ marginHorizontal: WIDTH * 0.05, marginVertical: HEIGHT * 0.02, flexDirection: "row" }}>
+            <View style={{ height: HEIGHT * 0.05, marginHorizontal: WIDTH * 0.05, flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginVertical: HEIGHT * 0.01 }}>
+                <Pressable onPress={() => setPickupMode("delivery")} style={{ borderWidth: 1, width: WIDTH * 0.4, height: HEIGHT * 0.05, justifyContent: "center", alignItems: "center", borderRadius: HEIGHT * 0.025, backgroundColor: pickupMode == "delivery" ? COLORS.primary : COLORS.white, borderColor: pickupMode == "delivery" ? COLORS.primary : COLORS.textInputBorder }}>
+                    <Text style={{ fontSize: 12, color: pickupMode == "delivery" ? COLORS.white : COLORS.textInputBorder, fontWeight: "bold" }}>Deliver Order</Text>
+                </Pressable>
+                <Pressable onPress={() => setPickupMode("pickup")} style={{ borderWidth: 1, width: WIDTH * 0.4, height: HEIGHT * 0.05, justifyContent: "center", alignItems: "center", borderRadius: HEIGHT * 0.025, backgroundColor: pickupMode == "pickup" ? COLORS.primary : COLORS.white, borderColor: pickupMode == "pickup" ? COLORS.primary : COLORS.textInputBorder }}>
+                    <Text style={{ fontSize: 12, color: pickupMode == "pickup" ? COLORS.white : COLORS.textInputBorder, fontWeight: "bold" }}>Pickup Order</Text>
+                </Pressable>
+                {/*  <Switch value={pickupMode == "pickup"} thumbColor={pickupMode == "pickup" ? COLORS.green2 : COLORS.addToCartButton} trackColor={{ false: COLORS.color4, true: COLORS.color1 }}
+                    onValueChange={(value) => setPickupMode(value ? "pickup" : "delivery")} /> */}
+                {/* <Text style={{ fontSize: 12 }}>Pickup Order</Text> */}
+            </View>
+            {pickupMode != "pickup" && <>
+                <View style={{ marginHorizontal: WIDTH * 0.05, marginVertical: HEIGHT * 0.01, flexDirection: "row", alignItems: "center", }}>
+                    <Image source={homeaddress} resizeMode="contain" />
+                    <Text style={{ fontSize: 12, marginHorizontal: WIDTH * 0.03 }}>Delivery Address</Text>
+                </View>
+                <Text style={[{ fontSize: 15, marginHorizontal: WIDTH * 0.13 }, STYLES.fontMedium()]}>{!isEmpty(addressList) && addressList.find((add) => add?.is_default)?.address}</Text>
+                <Pressable onPress={() => showAddressSelect(true)} style={{ height: HEIGHT * 0.04, justifyContent: "center", marginHorizontal: WIDTH * 0.125, marginBottom: HEIGHT * 0.02 }}>
+                    <Text style={{ fontSize: 14, fontWeight: "bold", color: COLORS.green1 }}>Choose/Add Address</Text>
+                </Pressable>
+            </>}
+            <View style={{ marginHorizontal: WIDTH * 0.05, flexDirection: "row" }}>
                 <Image source={restaurant} resizeMode="contain" />
                 <View style={{ marginHorizontal: WIDTH * 0.05, }}>
                     <Text style={{ fontSize: 12, marginBottom: HEIGHT * 0.01 }}>Restaurant</Text>
@@ -56,7 +85,7 @@ const CartScreen = (props, context) => {
                     <Text style={{ fontSize: 10 }}>{cartList?.cartDetails[0].restaurant?.address}</Text>
                 </View>
             </View>
-            <View style={{ marginHorizontal: WIDTH * 0.05, flexDirection: "row" }}>
+            <View style={{ marginHorizontal: WIDTH * 0.05, flexDirection: "row", marginTop: HEIGHT * 0.02 }}>
                 <View style={{ flex: 1, height: HEIGHT * 0.03 }}>
                     <Text style={{ fontSize: 10, fontWeight: "bold" }}>
                         PRODUCT</Text>
@@ -83,23 +112,7 @@ const CartScreen = (props, context) => {
                 placeholderTextColor={COLORS.titleColor}
                 onChangeText={(text) => setdeliveryNotes(text)}
                 style={{ borderRadius: HEIGHT * 0.02, marginHorizontal: WIDTH * 0.05, borderWidth: 0.5, height: HEIGHT * 0.06, marginVertical: HEIGHT * 0.03 }} />
-            <View style={{ height: HEIGHT * 0.05, marginHorizontal: WIDTH * 0.05, flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginBottom: HEIGHT * 0.03 }}>
-                <Text style={{ fontSize: 12 }}>Deliver Order</Text>
-                <Switch value={pickupMode == "pickup"} thumbColor={pickupMode == "pickup" ? COLORS.green2 : COLORS.addToCartButton} trackColor={{ false: COLORS.color4, true: COLORS.color1 }}
-                    onValueChange={(value) => setPickupMode(value ? "pickup" : "delivery")} />
-                <Text style={{ fontSize: 12 }}>Pick Up Order</Text>
-            </View>
-            {pickupMode != "pickup" && <>
-                <View style={{ marginHorizontal: WIDTH * 0.05, marginVertical: HEIGHT * 0.01, flexDirection: "row", alignItems: "center", }}>
-                    <Image source={homeaddress} resizeMode="contain" />
-                    <Text style={{ fontSize: 12, marginHorizontal: WIDTH * 0.03 }}>Delivery Address</Text>
-                </View>
-                <Text style={[{ fontSize: 15, marginHorizontal: WIDTH * 0.13 }, STYLES.fontMedium()]}>{!isEmpty(addressList) && addressList.find((add) => add?.is_default)?.address}</Text>
-                <Pressable onPress={() => showAddressSelect(true)} style={{ height: HEIGHT * 0.04, justifyContent: "center", marginHorizontal: WIDTH * 0.125, marginBottom: HEIGHT * 0.02 }}>
-                    <Text style={{ fontSize: 14, fontWeight: "bold", color: COLORS.green1 }}>Choose/Add Address</Text>
-                </Pressable>
-            </>}
-            <View style={{ marginHorizontal: WIDTH * 0.05, elevation: 3, backgroundColor: COLORS.white, borderRadius: HEIGHT * 0.038, marginBottom: HEIGHT * 0.1 }}>
+            {/* <View style={{ marginHorizontal: WIDTH * 0.05, elevation: 3, backgroundColor: COLORS.white, borderRadius: HEIGHT * 0.038, marginBottom: HEIGHT * 0.1 }}>
                 <View style={{ height: HEIGHT * 0.06, elevation: 3, backgroundColor: COLORS.white, flexDirection: "row", borderRadius: HEIGHT * 0.035 }}>
                     <View style={{ flex: 1 }}>
                         <CustomTextInput
@@ -129,12 +142,13 @@ const CartScreen = (props, context) => {
                     <Text>Total Bill</Text>
                     <Text>{context.t("price", { price: pickupMode != "pickup" ? (cartList.totalBill + cartList.deliveryFee) : cartList.totalBill })}</Text>
                 </View>
-                <Pressable onPress={() => navigation.navigate("CheckOutScreen", { deliveryNotes })} style={{ height: HEIGHT * 0.07, backgroundColor: COLORS.primary, borderRadius: HEIGHT * 0.035, justifyContent: "center", alignItems: "center", bottom: -1 }}>
-                    <Text style={{ color: COLORS.white, fontWeight: "bold" }}>
-                        CHECKOUT
-                    </Text>
+                <Pressable onPress={() => onNavigate()} style={{ height: HEIGHT * 0.07, backgroundColor: COLORS.primary, borderRadius: HEIGHT * 0.035, justifyContent: "center", alignItems: "center", }}>
+                    <Text style={{ color: COLORS.white, fontWeight: "bold" }}>CHECKOUT</Text>
                 </Pressable>
-            </View>
+            </View> */}
+            <Pressable onPress={() => onNavigate()} style={{ height: HEIGHT * 0.07, backgroundColor: !isEmpty(addressList) ? COLORS.primary : COLORS.textInputBorder, borderRadius: HEIGHT * 0.035, justifyContent: "center", alignItems: "center", marginHorizontal: WIDTH * 0.05 }}>
+                <Text style={{ color: COLORS.white, fontWeight: "bold" }}>CHECKOUT</Text>
+            </Pressable>
         </ScrollView> : <View style={{ flex: 1, }}>
             <View style={{ justifyContent: "space-evenly", alignItems: "center", height: HEIGHT * 0.4 }}>
                 <Image source={emptyCart} style={{ width: WIDTH * 0.5 }} resizeMode="contain" />
