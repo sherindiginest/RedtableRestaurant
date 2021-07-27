@@ -49,11 +49,11 @@ const HomeScreen = (props, context) => {
                     data={homeList?.slides || []}
                     showsHorizontalScrollIndicator={false}
                     keyExtractor={(item, index) => index.toString()}
-                    renderItem={({ item, index }) => <RestaurantComponent item={item} lastelement={index == homeList?.slides.length - 1} />}
+                    renderItem={({ item, index }) => <RestaurantComponent slider item={item} lastelement={index == homeList?.slides.length - 1} />}
                 />
             </View>
             <View style={{ backgroundColor: `${COLORS.statusbar}50`, flex: 1 }}>
-                <View style={[{ height: HEIGHT * 0.07, borderRadius: HEIGHT * 0.035, marginTop: -HEIGHT * 0.035, backgroundColor: COLORS.white, borderColor: COLORS.borderColor1, alignItems: "center", borderWidth: 1, justifyContent: "space-between" }, STYLES.flexDirection(lang)]}>
+                {/* <View style={[{ height: HEIGHT * 0.07, borderRadius: HEIGHT * 0.035, marginTop: -HEIGHT * 0.035, backgroundColor: COLORS.white, borderColor: COLORS.borderColor1, alignItems: "center", borderWidth: 1, justifyContent: "space-between" }, STYLES.flexDirection(lang)]}>
                     <View style={{ flex: 1 }}>
                         <CustomTextInput style={{ height: HEIGHT * 0.07, borderWidth: 0, }}
                             placeholder="Search"
@@ -63,7 +63,7 @@ const HomeScreen = (props, context) => {
                         />
                     </View>
                     <Image style={{ marginHorizontal: WIDTH * 0.05, width: WIDTH * 0.1 }} source={filter} resizeMode="contain" />
-                </View>
+                </View> */}
                 <View style={{ height: HEIGHT * 0.2, justifyContent: "space-evenly" }}>
                     <Text style={[{ color: COLORS.white, marginHorizontal: WIDTH * 0.05, marginVertical: WIDTH * 0.025, fontSize: 18 }, STYLES.textAlign(lang), STYLES.fontSpecial()]}>{context.t("meals")}</Text>
                     <FlatList

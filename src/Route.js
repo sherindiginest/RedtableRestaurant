@@ -16,7 +16,8 @@ import {
   SettingsScreen,
   EditProfileScreen,
   ManageAddressScreen,
-  ChangePasswordScreen
+  ChangePasswordScreen,
+  OffersScreen
 } from './screens'
 
 import { BottomTabs, DrawerMenu } from './components'
@@ -25,7 +26,7 @@ const SettingStack = createStackNavigator()
 
 const Settings = () => {
   return (
-    <SettingStack.Navigator screenOptions={{ headerShown: false, animationTypeForReplace: 'pop' }}
+    <SettingStack.Navigator screenOptions={{ headerShown: false }}
       initialRouteName="SettingsScreen">
       <SettingStack.Screen name="SettingsScreen" component={SettingsScreen} />
       <SettingStack.Screen name="EditProfileScreen" component={EditProfileScreen} />
@@ -50,6 +51,7 @@ const Home = () => {
       initialRouteName="Bottom"
       drawerContent={(props) => <DrawerMenu {...props} />}>
       <HomeStack.Screen name="Bottom" component={BottomTabs} />
+      <HomeStack.Screen name="OffersScreen" component={OffersScreen} />
       <HomeStack.Screen name="Settings" component={Settings} />
     </HomeStack.Navigator>
   )

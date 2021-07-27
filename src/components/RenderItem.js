@@ -88,19 +88,12 @@ const RenderItem = (props, context) => {
     }
 
     const manageCart = (qty = 0) => {
-        if (pickupMode == null) {
-            setshowPickupModal(true)
-        } else {
-            if (isEmpty(addressList) && pickupMode != "pickup") {
-                setshowAddAddress(true)
-            } else {
-                if (validateRes()) {
-                    if (qty == 0) {
-                        deleteCart()
-                    } else if (qty > 0) {
-                        addToCart(qty)
-                    }
-                }
+        console.log("qty ===>", qty);
+        if (validateRes()) {
+            if (qty == 0) {
+                deleteCart()
+            } else if (qty > 0) {
+                addToCart(qty)
             }
         }
     }

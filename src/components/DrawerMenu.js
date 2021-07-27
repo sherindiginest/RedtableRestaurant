@@ -27,6 +27,9 @@ const DrawerMenu = (props, context) => {
     {
       label: 'Offers',
       icon: offers,
+      onPress: () => {
+        navigation.navigate("OffersScreen")
+      }
     },
     {
       label: 'Settings',

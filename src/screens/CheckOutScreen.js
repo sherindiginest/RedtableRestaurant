@@ -5,9 +5,9 @@ import { connect } from 'react-redux'
 import { isEmpty, has, isNull } from "lodash"
 
 import { restaurant, payment, backarrow, dummy, money, visa, bank, close, thankyou, homeaddress } from '../../assets/images'
-import { CustomTextInput, Header } from '../components'
+import { CustomTextInput, Header, RenderItem } from '../components'
 import { API, Axios, COLORS, HEIGHT, STYLES, WIDTH } from '../constants'
-import { profileAction } from '../redux/actions'
+import { LoadingAction, profileAction } from '../redux/actions'
 import { Alert } from 'react-native'
 
 const list = [
@@ -26,12 +26,15 @@ const list = [
 ]
 
 const CheckOutScreen = (props, context) => {
-    const { navigation, route, cartList, addressList, lang, userData, setCartList, showAddressSelect, pickupMode } = props
+    const { navigation, route, cartList, addressList, lang, userData, setCartList, showAddressSelect, pickupMode, hideLoader, showLoader } = props
     //const AnimatedValue = useRef(new Animated.Value(useRef)
     const [animation, setAnimation] = useState(false)
     const [paymentMode, setPaymentMode] = useState("Cash On Delivery")
     const [thankyouModal, setThankyouModal] = useState(false)
     const [addnewcardModal, setAddnewcardModal] = useState(false)
+    const [deliveryFee, setDeliveryFee] = useState(0)
+    const [coupon_code, setCouponCode] = useState("")
+    const [couponStatus, setCouponStatus] = useState({})
     //const [selectedAddress, setSelectedAddress] = useState({})
     const AnimatedValue = useRef(new Animated.Value(0)).current
 
@@ -43,6 +46,7 @@ const CheckOutScreen = (props, context) => {
         } else {
             Alert.alert("Waring", "Add an address to continue")
         } */
+        pickupMode == "delivery" && getDeliveryPrice()
     }, [])
 
     useEffect(() => {
@@ -51,7 +55,7 @@ const CheckOutScreen = (props, context) => {
 
     const createOrder = async () => {
         const { api_token, id } = userData
-        const { cartDetails, deliveryFee } = cartList
+        const { cartDetails } = cartList
         const foods = cartDetails.map(({ food_id, food, quantity }) => {
             return { price: food.discount_price, quantity, food_id }
         })
@@ -65,6 +69,7 @@ const CheckOutScreen = (props, context) => {
                 status: null,
                 method: paymentMode
             },
+            tax: couponStatus?.tax ? couponStatus?.tax : cartList.tax,
             foods,
             delivery_fee: deliveryFee,
             restaurant_id: cartList.cartDetails[0].restaurant_id,
@@ -90,6 +95,46 @@ const CheckOutScreen = (props, context) => {
         setThankyouModal(false)
         navigation.popToTop()
         navigation.navigate("HomeScreen")
+    }
+
+    const getDeliveryPrice = async () => {
+        showLoader()
+        const { api_token } = userData
+        await Axios.get(API.getDeliveryCharge(addressList.find((add) => add?.is_default)?.area_id, cartList.cartDetails[0].restaurant_id), { params: { api_token } })
+            .then(async (response) => {
+                if (has(response, "success") && response.success) {
+                    console.log("response ==>", response)
+                    setDeliveryFee(Number(response.data.delivery_charge))
+                }
+                hideLoader()
+            }).catch((error) => { hideLoader() })
+    }
+
+    const applyCoupon = async () => {
+        if (coupon_code != "") {
+            showLoader()
+            const { api_token } = userData
+            const data = {
+                api_token,
+                area_id: addressList.find((add) => add?.is_default)?.area_id,
+                item_total: cartList.cartTotal,
+                coupon_code,
+                restaurant_id: cartList.cartDetails[0].restaurant_id
+            }
+            await Axios.post(API.applyCoupon, data)
+                .then(async (response) => {
+                    if (has(response, "success") && response.success) {
+                        setCouponStatus(response.data)
+                        console.log("data==>", response.data);
+                    }
+                    hideLoader()
+                }).catch((error) => {
+                    hideLoader()
+                    console.log("error ==>", JSON.stringify(error));
+                })
+        } else {
+            Alert.alert("Error", "Please enter a coupon code")
+        }
     }
 
     const slideDown = (toValue) => {
@@ -127,6 +172,44 @@ const CheckOutScreen = (props, context) => {
                         <Text style={{ fontSize: 10 }}>{has(cartList, "cartDetails") && cartList?.cartDetails[0].restaurant?.address}</Text>
                     </View>
                 </View>
+                <View style={{ marginHorizontal: WIDTH * 0.05, flexDirection: "row", marginTop: HEIGHT * 0.02 }}>
+                    <View style={{ flex: 1, height: HEIGHT * 0.03 }}>
+                        <Text style={{ fontSize: 10, fontWeight: "bold" }}>
+                            PRODUCT</Text>
+                    </View>
+                    <View style={{ width: WIDTH * 0.3, alignItems: "center" }}>
+                        <Text style={{ fontSize: 10, fontWeight: "bold" }}>
+                            QUANTITY</Text>
+                    </View>
+                    <View style={{ width: WIDTH * 0.2, alignItems: "flex-end" }}>
+                        <Text style={{ color: COLORS.addToCartButton, fontSize: 10, fontWeight: "bold" }}>
+                            PRICE</Text>
+                    </View>
+                </View>
+                <FlatList
+                    extraData={cartList?.cartDetails}
+                    data={cartList?.cartDetails}
+                    keyExtractor={(item, index) => index.toString()}
+                    renderItem={({ item, index }) => <View key={item?.food?.name} style={{ marginHorizontal: WIDTH * 0.05, flexDirection: "row", borderTopWidth: 0.5, height: HEIGHT * 0.05, justifyContent: "center", alignItems: "center" }}>
+                        <View style={{ flex: 1, justifyContent: "center" }}>
+                            <Text>{item?.food?.name}</Text>
+                        </View>
+                        <View style={{ width: WIDTH * 0.3, flexDirection: "row", backgroundColor: COLORS.primary, height: HEIGHT * 0.03, borderRadius: HEIGHT * 0.02 }}>
+                            {/*  <Pressable onPress={() => manageCart(quantity - 1)} style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+                            <Text style={{ color: COLORS.white, fontSize: 25 }}>-</Text>
+                        </Pressable> */}
+                            <View style={{ backgroundColor: COLORS.white, flex: 1, justifyContent: "center", alignItems: "center", }}>
+                                <Text style={{ color: COLORS.black, fontSize: 14 }}>{item.quantity}</Text>
+                            </View>
+                            {/*  <Pressable onPress={() => manageCart(quantity + 1)} style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+                            <Text style={{ color: COLORS.white, fontSize: 15 }}>+</Text>
+                        </Pressable> */}
+                        </View>
+                        <View style={{ width: WIDTH * 0.2, alignItems: "flex-end", justifyContent: "center" }}>
+                            <Text style={{ color: COLORS.primary }}>{context.t("price", { price: item?.food?.price })}</Text>
+                        </View>
+                    </View>}
+                />
                 {/* <View style={{ marginHorizontal: WIDTH * 0.05, marginVertical: HEIGHT * 0.02, }}>
                     <View style={{ flexDirection: "row", alignItems: "center", flex: 1 }}>
                         <Image source={homeaddress} resizeMode="contain" />
@@ -170,25 +253,43 @@ const CheckOutScreen = (props, context) => {
                     </Animated.View>
                 </View>
                 <View style={{ marginHorizontal: WIDTH * 0.05, elevation: 3, backgroundColor: COLORS.white, borderRadius: HEIGHT * 0.038, marginBottom: HEIGHT * 0.02 }}>
+                    <View style={{ height: HEIGHT * 0.06, elevation: 3, backgroundColor: COLORS.white, flexDirection: "row", borderRadius: HEIGHT * 0.035 }}>
+                        <View style={{ flex: 1 }}>
+                            <CustomTextInput
+                                placeholder="Enter Coupon Code"
+                                placeholderTextColor={COLORS.titleColor}
+                                style={{ height: HEIGHT * 0.06, borderWidth: 0 }}
+                                onChangeText={(text) => setCouponCode(text.trim())}
+                                value={coupon_code}
+                                textColor={COLORS.black}
+                            />
+                        </View>
+                        {!isEmpty(couponStatus) && <Pressable onPress={() => [setCouponStatus({}), setCouponCode("")]} style={{ width: HEIGHT * 0.025, height: HEIGHT * 0.025, borderRadius: HEIGHT * 0.0125, justifyContent: "center", alignItems: "center", alignSelf: "center", backgroundColor: COLORS.textInputBorder }}>
+                            <Text style={{ color: COLORS.white, fontSize: 14 }}>X</Text>
+                        </Pressable>}
+                        <Pressable disabled={!isEmpty(couponStatus)} onPress={() => applyCoupon()} style={{ width: WIDTH * 0.2, justifyContent: "center", alignItems: "center" }}>
+                            <Text style={{ fontWeight: "bold", color: isEmpty(couponStatus) ? COLORS.green1 : COLORS.primary, fontSize: 14 }}>{isEmpty(couponStatus) ? "APPLY" : "APPLIED"}</Text>
+                        </Pressable>
+                    </View>
                     <View style={{ padding: HEIGHT * 0.015, flexDirection: "row", }}>
                         <View style={{ flex: 1 }}>
                             <Text>Item Total</Text>
                             <Text>Discount</Text>
-                            <Text>Tax</Text>
-                            {pickupMode != "pickup" && <Text>Delivery Fee</Text>}
+                            <Text>{`Tax (${cartList?.taxPercentage}%)`}</Text>
+                            {deliveryFee > 0 && <Text>Delivery Fee</Text>}
                         </View>
                         <View style={{ width: WIDTH * 0.2, alignItems: "flex-end" }}>
                             <Text>{context.t("price", { price: cartList.cartTotal })}</Text>
-                            <Text>{context.t("price", { price: cartList.cartDiscount })}</Text>
-                            <Text>{context.t("price", { price: cartList.tax })}</Text>
-                            {pickupMode != "pickup" && <Text>{context.t("price", { price: cartList.deliveryFee })}</Text>}
+                            <Text>{context.t("price", { price: parseFloat(couponStatus?.cartDiscount ? couponStatus?.cartDiscount : cartList.cartDiscount) })}</Text>
+                            <Text>{context.t("price", { price: parseFloat(couponStatus?.tax ? couponStatus?.tax : cartList.tax) })}</Text>
+                            {deliveryFee > 0 && <Text>{context.t("price", { price: deliveryFee })}</Text>}
                         </View>
                     </View>
                     <View style={{ flexDirection: "row", justifyContent: "space-between", marginHorizontal: HEIGHT * 0.015, paddingVertical: HEIGHT * 0.01, borderTopWidth: 0.5 }}>
                         <Text>Total Bill</Text>
-                        <Text>{context.t("price", { price: pickupMode != "pickup" ? cartList.totalBill + cartList.deliveryFee : cartList.totalBill })}</Text>
+                        <Text>{context.t("price", { price: (parseFloat(couponStatus?.totalBill ? couponStatus?.totalBill : cartList.totalBill) + deliveryFee) })}</Text>
                     </View>
-                    <Pressable onPress={() => createOrder()} style={{ height: HEIGHT * 0.07, backgroundColor: COLORS.addToCartButton, borderRadius: HEIGHT * 0.035, justifyContent: "center", alignItems: "center", bottom: -1 }}>
+                    <Pressable onPress={() => createOrder()} style={{ height: HEIGHT * 0.07, backgroundColor: COLORS.primary, borderRadius: HEIGHT * 0.035, justifyContent: "center", alignItems: "center", bottom: -1 }}>
                         <Text style={{ color: COLORS.white, fontWeight: "bold" }}>CONFIRM ORDER</Text>
                     </Pressable>
                 </View>
@@ -280,7 +381,7 @@ const CheckOutScreen = (props, context) => {
                         { }
                         <Pressable onPress={() => {
                             onClose()
-                        }} style={{ height: HEIGHT * 0.06, backgroundColor: COLORS.addToCartButton, borderRadius: HEIGHT * 0.036, justifyContent: "center", alignItems: "center", width: WIDTH * 0.9 }}>
+                        }} style={{ height: HEIGHT * 0.06, backgroundColor: COLORS.primary, borderRadius: HEIGHT * 0.036, justifyContent: "center", alignItems: "center", width: WIDTH * 0.9 }}>
                             <Text style={{ color: COLORS.white, fontWeight: "bold" }}>
                                 Back To Home
                             </Text>
@@ -310,6 +411,8 @@ const mapDispatchToProps = {
     setCartList: (cart) => profileAction.setCartList(cart),
     showAddressSelect: (value) => profileAction.showAddressSelect(value),
     showAddNewAddress: (value) => profileAction.showAddNewAddress(value),
+    hideLoader: () => LoadingAction.hideLoader(),
+    showLoader: () => LoadingAction.showLoader()
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(CheckOutScreen)

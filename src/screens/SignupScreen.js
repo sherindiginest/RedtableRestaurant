@@ -46,11 +46,6 @@ const SignupScreen = (props, context) => {
           if (has(response, "success") && response.success) {
             setProfileData(response.data)
             await AsyncStorage.setItem('api_token', response?.data?.api_token)
-            await Axios.get(API.addresses(), { params: { api_token: response?.data?.api_token, "search": `user_id:${response?.data?.id}` } }).then(async (res) => {
-              if (has(res, "success") && res.success) {
-                setAddressList(res.data)
-              }
-            }).catch((error) => { })
             //navigation.popToTop()
             navigation.replace('Home')
           }

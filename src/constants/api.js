@@ -23,6 +23,9 @@ export const API = {
     restaurantFoods: (id) => `restaurant_foods/${id}`,
     restaurantReviews: (id) => `restaurant_reviews`,
     areaCodes: (id) => id ? `get_area_restaurants/${id}` : `area`,
-    clearCart: "clear_cart"
+    clearCart: "clear_cart",
+    getDeliveryCharge: (areaId, restaurantid) => `get_delivery_charges/${areaId}/${restaurantid}`,
+    applyCoupon: "applycoupon",
+    coupons: "coupons",
 
 }
