@@ -20,6 +20,7 @@ import {
 } from './../screens'
 
 import { HEIGHT, WIDTH, COLORS } from '../constants'
+import SearchScreen from '../screens/SearchScreen'
 
 const TABBAR_HEIGHT = HEIGHT * 0.08
 const TABBAR_WIDTH = WIDTH / 5
@@ -94,6 +95,7 @@ const HomeScreenRoute = () => {
             <HomeScreenStack.Screen name="HomeScreen" component={HomeScreen} />
             <HomeScreenStack.Screen name="RestaurantDetailsScreen" component={RestaurantDetailsScreen} />
             <HomeScreenStack.Screen name="ChooseRestaurantsScreen" component={ChooseRestaurantsScreen} />
+            <HomeScreenStack.Screen name="SearchScreen" component={SearchScreen} />
         </HomeScreenStack.Navigator>
     )
 }
@@ -105,6 +107,7 @@ const OurRestaurantsScreenRoute = () => {
             initialRouteName="OurRestaurantsScreen">
             <OurRestaurantsScreenStack.Screen name="OurRestaurantsScreen" component={OurRestaurantsScreen} />
             <OurRestaurantsScreenStack.Screen name="RestaurantDetailsScreen" component={RestaurantDetailsScreen} />
+            <OurRestaurantsScreenStack.Screen name="SearchScreen" component={SearchScreen} />
         </OurRestaurantsScreenStack.Navigator>
     )
 }

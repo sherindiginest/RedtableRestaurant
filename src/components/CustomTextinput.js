@@ -7,7 +7,7 @@ import { HEIGHT, COLORS, WIDTH, STYLES } from '../constants'
 import { Pressable } from 'react-native'
 
 const CustomTextinput = (props) => {
-  const { image, placeholder, onChangeText, style, lang, secureEntry = false, secureEntryIcon, placeholderTextColor = COLORS.white, textColor = COLORS.white, keyboardType = "default", returnKeyType = "done", currentRef, nextRef = null, onSubmitAction, error, errorTextColor = COLORS.white, maxLength = 50, outerStyle, value, editable = true, tintColor } = props
+  const { image, placeholder, onChangeText, style, lang, secureEntry = false, secureEntryIcon, placeholderTextColor = COLORS.white, textColor = COLORS.white, keyboardType = "default", returnKeyType = "done", currentRef, nextRef = null, onSubmitAction, error, errorTextColor = COLORS.white, maxLength = 50, outerStyle, value, editable = true, tintColor, autoFocus } = props
   const [secureTextEntry, setSecureTextEntry] = useState(secureEntry)
 
   return (<View style={[{ alignSelf: "stretch" }, outerStyle]}>
@@ -23,11 +23,11 @@ const CustomTextinput = (props) => {
     { ...style },
     STYLES.flexDirection(lang),
     ]}>
-      <Image
+      {image && <Image
         style={[{ marginHorizontal: WIDTH * 0.05, }, tintColor && { tintColor }]}
         source={image}
         resizeMode="contain"
-      />
+      />}
       <TextInput
         editable={editable}
         secureTextEntry={secureTextEntry}
@@ -44,6 +44,7 @@ const CustomTextinput = (props) => {
         }}
         maxLength={maxLength}
         value={value}
+        autoFocus={autoFocus}
       />
       {secureEntry && <Pressable onPress={() => setSecureTextEntry(!secureTextEntry)}>
         <Image

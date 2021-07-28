@@ -33,7 +33,7 @@ const OffersScreen = (props) => {
         })
     }
 
-    return (<Header backgroundColor={COLORS.white} title="offers">
+    return (<Header backgroundColor={COLORS.white} title="offers" titleColor={COLORS.black}>
         <View style={{ flex: 1 }}>
             <FlatList
                 showsVerticalScrollIndicator={false}

@@ -69,7 +69,7 @@ const CheckOutScreen = (props, context) => {
                 status: null,
                 method: paymentMode
             },
-            tax: couponStatus?.tax ? couponStatus?.tax : cartList.tax,
+            tax: Number(couponStatus?.tax ? couponStatus?.tax : cartList.tax),
             foods,
             delivery_fee: deliveryFee,
             restaurant_id: cartList.cartDetails[0].restaurant_id,
@@ -88,7 +88,7 @@ const CheckOutScreen = (props, context) => {
                     setCartList({})
                     setThankyouModal(true)
                 }
-            }).catch((error) => { })
+            }).catch((error) => { console.log(error); })
     }
 
     const onClose = () => {

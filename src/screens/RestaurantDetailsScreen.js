@@ -10,7 +10,7 @@ import { API, Axios, COLORS, HEIGHT, STYLES, WIDTH } from '../constants'
 import { LoadingAction } from '../redux/actions'
 
 const RestaurantDetailsScreen = (props) => {
-    const { lang, route: { params: { item, type, mealId = null, categoryId = null } }, showLoader, hideLoader } = props
+    const { lang, route: { params: { item, type, mealId = null, categoryId = null } }, showLoader, hideLoader, navigation } = props
     let scrollViewref = useRef(null)
     let scrollViewref1 = useRef(null)
     let scrollViewref2 = useRef(null)
@@ -159,19 +159,7 @@ const RestaurantDetailsScreen = (props) => {
                     </View>
                 </ImageBackground>
                 <View style={{ flex: 1, backgroundColor: COLORS.white }}>
-                    <View style={[{ height: HEIGHT * 0.07, borderRadius: HEIGHT * 0.035, marginTop: -HEIGHT * 0.035, backgroundColor: COLORS.white, borderColor: COLORS.borderColor1, alignItems: "center", borderWidth: 1 }, STYLES.flexDirection(lang)]}>
-                        {/*  <Image style={{}} source={search} resizeMode="contain" /> */}
-                        <View style={{ flex: 1 }}>
-                            <CustomTextInput style={{ height: HEIGHT * 0.07, borderWidth: 0, }}
-                                placeholder="Search Menu"
-                                image={search}
-                                placeholderTextColor={COLORS.placeHolderColor}
-                                textColor={COLORS.black}
-                            />
-                        </View>
-                        {/* <Image style={{ marginHorizontal: WIDTH * 0.05, }} source={filter} resizeMode="contain" /> */}
-                    </View>
-                    <View style={{ height: HEIGHT * 0.07, marginTop: HEIGHT * 0.01 }}>
+                    <View style={{ height: HEIGHT * 0.07, marginTop: HEIGHT * 0.025 }}>
                         <FlatList
                             showsHorizontalScrollIndicator={false}
                             horizontal
@@ -339,6 +327,12 @@ const RestaurantDetailsScreen = (props) => {
                         </View>
                     </ScrollView>
                 </View>
+                <Pressable onPress={() => navigation.navigate("SearchScreen", { details })} style={[{ height: HEIGHT * 0.07, borderRadius: HEIGHT * 0.035, marginTop: HEIGHT * 0.315, backgroundColor: COLORS.white, borderColor: COLORS.borderColor1, alignItems: "center", borderWidth: 1, position: "absolute", width: WIDTH }, STYLES.flexDirection(lang)]}>
+                    <View style={[{ flex: 1, alignItems: "center" }, STYLES.flexDirection(lang)]}>
+                        <Image style={[{ marginHorizontal: WIDTH * 0.05, }]} source={search} resizeMode="contain" />
+                        <Text style={[{ color: COLORS.black, fontSize: 15 }, STYLES.fontRegular()]}>Search Menu</Text>
+                    </View>
+                </Pressable>
             </ScrollView>
         </Header>
         <AddAddressModal visible={showAddAddress} onClose={() => setshowAddAddress(false)} addressData={{}} restaurantSpecific resId={item.restaurant_id || item.id} />
