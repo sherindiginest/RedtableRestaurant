@@ -9,21 +9,13 @@ import {
   ScrollView, Alert, KeyboardAvoidingView, TouchableWithoutFeedback, Keyboard
 } from 'react-native'
 import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
+import { connect, useDispatch } from 'react-redux'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { isEmpty, has } from "lodash"
 
-import { profileAction } from "./../redux/actions"
+import { AlertAction, profileAction } from "./../redux/actions"
 import { CustomTextInput, CustomButton } from './../components'
-import {
-  backgroundImage,
-  logo,
-  email,
-  password,
-  user,
-  phone,
-  eye
-} from './../../assets/images'
+import { backgroundImage, logo, email, password, user, phone, eye } from './../../assets/images'
 import { COLORS, HEIGHT, STYLES, WIDTH, Axios, API, validateEmail, validatePhone } from './../constants'
 
 const SignupScreen = (props, context) => {
@@ -31,6 +23,7 @@ const SignupScreen = (props, context) => {
   const [form, setForm] = useState({})
   const [errors, setErrors] = useState({})
   const [loading, setloading] = useState(false)
+  const dispatch = useDispatch()
   const refList = { email: useRef(null), phone: useRef(null), password: useRef(null) }
 
   const setData = (field, value) => {
@@ -51,7 +44,17 @@ const SignupScreen = (props, context) => {
           }
           setloading(false)
         }).catch((error) => {
-          error?.message && Alert.alert("Error", error?.message)
+          dispatch(AlertAction.handleAlert({
+            visible: true,
+            title: "Error",
+            message: error?.message,
+            buttons: [{
+              title: "Okay",
+              onPress: () => {
+                dispatch(AlertAction.handleAlert({ visible: false, }))
+              }
+            }]
+          }))
           setloading(false)
         })
     }

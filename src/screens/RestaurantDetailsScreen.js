@@ -16,7 +16,6 @@ const RestaurantDetailsScreen = (props) => {
     let scrollViewref2 = useRef(null)
     const [tab, setTab] = useState(0)
     const [categoryList, setcategoryList] = useState([])
-    const [showAddAddress, setshowAddAddress] = useState(false)
     const [showPickupModal, setshowPickupModal] = useState(false)
     const [bestoffers, setBestoffers] = useState([])
     const [todaylist, setTodaylist] = useState([])
@@ -32,8 +31,6 @@ const RestaurantDetailsScreen = (props) => {
     useEffect(() => {
         if (has(details, "foods") && !isEmpty(details.foods)) {
             const list = details.foods.filter((data) => data.category_id == selectdCategory)
-
-
             //setfoodList(list)
             try {
                 const index = categoryList.findIndex((data) => data.id == selectdCategory)
@@ -71,8 +68,6 @@ const RestaurantDetailsScreen = (props) => {
         }).catch((error) => {
             console.log("error ==>", error);
             hideLoader()
-            //error?.message && Alert.alert("Error", error?.message)
-            // setloading(false)
         })
     }
 
@@ -87,8 +82,6 @@ const RestaurantDetailsScreen = (props) => {
         }).catch((error) => {
             hideLoader()
             console.log("error ==>", JSON.stringify(error));
-            //error?.message && Alert.alert("Error", error?.message)
-            // setloading(false)
         })
     }
 
@@ -97,10 +90,9 @@ const RestaurantDetailsScreen = (props) => {
             .then(async (response) => {
                 if (has(response, "success") && response.success) {
                     setBestoffers(response.data)
+                    console.log(JSON.stringify(response.data));
                 }
             }).catch((error) => {
-                //error?.message && Alert.alert("Error", error?.message)
-                // setloading(false)
             })
     }
 
@@ -111,8 +103,6 @@ const RestaurantDetailsScreen = (props) => {
                     setTodaylist(response.data)
                 }
             }).catch((error) => {
-                //error?.message && Alert.alert("Error", error?.message)
-                // setloading(false)
             })
     }
 
@@ -164,10 +154,10 @@ const RestaurantDetailsScreen = (props) => {
                             showsHorizontalScrollIndicator={false}
                             horizontal
                             inverted={lang == "ar"}
-                            data={["Menu", "About", "Featured", "Reviews"]}
+                            data={["Menu", "About", "Featured"/* , "Reviews" */]}
                             keyExtractor={(item, index) => index.toString()}
                             renderItem={({ item, index }) => <View style={{ justifyContent: "center", }}>
-                                <Pressable onPress={() => setTab(index)} style={{ justifyContent: "center", alignItems: "center", borderRadius: HEIGHT * 0.01, elevation: 3, backgroundColor: tab == index ? COLORS.statusbar : COLORS.white, height: HEIGHT * 0.03, marginLeft: index == 0 ? WIDTH * 0.05 : 0, marginRight: index == 3 ? WIDTH * 0.05 : 0, width: WIDTH * 0.2, }}>
+                                <Pressable onPress={() => setTab(index)} style={{ justifyContent: "center", alignItems: "center", borderRadius: HEIGHT * 0.01, elevation: 3, backgroundColor: tab == index ? COLORS.statusbar : COLORS.white, height: HEIGHT * 0.03, marginLeft: index == 0 ? WIDTH * 0.05 : 0, marginRight: index == 2 ? WIDTH * 0.05 : 0, width: WIDTH * 0.2, }}>
                                     <Text style={[{ color: tab == index ? COLORS.white : COLORS.black, fontSize: 12 }, STYLES.fontRegular()]}>{item}</Text>
                                 </Pressable>
                             </View>}
@@ -229,7 +219,7 @@ const RestaurantDetailsScreen = (props) => {
                                             keyExtractor={(item, index) => index.toString()}
                                             contentContainerStyle={[STYLES.alignItems(lang)]}
                                             numColumns={2}
-                                            renderItem={({ item, index }) => <RenderItem setshowPickupModal={(value) => setshowPickupModal(value)} setshowAddAddress={(value) => setshowAddAddress(value)} item={item} restaurant_id={details.id} />}
+                                            renderItem={({ item, index }) => <RenderItem setshowPickupModal={(value) => setshowPickupModal(value)} item={item} restaurant_id={details.id} />}
                                         />
                                     </View>
                                     )
@@ -263,7 +253,7 @@ const RestaurantDetailsScreen = (props) => {
                             </View>
                             <View style={[{ paddingHorizontal: WIDTH * 0.05, alignItems: "center" }, STYLES.flexDirection(lang)]}>
                                 <Image style={{ marginHorizontal: WIDTH * 0.05, width: WIDTH * 0.05, height: HEIGHT * 0.05 }} source={clockoutline} resizeMode="contain" />
-                                <Text style={[{ color: COLORS.activeTabColor }, STYLES.fontRegular()]}>{details?.working_hours}</Text>
+                                <Text style={[{ color: COLORS.activeTabColor, width: WIDTH * 0.5 }, STYLES.fontRegular()]}>{details?.working_hours}</Text>
                             </View>
                         </View>
                         {/* FEATURED */}
@@ -278,7 +268,7 @@ const RestaurantDetailsScreen = (props) => {
                                         showsHorizontalScrollIndicator={false}
                                         keyExtractor={(item, index) => index.toString()}
                                         contentContainerStyle={[STYLES.alignItems(lang)]}
-                                        renderItem={({ item, index }) => <RenderItem setshowPickupModal={(value) => setshowPickupModal(value)} setshowAddAddress={(value) => setshowAddAddress(value)} item={item} lang={lang} vertLast={todaylist?.length - 1 == index} restaurant_id={details.id} />}
+                                        renderItem={({ item, index }) => <RenderItem setshowPickupModal={(value) => setshowPickupModal(value)} item={item} lang={lang} vertLast={todaylist?.length - 1 == index} restaurant_id={details.id} />}
                                     />
                                 </View>
                                 <Text style={[{ marginHorizontal: WIDTH * 0.05, fontSize: 20, }, STYLES.textAlign(lang), STYLES.fontSpecial()]}>Best Offers</Text>
@@ -290,13 +280,13 @@ const RestaurantDetailsScreen = (props) => {
                                         showsHorizontalScrollIndicator={false}
                                         keyExtractor={(item, index) => index.toString()}
                                         contentContainerStyle={[STYLES.alignItems(lang)]}
-                                        renderItem={({ item, index }) => <RenderItem setshowPickupModal={(value) => setshowPickupModal(value)} setshowAddAddress={(value) => setshowAddAddress(value)} item={item} lang={lang} vertLast={bestoffers?.length - 1 == index} bestOffer restaurant_id={details.id} />}
+                                        renderItem={({ item, index }) => <RenderItem setshowPickupModal={(value) => setshowPickupModal(value)} item={item} lang={lang} vertLast={bestoffers?.length - 1 == index} bestOffer restaurant_id={details.id} />}
                                     />
                                 </View>
                             </ScrollView>
                         </View>
                         {/* REVIEW */}
-                        <View style={{ flex: 1, width: WIDTH }}>
+                        {/* <View style={{ flex: 1, width: WIDTH }}>
                             <Text style={[{ marginHorizontal: WIDTH * 0.05, fontSize: 20, }, STYLES.textAlign(lang), STYLES.fontSpecial()]}>Reviews & Ratings</Text>
                             <View style={{ flex: 1 }}>
                                 <FlatList
@@ -324,7 +314,7 @@ const RestaurantDetailsScreen = (props) => {
                                 />
 
                             </View>
-                        </View>
+                        </View> */}
                     </ScrollView>
                 </View>
                 <Pressable onPress={() => navigation.navigate("SearchScreen", { details })} style={[{ height: HEIGHT * 0.07, borderRadius: HEIGHT * 0.035, marginTop: HEIGHT * 0.315, backgroundColor: COLORS.white, borderColor: COLORS.borderColor1, alignItems: "center", borderWidth: 1, position: "absolute", width: WIDTH }, STYLES.flexDirection(lang)]}>
@@ -335,8 +325,7 @@ const RestaurantDetailsScreen = (props) => {
                 </Pressable>
             </ScrollView>
         </Header>
-        <AddAddressModal visible={showAddAddress} onClose={() => setshowAddAddress(false)} addressData={{}} restaurantSpecific resId={item.restaurant_id || item.id} />
-        <PickupMethodModal visible={showPickupModal} onClose={() => setshowPickupModal(false)} setshowAddAddress={(value) => setshowAddAddress(value)} />
+        <PickupMethodModal visible={showPickupModal} onClose={() => setshowPickupModal(false)} />
     </>)
 }
 

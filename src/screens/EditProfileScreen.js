@@ -1,23 +1,22 @@
 import React, { useEffect, useState, useRef } from 'react'
 import { View, Text, Image, FlatList, Alert } from 'react-native'
 import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
+import { connect, useDispatch } from 'react-redux'
 import { isEmpty, has } from "lodash"
 
 import { backarrow, dummy, email, phone, user } from '../../assets/images'
 import { Header, RestaurantComponent, CustomTextInput, CustomButton } from '../components'
 import { API, Axios, COLORS, HEIGHT, STYLES, validateEmail, validatePhone, WIDTH } from '../constants'
-import { profileAction } from '../redux/actions'
+import { AlertAction, profileAction } from '../redux/actions'
 
 
 const EditProfileScreen = (props, context) => {
     const { route, navigation, lang, userData, setProfileData } = props
-    //const [title, setTitle] = useState(route.params?.title || "Our Restaurants")
     const [form, setForm] = useState({ name: userData.name, email: userData.email, phone: userData.phone })
     const [errors, setErrors] = useState({})
     const [loading, setloading] = useState(false)
     const refList = { email: useRef(null), phone: useRef(null) }
-
+    const dispatch = useDispatch()
     useEffect(() => {
         setForm({ name: userData.name, email: userData.email, phone: userData.phone })
     }, [userData])
@@ -31,17 +30,37 @@ const EditProfileScreen = (props, context) => {
         const { api_token, id } = userData
         if (validate()) {
             setloading(true)
-            await Axios.post(API.userUpdate(id), { ...form, api_token })
-                .then(async (response) => {
-                    if (has(response, "success") && response.success) {
-                        console.log(JSON.stringify(response));
-                        setProfileData(response.data)
-                    }
-                    setloading(false)
-                }).catch((error) => {
-                    error?.message && Alert.alert("Error", error?.message)
-                    setloading(false)
-                })
+            await Axios.post(API.userUpdate(id), { ...form, api_token }).then(async (response) => {
+                if (has(response, "success") && response.success) {
+                    setProfileData(response.data)
+                    dispatch(AlertAction.handleAlert({
+                        visible: true,
+                        title: "Success",
+                        message: "Profile data updated successfully",
+                        buttons: [{
+                            title: "Okay",
+                            onPress: () => {
+                                dispatch(AlertAction.handleAlert({ visible: false, }))
+                                navigation.goBack()
+                            }
+                        }]
+                    }))
+                }
+                setloading(false)
+            }).catch((error) => {
+                dispatch(AlertAction.handleAlert({
+                    visible: true,
+                    title: "Error",
+                    message: error?.message,
+                    buttons: [{
+                        title: "Okay",
+                        onPress: () => {
+                            dispatch(AlertAction.handleAlert({ visible: false, }))
+                        }
+                    }]
+                }))
+                setloading(false)
+            })
         }
     }
 
@@ -79,7 +98,7 @@ const EditProfileScreen = (props, context) => {
                 placeholder={context.t('name')}
                 onChangeText={(text) => setData("name", text)}
                 returnKeyType="next"
-                nextRef={refList.email}
+                nextRef={refList.phone}
                 error={errors?.name}
                 placeholderTextColor={COLORS.title3}
                 tintColor={COLORS.activeTabColor}
@@ -102,6 +121,7 @@ const EditProfileScreen = (props, context) => {
                 value={form.email}
                 textColor={COLORS.title3}
                 errorTextColor={COLORS.statusbar}
+                editable={false}
             />
             <CustomTextInput
                 //editable={false}

@@ -34,7 +34,7 @@ const CustomTextinput = (props) => {
         onChangeText={onChangeText}
         placeholder={placeholder}
         placeholderTextColor={placeholderTextColor}
-        style={[{ fontSize: 15, color: textColor, flex: 1 }, STYLES.textAlign(lang),]}
+        style={[{ fontSize: 15, color: textColor, flex: 1, marginLeft: !image ? WIDTH * 0.05 : 0 }, STYLES.textAlign(lang),]}
         keyboardType={keyboardType}
         autoCapitalize="none"
         returnKeyType={returnKeyType}

@@ -27,5 +27,7 @@ export const API = {
     getDeliveryCharge: (areaId, restaurantid) => `get_delivery_charges/${areaId}/${restaurantid}`,
     applyCoupon: "applycoupon",
     coupons: "coupons",
+    passwordReset: "password_reset",
+    passwordForgot: "send_reset_link_email"
 
 }

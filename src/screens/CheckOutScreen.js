@@ -1,14 +1,13 @@
 import React, { useRef, useEffect, useState } from 'react'
 import { View, Text, ScrollView, Image, Animated, Pressable, Modal, FlatList, Switch } from 'react-native'
 import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
+import { connect, useDispatch } from 'react-redux'
 import { isEmpty, has, isNull } from "lodash"
 
 import { restaurant, payment, backarrow, dummy, money, visa, bank, close, thankyou, homeaddress } from '../../assets/images'
 import { CustomTextInput, Header, RenderItem } from '../components'
 import { API, Axios, COLORS, HEIGHT, STYLES, WIDTH } from '../constants'
-import { LoadingAction, profileAction } from '../redux/actions'
-import { Alert } from 'react-native'
+import { AlertAction, LoadingAction, profileAction } from '../redux/actions'
 
 const list = [
     {
@@ -35,6 +34,7 @@ const CheckOutScreen = (props, context) => {
     const [deliveryFee, setDeliveryFee] = useState(0)
     const [coupon_code, setCouponCode] = useState("")
     const [couponStatus, setCouponStatus] = useState({})
+    const dispatch = useDispatch()
     //const [selectedAddress, setSelectedAddress] = useState({})
     const AnimatedValue = useRef(new Animated.Value(0)).current
 
@@ -44,7 +44,6 @@ const CheckOutScreen = (props, context) => {
             const list = addressList.find((item) => item.is_default)
             !isEmpty(list) && setSelectedAddress(list)
         } else {
-            Alert.alert("Waring", "Add an address to continue")
         } */
         pickupMode == "delivery" && getDeliveryPrice()
     }, [])
@@ -54,6 +53,7 @@ const CheckOutScreen = (props, context) => {
     }, [animation])
 
     const createOrder = async () => {
+        showLoader()
         const { api_token, id } = userData
         const { cartDetails } = cartList
         const foods = cartDetails.map(({ food_id, food, quantity }) => {
@@ -82,13 +82,27 @@ const CheckOutScreen = (props, context) => {
             data.delivery_address_id = addressList.find((add) => add?.is_default)?.id
         }
 
-        await Axios.post(API.createOrder, data)
-            .then(async (response) => {
-                if (has(response, "success") && response.success) {
-                    setCartList({})
-                    setThankyouModal(true)
-                }
-            }).catch((error) => { console.log(error); })
+        await Axios.post(API.createOrder, data).then(async (response) => {
+            if (has(response, "success") && response.success) {
+                setCartList({})
+                setThankyouModal(true)
+            }
+            hideLoader()
+        }).catch((error) => {
+            hideLoader()
+            dispatch(AlertAction.handleAlert({
+                visible: true,
+                title: "Error",
+                message: error?.message,
+                buttons: [{
+                    title: "Okay",
+                    onPress: () => {
+                        dispatch(AlertAction.handleAlert({ visible: false, }))
+                    }
+                }]
+            }))
+            console.log(error); error?.message
+        })
     }
 
     const onClose = () => {
@@ -125,15 +139,46 @@ const CheckOutScreen = (props, context) => {
                 .then(async (response) => {
                     if (has(response, "success") && response.success) {
                         setCouponStatus(response.data)
-                        console.log("data==>", response.data);
+                        dispatch(AlertAction.handleAlert({
+                            visible: true,
+                            title: "Success",
+                            message: "Coupon code applied successfully",
+                            buttons: [{
+                                title: "Okay",
+                                onPress: () => {
+                                    dispatch(AlertAction.handleAlert({ visible: false, }))
+                                }
+                            }]
+                        }))
                     }
                     hideLoader()
                 }).catch((error) => {
                     hideLoader()
+                    dispatch(AlertAction.handleAlert({
+                        visible: true,
+                        title: "Error",
+                        message: error?.message,
+                        buttons: [{
+                            title: "Okay",
+                            onPress: () => {
+                                dispatch(AlertAction.handleAlert({ visible: false, }))
+                            }
+                        }]
+                    }))
                     console.log("error ==>", JSON.stringify(error));
                 })
         } else {
-            Alert.alert("Error", "Please enter a coupon code")
+            dispatch(AlertAction.handleAlert({
+                visible: true,
+                title: "Error",
+                message: "Please enter a coupon code",
+                buttons: [{
+                    title: "Okay",
+                    onPress: () => {
+                        dispatch(AlertAction.handleAlert({ visible: false, }))
+                    }
+                }]
+            }))
         }
     }
 

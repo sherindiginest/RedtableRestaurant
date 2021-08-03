@@ -1,6 +1,6 @@
 import React from 'react'
 import { NavigationContainer } from '@react-navigation/native'
-import { createStackNavigator } from '@react-navigation/stack'
+import { CardStyleInterpolators, createStackNavigator } from '@react-navigation/stack'
 import { createDrawerNavigator } from '@react-navigation/drawer'
 
 import { store } from "./../App"
@@ -26,7 +26,7 @@ const SettingStack = createStackNavigator()
 
 const Settings = () => {
   return (
-    <SettingStack.Navigator screenOptions={{ headerShown: false }}
+    <SettingStack.Navigator screenOptions={{ headerShown: false, cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS }}
       initialRouteName="SettingsScreen">
       <SettingStack.Screen name="SettingsScreen" component={SettingsScreen} />
       <SettingStack.Screen name="EditProfileScreen" component={EditProfileScreen} />
@@ -62,7 +62,7 @@ const RouteStack = createStackNavigator()
 const Route = () => {
   return (
     <NavigationContainer>
-      <RouteStack.Navigator screenOptions={{ headerShown: false, animationTypeForReplace: 'pop' }}
+      <RouteStack.Navigator screenOptions={{ headerShown: false, cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS }}
         initialRouteName="SplashScreen">
         <RouteStack.Screen name="SplashScreen" component={SplashScreen} />
         <RouteStack.Screen name="LanguageSwitchScreen" component={LanguageSwitchScreen} />

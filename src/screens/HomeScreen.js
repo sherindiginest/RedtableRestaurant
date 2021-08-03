@@ -1,23 +1,48 @@
 import React, { useState, useEffect } from 'react'
 import { View, Text, FlatList, Image, ScrollView, ImageBackground, Pressable } from 'react-native'
 import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
+import { connect, useDispatch } from 'react-redux'
 import { isEmpty, has } from "lodash"
 
 import { dummy, search, filter } from '../../assets/images'
 import { API, Axios, COLORS, HEIGHT, STYLES, WIDTH } from '../constants'
 import { Header, RestaurantComponent, CustomTextInput, RenderMealItem } from "./../components"
+import { AlertAction, LoadingAction, profileAction } from '../redux/actions'
 
 const HomeScreen = (props, context) => {
-    const { lang, navigation } = props
+    const { lang, navigation, pickupMode, askForPickupMode } = props
     const [homeList, sethomeList] = useState({})
     const [categoryList, setcategoryList] = useState([])
+    const dispatch = useDispatch()
+
     useEffect(() => {
+        if (askForPickupMode) {
+            dispatch(AlertAction.handleAlert({
+                visible: true,
+                title: "Order Type",
+                message: "Please choose one method to countinue",
+                buttons: [{
+                    title: "delivery",
+                    onPress: () => {
+                        dispatch(profileAction.setPickupMode("delivery"))
+                        dispatch(AlertAction.handleAlert({ visible: false, }))
+                        dispatch(profileAction.askPickupMode(false))
+                    }
+                }, {
+                    title: "pickup",
+                    onPress: () => {
+                        dispatch(profileAction.setPickupMode("pickup"))
+                        dispatch(AlertAction.handleAlert({ visible: false, }))
+                        dispatch(profileAction.askPickupMode(false))
+                    }
+                }]
+            }))
+        }
         getData()
     }, [])
 
     const getData = async () => {
-        //setloading(true)
+        dispatch(LoadingAction.showLoader())
         await Axios.get(API.home)
             .then(async (response) => {
                 if (has(response, "success") && response.success) {
@@ -25,18 +50,17 @@ const HomeScreen = (props, context) => {
                 }
                 // setloading(false)
             }).catch((error) => {
-                //error?.message && Alert.alert("Error", error?.message)
-                // setloading(false)
+                dispatch(LoadingAction.hideLoader())
             })
         await Axios.get(API.categories)
             .then(async (response) => {
                 if (has(response, "success") && response.success) {
                     setcategoryList(response.data)
                 }
+                dispatch(LoadingAction.hideLoader())
                 // setloading(false)
             }).catch((error) => {
-                //error?.message && Alert.alert("Error", error?.message)
-                // setloading(false)
+                dispatch(LoadingAction.hideLoader())
             })
     }
 
@@ -52,7 +76,7 @@ const HomeScreen = (props, context) => {
                     renderItem={({ item, index }) => <RestaurantComponent slider item={item} lastelement={index == homeList?.slides.length - 1} />}
                 />
             </View>
-            <View style={{ backgroundColor: `${COLORS.statusbar}50`, flex: 1 }}>
+            <View style={{ backgroundColor: `${COLORS.statusbar}80`, flex: 1 }}>
                 {/* <View style={[{ height: HEIGHT * 0.07, borderRadius: HEIGHT * 0.035, marginTop: -HEIGHT * 0.035, backgroundColor: COLORS.white, borderColor: COLORS.borderColor1, alignItems: "center", borderWidth: 1, justifyContent: "space-between" }, STYLES.flexDirection(lang)]}>
                     <View style={{ flex: 1 }}>
                         <CustomTextInput style={{ height: HEIGHT * 0.07, borderWidth: 0, }}
@@ -115,9 +139,11 @@ HomeScreen.contextTypes = {
     t: PropTypes.func,
 }
 
-const mapStateToProps = ({ i18nState }) => {
+const mapStateToProps = ({ i18nState, ProfileReducer }) => {
     return {
         lang: i18nState.lang,
+        pickupMode: ProfileReducer.pickupMode,
+        askForPickupMode: ProfileReducer.askForPickupMode,
     }
 }
 const mapDispatchToProps = {}

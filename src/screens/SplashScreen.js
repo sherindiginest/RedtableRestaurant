@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { View, Text, ImageBackground, StatusBar, Image, Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import { connect } from 'react-redux';
+import { connect, useDispatch } from 'react-redux';
 import { isEmpty, has, isNull } from "lodash"
 import { profileAction, SetLanguageAction } from "./../redux/actions"
 
@@ -11,12 +11,15 @@ import { log } from 'react-native-reanimated';
 
 const SplashScreen = (props) => {
   const { navigation, setProfileData, setLang, setAddressList, setCartList } = props;
+  const dispatch = useDispatch()
   useEffect(() => {
     getProfileData()
   }, []);
 
   const getProfileData = async () => {
     const api_token = await AsyncStorage.getItem("api_token")
+    const order_type = await AsyncStorage.getItem("pickupMode")
+    order_type != null && dispatch(profileAction.setPickupMode(order_type))
     let route = 'LoginScreen'
     if (!isEmpty(api_token)) {
       await Axios.get(API.userProfile, { params: { api_token } })
@@ -39,11 +42,12 @@ const SplashScreen = (props) => {
               }).catch((error) => { console.log("error ==>", error); })
           }
         }).catch((error) => {
-          //getLanguage('LoginScreen')
-          //error?.message && Alert.alert("Error", error?.message)
         })
     }
-    getLanguage(route)
+
+    setTimeout(() => {
+      getLanguage(route)
+    }, 1500);
   }
 
   const getLanguage = async (route) => {
@@ -70,7 +74,7 @@ const SplashScreen = (props) => {
   );
 };
 
-const mapStateToProps = ({ i18nState }) => {
+const mapStateToProps = ({ i18nState, ProfileReducer }) => {
   return {
     lang: i18nState.lang,
   };

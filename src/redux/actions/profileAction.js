@@ -1,4 +1,5 @@
-import { SETADDRESSLIST, SETADDRESSSELECT, SETCARTLIST, SETPROFILEDATA, SETNEWADDRESS, SETPICKUPMODE } from "../../constants/constants"
+import AsyncStorage from "@react-native-async-storage/async-storage"
+import { SETADDRESSLIST, SETADDRESSSELECT, SETCARTLIST, SETPROFILEDATA, SETNEWADDRESS, SETPICKUPMODE, ASKPICKUPMODE } from "../../constants/constants"
 
 
 
@@ -29,7 +30,7 @@ const setCartList = (payload) => {
     }
 }
 
-const showAddressSelect = (payload = false) => {
+const showAddressSelect = (payload = { visible: false }) => {
     return async (dispatch) => {
         dispatch({
             type: SETADDRESSSELECT,
@@ -38,7 +39,7 @@ const showAddressSelect = (payload = false) => {
     }
 }
 
-const showAddNewAddress = (payload = false) => {
+const showAddNewAddress = (payload = { visible: false }) => {
     return async (dispatch) => {
         dispatch({
             type: SETNEWADDRESS,
@@ -47,9 +48,18 @@ const showAddNewAddress = (payload = false) => {
     }
 }
 const setPickupMode = (payload) => {
+    AsyncStorage.setItem("pickupMode", payload)
     return async (dispatch) => {
         dispatch({
             type: SETPICKUPMODE,
+            payload,
+        })
+    }
+}
+const askPickupMode = (payload) => {
+    return async (dispatch) => {
+        dispatch({
+            type: ASKPICKUPMODE,
             payload,
         })
     }
@@ -62,5 +72,6 @@ export default {
     setCartList,
     showAddressSelect,
     showAddNewAddress,
-    setPickupMode
+    setPickupMode,
+    askPickupMode
 }

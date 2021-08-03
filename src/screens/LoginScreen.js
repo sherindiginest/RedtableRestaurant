@@ -1,11 +1,11 @@
 import React, { useRef, useState } from 'react';
 import { View, Text, ImageBackground, StatusBar, Image, Pressable, KeyboardAvoidingView, Platform, TouchableWithoutFeedback, Keyboard, ScrollView, Alert } from 'react-native';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import { connect, useDispatch } from 'react-redux';
 import { isEmpty, has } from "lodash"
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
-import { profileAction } from "./../redux/actions"
+import { AlertAction, profileAction } from "./../redux/actions"
 import { CustomTextInput, CustomButton } from './../components';
 import { backgroundImage, logo, email, password, eye } from './../../assets/images';
 import { COLORS, HEIGHT, STYLES, WIDTH, Axios, API, validateEmail } from './../constants';
@@ -16,7 +16,7 @@ const LoginScreen = (props, context) => {
   const [errors, setErrors] = useState({})
   const [loading, setloading] = useState(false)
   const passwordRef = useRef(null)
-
+  const dispatch = useDispatch()
   const setData = (field, value) => {
     form[field] = value
     setForm({ ...form })
@@ -41,7 +41,17 @@ const LoginScreen = (props, context) => {
           }
           setloading(false)
         }).catch((error) => {
-          error?.message && Alert.alert("Error", error?.message)
+          dispatch(AlertAction.handleAlert({
+            visible: true,
+            title: "Error",
+            message: error?.message,
+            buttons: [{
+              title: "Okay",
+              onPress: () => {
+                dispatch(AlertAction.handleAlert({ visible: false, }))
+              }
+            }]
+          }))
           setloading(false)
         })
     }

@@ -1,4 +1,4 @@
-import { SHOW_ALERT } from '../../constants/constants'
+import { SHOWALERT } from '../../constants/constants'
 
 const initialState = {
     alertParams: {
@@ -8,7 +8,7 @@ const initialState = {
 
 const alertReducer = (state = initialState, action) => {
     switch (action.type) {
-        case SHOW_ALERT:
+        case SHOWALERT:
             return {
                 ...state,
                 alertParams: action.payload

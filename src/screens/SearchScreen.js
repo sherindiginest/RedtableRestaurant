@@ -3,13 +3,15 @@ import { View, Text, Image, Pressable, FlatList } from 'react-native'
 import { COLORS, HEIGHT, STYLES, WIDTH } from '../constants'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { CustomTextInput, RenderItem } from '../components'
+import { AddAddressModal, CustomTextInput, RenderItem } from '../components'
 import { backarrow, search } from '../../assets/images'
 
 const SearchScreen = (props) => {
     const { lang, navigation, route: { params: { details } } } = props
 
     const [search, setsearch] = useState("")
+    const [showAddAddress, setshowAddAddress] = useState(false)
+
     return (
         <View style={{ flex: 1, backgroundColor: COLORS.white }}>
             <View style={[STYLES.flexDirection(lang), { borderBottomWidth: 0.5 }]}>

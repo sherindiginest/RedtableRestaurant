@@ -24,12 +24,11 @@ const OffersScreen = (props) => {
             if (has(response, "success") && response.success) {
                 setOffersList(response.data)
             }
+            console.log("response ==>", response);
             hideLoader()
         }).catch((error) => {
             hideLoader()
             console.log("error ==>", error);
-            //error?.message && Alert.alert("Error", error?.message)
-            // setloading(false)
         })
     }
 

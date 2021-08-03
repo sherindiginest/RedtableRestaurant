@@ -1,16 +1,25 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { View, Text, ScrollView, Image, Pressable, FlatList, Switch, Alert } from 'react-native'
 import { close, restaurant, notes, homeaddress, emptyCart } from '../../assets/images'
 import { AddAddressModal, ChooseAddress, CustomTextInput, Header, RenderItem } from '../components'
 import { API, Axios, COLORS, HEIGHT, STYLES, WIDTH } from '../constants'
 import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
+import { connect, useDispatch } from 'react-redux'
 import { isEmpty, has, isNull } from "lodash"
-import { LoadingAction, profileAction } from '../redux/actions'
+import { AlertAction, LoadingAction, profileAction } from '../redux/actions'
 
 const CartScreen = (props, context) => {
-    const { navigation, cartList, addressList, showAddressSelect, showAddNewAddress, visibleAddnewAddress, pickupMode, setPickupMode, setCartList, userData, showLoader, hideLoader } = props
+    const { navigation, cartList, addressList, showAddressSelect, showAddNewAddress, pickupMode, setPickupMode, setCartList, userData, showLoader, hideLoader } = props
     const [deliveryNotes, setdeliveryNotes] = useState("")
+    const [disableAddress, setdisableAddress] = useState(undefined)
+    const dispatch = useDispatch()
+
+    useEffect(() => {
+        if (has(cartList, "cartDetails") && !isEmpty(cartList.cartDetails)) {
+            const addRestaurants = addressList.find((add) => add?.is_default)?.restaurants
+            setdisableAddress(addRestaurants.find((i) => i == cartList?.cartDetails[0]?.restaurant_id))
+        }
+    }, [cartList, pickupMode])
 
     const getCartList = async () => {
         const { api_token } = userData
@@ -40,8 +49,29 @@ const CartScreen = (props, context) => {
     }
 
     const onNavigate = () => {
-        if (pickupMode == "delivery" && isEmpty(addressList)) {
-            Alert.alert("Warning", "Add an address to continue", [{ text: "OKAY", onPress: () => showAddNewAddress(true) }, { text: "Cancel", style: "cancel" }])
+        if (pickupMode == "delivery" && (isEmpty(addressList) || !disableAddress)) {
+            dispatch(AlertAction.handleAlert({
+                visible: true,
+                title: "Error",
+                message: !isEmpty(addressList) ? "Please choose or add another address" : "Add an address to continue",
+                buttons: [{
+                    title: "Okay",
+                    onPress: () => {
+                        if (!isEmpty(addressList)) {
+                            showAddressSelect({ visible: true, resId: cartList?.cartDetails[0]?.restaurant_id })
+                        } else {
+                            showAddNewAddress({ visible: true, resId: cartList?.cartDetails[0]?.restaurant_id })
+                        }
+                        dispatch(AlertAction.handleAlert({ visible: false, }))
+                    }
+                },
+                {
+                    title: "Cancel",
+                    onPress: () => {
+                        dispatch(AlertAction.handleAlert({ visible: false, }))
+                    }
+                }]
+            }))
         } else {
             navigation.navigate("CheckOutScreen", { deliveryNotes })
         }
@@ -52,7 +82,24 @@ const CartScreen = (props, context) => {
         titleColor={COLORS.black}
         cartButton={!isEmpty(cartList)}
         cartAction={() => {
-            Alert.alert("Warning", "Are you sure?", [{ text: "Clear", onPress: () => clearCart() }, { text: "Cancel", style: "cancel" }])
+            dispatch(AlertAction.handleAlert({
+                visible: true,
+                title: "Warning",
+                message: "Are you sure?",
+                buttons: [{
+                    title: "Clear",
+                    onPress: () => {
+                        clearCart()
+                        dispatch(AlertAction.handleAlert({ visible: false, }))
+                    }
+                },
+                {
+                    title: "Cancel",
+                    onPress: () => {
+                        dispatch(AlertAction.handleAlert({ visible: false, }))
+                    }
+                }]
+            }))
         }}
     >
         {has(cartList, "cartDetails") && !isEmpty(cartList.cartDetails) ? <ScrollView showsVerticalScrollIndicator={false}>
@@ -73,7 +120,8 @@ const CartScreen = (props, context) => {
                     <Text style={{ fontSize: 12, marginHorizontal: WIDTH * 0.03 }}>Delivery Address</Text>
                 </View>
                 <Text style={[{ fontSize: 15, marginHorizontal: WIDTH * 0.13 }, STYLES.fontMedium()]}>{!isEmpty(addressList) && addressList.find((add) => add?.is_default)?.address}</Text>
-                <Pressable onPress={() => showAddressSelect(true)} style={{ height: HEIGHT * 0.04, justifyContent: "center", marginHorizontal: WIDTH * 0.125, marginBottom: HEIGHT * 0.02 }}>
+                {!disableAddress && <Text style={[{ color: COLORS.primary, fontSize: 12, marginHorizontal: WIDTH * 0.13 }, STYLES.fontRegular()]}>Not Deliverable to this address</Text>}
+                <Pressable onPress={() => showAddressSelect({ visible: true, resId: cartList?.cartDetails[0]?.restaurant_id })} style={{ height: HEIGHT * 0.04, justifyContent: "center", marginHorizontal: WIDTH * 0.125, marginBottom: HEIGHT * 0.02 }}>
                     <Text style={{ fontSize: 14, fontWeight: "bold", color: COLORS.green1 }}>Choose/Add Address</Text>
                 </Pressable>
             </>}
@@ -156,7 +204,6 @@ const CartScreen = (props, context) => {
             </View>
         </View>}
     </Header>
-        <AddAddressModal visible={visibleAddnewAddress} onClose={() => { showAddNewAddress() }} addressData={{}} restaurantSpecific />
     </>)
 }
 
@@ -169,7 +216,6 @@ const mapStateToProps = ({ i18nState, ProfileReducer }) => {
         lang: i18nState.lang,
         cartList: ProfileReducer.cartList,
         addressList: ProfileReducer.addressList,
-        visibleAddnewAddress: ProfileReducer.visibleAddnewAddress,
         pickupMode: ProfileReducer.pickupMode,
         userData: ProfileReducer.userData,
     }
