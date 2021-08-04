@@ -183,7 +183,12 @@ const RestaurantDetailsScreen = (props) => {
                                     onContentSizeChange={() => {
                                         try {
                                             const index = categoryList.findIndex((data) => data.id == selectdCategory)
-                                            if (index > -1 && scrollViewref1 != null && categoryId && categoryId != null) { scrollViewref1.current.scrollToIndex({ index, animted: true, viewPosition: 0.5 }) }
+                                            if (index > -1 && scrollViewref1 != null && categoryId && categoryId != null) {
+                                                scrollViewref1.current.scrollToIndex({
+                                                    index, animted: true, viewPosition: 0.5
+                                                })
+                                                scrollViewref2 != null && scrollViewref2.current.scrollTo({ x: index * WIDTH, y: 0, animted: true, })
+                                            }
                                         } catch (error) {
                                             console.log(error);
                                         }

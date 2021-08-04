@@ -10,6 +10,7 @@ import { AlertAction, LoadingAction, profileAction } from '../redux/actions'
 
 const RenderItem = (props, context) => {
     const { item, lang, restaurant_id, setCartList, userData, cartList, vertLast, cart, bestOffer, hideLoader, showLoader, setshowAddAddress = () => { }, setshowPickupModal = () => { }, pickupMode, addressList, showAddressSelect, } = props
+    console.log(JSON.stringify(item));
     const [visible, setVisible] = useState(false)
     const [quantity, setQuantity] = useState(null)
     const dispatch = useDispatch()
@@ -166,7 +167,7 @@ const RenderItem = (props, context) => {
                 </Pressable>
             </View>
             <View style={{ width: WIDTH * 0.2, alignItems: "flex-end", justifyContent: "center" }}>
-                <Text>{context.t("price", { price: item?.food?.price })}</Text>
+                <Text>{context.t("price", { price: quantity * item?.food?.price })}</Text>
             </View>
         </View> : bestOffer ? <Pressable onPress={() => setVisible(true)} style={{ height: WIDTH * 0.4, width: WIDTH * 0.6, marginLeft: lang == "en" ? WIDTH * 0.07 : vertLast ? WIDTH * 0.07 : 0, marginRight: lang == "ar" ? WIDTH * 0.07 : vertLast ? WIDTH * 0.07 : 0, borderRadius: WIDTH * 0.07, backgroundColor: COLORS.white, elevation: 3, marginBottom: HEIGHT * 0.02, marginTop: WIDTH * 0.03 }}>
             <Image style={{ height: WIDTH * 0.25, width: WIDTH * 0.6, marginTop: WIDTH * 0.01, borderTopRightRadius: WIDTH * 0.05, borderTopLeftRadius: WIDTH * 0.05 }} source={item?.media && item?.media.length > 0 ? { uri: item?.media[0]?.url } : logo} defaultSource={logo} resizeMode="cover" />
@@ -176,17 +177,18 @@ const RenderItem = (props, context) => {
             {item?.discount_percentage && <View style={[{ backgroundColor: COLORS.green, width: WIDTH * 0.1, height: WIDTH * 0.1, borderRadius: WIDTH * 0.05, position: "absolute", top: -WIDTH * 0.03, justifyContent: "center", alignItems: "center" }, lang == "ar" ? { right: -WIDTH * 0.02, } : { left: -WIDTH * 0.02, }]}>
                 <Text style={[{ fontSize: 12 }, STYLES.fontMedium()]}>{item?.discount_percentage}%</Text>
             </View>}
+            {!item?.deliverable && <View style={{ position: "absolute", top: 0, left: 0, bottom: 0, right: 0, backgroundColor: "#00000020", borderRadius: WIDTH * 0.07, }} />}
         </Pressable> : <View style={{ marginLeft: lang == "en" ? WIDTH * 0.07 : vertLast ? WIDTH * 0.07 : 0, marginRight: lang == "ar" ? WIDTH * 0.07 : vertLast ? WIDTH * 0.07 : 0, marginBottom: WIDTH * 0.025, }}>
             <Pressable
                 onPress={() => setVisible(true)}
-                style={{ height: WIDTH * 0.4, width: WIDTH * 0.4, marginVertical: WIDTH * 0.025, borderRadius: WIDTH * 0.07, backgroundColor: COLORS.white, elevation: 3, alignItems: "center", }}>
+                style={{ height: WIDTH * 0.4, width: WIDTH * 0.4, marginVertical: WIDTH * 0.025, borderRadius: WIDTH * 0.07, backgroundColor: item?.deliverable ? COLORS.white : "#00000020", elevation: 3, alignItems: "center", }}>
                 <Image key={item?.media[0]?.url} style={{ width: WIDTH * 0.27, height: WIDTH * 0.23, marginTop: WIDTH * 0.01, }}
                     source={item?.media && item?.media.length > 0 ? { uri: item?.media[0]?.url } : logo} defaultSource={logo} resizeMode="contain" />
                 <Text style={[{ textAlign: "center", fontSize: 12 }, STYLES.fontRegular()]}>{item?.name}</Text>
                 <Text style={[{}, STYLES.fontBold()]}>{context.t("price", { price: item?.discount_price })}</Text>
             </Pressable>
             <View style={{ width: WIDTH * 0.25, height: WIDTH * 0.07, borderRadius: WIDTH * 0.035, backgroundColor: COLORS.statusbar, position: "absolute", bottom: 0, elevation: 4, alignSelf: "center" }}>
-                {quantity > 0 ? <View style={{ flex: 1, flexDirection: "row" }}>
+                {item?.deliverable ? (quantity > 0 ? <View style={{ flex: 1, flexDirection: "row" }}>
                     <Pressable onPress={() => manageCart(quantity - 1)} style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
                         <Text style={{ color: COLORS.white, fontSize: 25 }}>-</Text>
                     </Pressable>
@@ -198,8 +200,9 @@ const RenderItem = (props, context) => {
                     </Pressable>
                 </View> : <Pressable onPress={() => manageCart(1)} style={{ justifyContent: "center", alignItems: "center", flex: 1 }}>
                     <Text style={[{ color: COLORS.white, fontSize: 11, }, STYLES.fontRegular()]}>Add to order</Text>
-                </Pressable>
-                }
+                </Pressable>) : <View style={{ justifyContent: "center", alignItems: "center", flex: 1 }}>
+                    <Text style={[{ color: COLORS.white, fontSize: 11, }, STYLES.fontRegular()]}>Out of stock</Text>
+                </View>}
             </View>
         </View>}
         <Modal animationType="slide" visible={visible} onRequestClose={() => setVisible(false)} transparent>
@@ -228,8 +231,8 @@ const RenderItem = (props, context) => {
                             <Text style={{ color: COLORS.titleColor }}>{item?.description}</Text>
                             <Text style={{ color: COLORS.titleColor }}>{item?.ingredients}</Text>
                         </View>
-                        <Pressable onPress={() => manageCart(quantity + 1)} style={{ marginHorizontal: WIDTH * 0.05, height: HEIGHT * 0.07, backgroundColor: COLORS.addToCartButton, marginBottom: HEIGHT * 0.01, borderRadius: HEIGHT * 0.035, justifyContent: "center", alignItems: "center" }}>
-                            <Text style={{ color: COLORS.white, fontWeight: "bold" }}> Add To Order</Text>
+                        <Pressable disabled={!item?.deliverable} onPress={() => manageCart(quantity + 1)} style={{ marginHorizontal: WIDTH * 0.05, height: HEIGHT * 0.07, backgroundColor: COLORS.addToCartButton, marginBottom: HEIGHT * 0.01, borderRadius: HEIGHT * 0.035, justifyContent: "center", alignItems: "center" }}>
+                            <Text style={{ color: COLORS.white, fontWeight: "bold" }}>{item?.deliverable ? "Add To Order" : "Out of Stock"}</Text>
                         </Pressable>
                     </View>
                 </View>

@@ -14,7 +14,7 @@ const RenderItem = (props) => {
     const { item, getOrders, userData, last, context } = props
     const [visible, setVisible] = useState(false)
     const [priceDetails, setPriceDetails] = useState({})
-
+    console.log(JSON.stringify(item));
     useEffect(() => {
         let price = {
             itemTotal: 0,
@@ -134,11 +134,13 @@ const RenderItem = (props) => {
                                 <Text>Item Total</Text>
                                 {priceDetails.discount > 0 && <Text>Discount</Text>}
                                 {item?.delivery_fee > 0 && <Text>Delivery Fee</Text>}
+                                {Number(item?.tax) > 0 && <Text>Tax</Text>}
                             </View>
                             <View style={{ width: WIDTH * 0.2, alignItems: "flex-end" }}>
                                 <Text style={{ color: COLORS.primary }}>{context.t("price", { price: priceDetails.itemTotal })}</Text>
                                 {priceDetails.discount > 0 && <Text style={{ color: COLORS.primary }}>{context.t("price", { price: priceDetails.discount })}</Text>}
                                 {item?.delivery_fee > 0 && <Text style={{ color: COLORS.primary }}>{context.t("price", { price: item.delivery_fee })}</Text>}
+                                {Number(item?.tax) > 0 && <Text style={{ color: COLORS.primary }}>{context.t("price", { price: item.tax })}</Text>}
                             </View>
                         </View>
                         <View style={{ flexDirection: "row", justifyContent: "space-between", marginHorizontal: WIDTH * 0.05, marginVertical: HEIGHT * 0.02 }}>

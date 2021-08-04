@@ -54,55 +54,60 @@ const CheckOutScreen = (props, context) => {
 
     const createOrder = async () => {
         showLoader()
-        const { api_token, id } = userData
-        const { cartDetails } = cartList
-        const foods = cartDetails.map(({ food_id, food, quantity }) => {
-            return { price: food.discount_price, quantity, food_id }
-        })
-        const data = {
-            api_token,
-            user_id: id,
-            order_status_id: 1,
-            order_type: 2,
-            payment: {
-                id: null,
-                status: null,
-                method: paymentMode
-            },
-            tax: Number(couponStatus?.tax ? couponStatus?.tax : cartList.tax),
-            foods,
-            delivery_fee: deliveryFee,
-            restaurant_id: cartList.cartDetails[0].restaurant_id,
-            active: 1,
-            delivery_note: route.params.deliveryNotes || ""
-        }
-
-        if (pickupMode != "pickup") {
-            data.order_type = 1
-            data.delivery_address_id = addressList.find((add) => add?.is_default)?.id
-        }
-
-        await Axios.post(API.createOrder, data).then(async (response) => {
-            if (has(response, "success") && response.success) {
-                setCartList({})
-                setThankyouModal(true)
+        try {
+            const { api_token, id } = userData
+            const { cartDetails } = cartList
+            const foods = cartDetails.map(({ food_id, food, quantity }) => {
+                return { price: food.discount_price, quantity, food_id }
+            })
+            const data = {
+                api_token,
+                user_id: id,
+                order_status_id: 1,
+                order_type: "2",
+                payment: {
+                    id: null,
+                    status: null,
+                    method: paymentMode
+                },
+                tax: couponStatus?.tax ? couponStatus?.tax : cartList.tax,
+                foods,
+                delivery_fee: deliveryFee,
+                restaurant_id: cartList.cartDetails[0].restaurant_id,
+                active: 1,
+                delivery_note: route.params.deliveryNotes || ""
             }
+
+            if (pickupMode != "pickup") {
+                data.order_type = "1"
+                data.delivery_address_id = addressList.find((add) => add?.is_default)?.id
+            }
+            console.log("data ==>", data);
+            await Axios.post(API.createOrder, data).then(async (response) => {
+                if (has(response, "success") && response.success) {
+                    setCartList({})
+                    setThankyouModal(true)
+                }
+                hideLoader()
+            }).catch((error) => {
+                hideLoader()
+                dispatch(AlertAction.handleAlert({
+                    visible: true,
+                    title: "Error",
+                    message: JSON.stringify(error?.message),
+                    buttons: [{
+                        title: "Okay",
+                        onPress: () => {
+                            dispatch(AlertAction.handleAlert({ visible: false, }))
+                        }
+                    }]
+                }))
+                console.log(JSON.stringify(error));
+            })
+        } catch (error) {
             hideLoader()
-        }).catch((error) => {
-            hideLoader()
-            dispatch(AlertAction.handleAlert({
-                visible: true,
-                title: "Error",
-                message: error?.message,
-                buttons: [{
-                    title: "Okay",
-                    onPress: () => {
-                        dispatch(AlertAction.handleAlert({ visible: false, }))
-                    }
-                }]
-            }))
-            console.log(error); error?.message
-        })
+            console.log("createOrder ==>", error);
+        }
     }
 
     const onClose = () => {
@@ -117,8 +122,10 @@ const CheckOutScreen = (props, context) => {
         await Axios.get(API.getDeliveryCharge(addressList.find((add) => add?.is_default)?.area_id, cartList.cartDetails[0].restaurant_id), { params: { api_token } })
             .then(async (response) => {
                 if (has(response, "success") && response.success) {
-                    console.log("response ==>", response)
-                    setDeliveryFee(Number(response.data.delivery_charge))
+                    const { delivery_charge, free_delivery_amount } = response.data
+                    if (Number(free_delivery_amount) >= Number(cartList.totalBill)) {
+                        setDeliveryFee(Number(delivery_charge))
+                    }
                 }
                 hideLoader()
             }).catch((error) => { hideLoader() })
