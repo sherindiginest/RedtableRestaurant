@@ -82,7 +82,6 @@ const CheckOutScreen = (props, context) => {
                 data.order_type = "1"
                 data.delivery_address_id = addressList.find((add) => add?.is_default)?.id
             }
-            console.log("data ==>", data);
             await Axios.post(API.createOrder, data).then(async (response) => {
                 if (has(response, "success") && response.success) {
                     setCartList({})
