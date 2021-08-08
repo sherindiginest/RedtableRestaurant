@@ -1,27 +1,28 @@
 import React, { useRef, useEffect, useState } from 'react'
-import { Pressable } from 'react-native'
-import { View, Text, Animated, Easing, BackHandler } from 'react-native'
+import { View, Text, Animated, Easing, BackHandler, Image, FlatList, Pressable } from 'react-native'
 import { API, Axios, COLORS, HEIGHT, STYLES, WIDTH } from '../constants'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { isEmpty, has, isNull } from "lodash"
+
 import { LoadingAction, profileAction } from '../redux/actions'
-import { Image } from 'react-native'
 import { close } from '../../assets/images'
-import { FlatList } from 'react-native'
 
 
 const ChooseAddress = (props) => {
-    const { visibleSelectAddress, showAddressSelect, addressList, lang, userData, setAddressList, showLoader, hideLoader, setCartList, cartList, showAddNewAddress, } = props
+    const { visibleSelectAddress, showAddressSelect, addressList, lang, userData, setAddressList, showLoader, hideLoader, setCartList, cartList, showAddNewAddress } = props
+    const { visible, resId } = visibleSelectAddress
     const AnimatedValue = useRef(new Animated.Value(0)).current
     useEffect(() => {
         const backHandler = BackHandler.addEventListener("hardwareBackPress", () => {
             showAddressSelect()
+            return visible
         })
-    }, [])
+        return () => backHandler.remove()
+    }, [visible])
 
     useEffect(() => {
-        slideDown(visibleSelectAddress ? 1 : 0)
+        slideDown(visible ? 1 : 0)
     }, [visibleSelectAddress])
 
     const handleDefault = async (data) => {
@@ -112,14 +113,14 @@ const ChooseAddress = (props) => {
                         data={addressList || []}
                         keyExtractor={(item, index) => index.toString()}
                         renderItem={({ item, index }) => {
-                            let disabled = undefined
-                            if (has(cartList, "cartDetails") && !isEmpty(cartList.cartDetails)) {
-                                disabled = item?.restaurants.find((i) => i == cartList?.cartDetails[0]?.restaurant_id)
+                            let disabled = true
+                            if (resId && item?.restaurants.find((i) => i == resId)) {
+                                disabled = false
                             }
-                            return (<Pressable disabled={!disabled} onPress={() => handleDefault(item)} style={[{ height: HEIGHT * 0.1, paddingHorizontal: WIDTH * 0.05, borderTopWidth: index == 0 ? 0 : 0.5, justifyContent: "space-between", alignItems: "center", backgroundColor: disabled ? COLORS.white : "#00000020" }, STYLES.flexDirection(lang)]}>
+                            return (<Pressable disabled={disabled} onPress={() => handleDefault(item)} style={[{ height: HEIGHT * 0.1, paddingHorizontal: WIDTH * 0.05, borderTopWidth: index == 0 ? 0 : 0.5, justifyContent: "space-between", alignItems: "center", backgroundColor: !disabled ? COLORS.white : "#00000020" }, STYLES.flexDirection(lang)]}>
                                 <View style={{ width: WIDTH * 0.6, justifyContent: "space-evenly", }}>
                                     <Text style={[STYLES.textAlign(lang), { color: COLORS.title3, fontWeight: "bold" }]}>{item.description}
-                                        {!disabled && <Text style={[{ color: COLORS.primary, fontSize: 12 }, STYLES.fontRegular()]}>  Not Deliverable to this address</Text>}
+                                        {disabled && <Text style={[{ color: COLORS.primary, fontSize: 12 }, STYLES.fontRegular()]}>  Not Deliverable to this address</Text>}
                                     </Text>
                                     <Text style={[STYLES.textAlign(lang), { color: `${COLORS.title3}70`, fontWeight: "bold" }]}>{item.address}</Text>
                                 </View>
@@ -135,7 +136,7 @@ const ChooseAddress = (props) => {
                     <Pressable onPress={() => showAddressSelect()} style={{ height: HEIGHT * 0.06, backgroundColor: COLORS.primary, borderRadius: HEIGHT * 0.036, justifyContent: "center", alignItems: "center", flex: 1, marginRight: WIDTH * 0.02 }}>
                         <Text style={{ color: COLORS.white, fontWeight: "bold" }}>{`DONE`}</Text>
                     </Pressable>
-                    <Pressable onPress={() => showAddNewAddress(true)} style={{ height: HEIGHT * 0.06, backgroundColor: COLORS.primary, borderRadius: HEIGHT * 0.036, justifyContent: "center", alignItems: "center", flex: 1 }}>
+                    <Pressable onPress={() => showAddNewAddress({ visible: true, resId })} style={{ height: HEIGHT * 0.06, backgroundColor: COLORS.primary, borderRadius: HEIGHT * 0.036, justifyContent: "center", alignItems: "center", flex: 1 }}>
                         <Text style={{ color: COLORS.white, fontWeight: "bold" }}>{`+ ADD NEW ADDRESS`}</Text>
                     </Pressable>
                 </View>

@@ -1,23 +1,49 @@
 import React, { useState, useEffect } from 'react'
 import { View, Text, FlatList, Image, ScrollView, ImageBackground, Pressable } from 'react-native'
 import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
+import { connect, useDispatch } from 'react-redux'
 import { isEmpty, has } from "lodash"
+import LinearGradient from 'react-native-linear-gradient';
 
 import { dummy, search, filter } from '../../assets/images'
-import { API, Axios, COLORS, HEIGHT, STYLES, WIDTH } from '../constants'
+import { API, Axios, colorArray, COLORS, HEIGHT, STYLES, WIDTH } from '../constants'
 import { Header, RestaurantComponent, CustomTextInput, RenderMealItem } from "./../components"
+import { AlertAction, LoadingAction, profileAction } from '../redux/actions'
 
 const HomeScreen = (props, context) => {
-    const { lang, navigation } = props
+    const { lang, navigation, pickupMode, askForPickupMode } = props
     const [homeList, sethomeList] = useState({})
     const [categoryList, setcategoryList] = useState([])
+    const dispatch = useDispatch()
+
     useEffect(() => {
+        if (askForPickupMode) {
+            dispatch(AlertAction.handleAlert({
+                visible: true,
+                title: "Order Type",
+                message: "Please choose one method to continue",
+                buttons: [{
+                    title: "Delivery",
+                    onPress: () => {
+                        dispatch(profileAction.setPickupMode("delivery"))
+                        dispatch(AlertAction.handleAlert({ visible: false, }))
+                        dispatch(profileAction.askPickupMode(false))
+                    }
+                }, {
+                    title: "Pickup",
+                    onPress: () => {
+                        dispatch(profileAction.setPickupMode("pickup"))
+                        dispatch(AlertAction.handleAlert({ visible: false, }))
+                        dispatch(profileAction.askPickupMode(false))
+                    }
+                }]
+            }))
+        }
         getData()
     }, [])
 
     const getData = async () => {
-        //setloading(true)
+        dispatch(LoadingAction.showLoader())
         await Axios.get(API.home)
             .then(async (response) => {
                 if (has(response, "success") && response.success) {
@@ -25,18 +51,17 @@ const HomeScreen = (props, context) => {
                 }
                 // setloading(false)
             }).catch((error) => {
-                //error?.message && Alert.alert("Error", error?.message)
-                // setloading(false)
+                dispatch(LoadingAction.hideLoader())
             })
         await Axios.get(API.categories)
             .then(async (response) => {
                 if (has(response, "success") && response.success) {
                     setcategoryList(response.data)
                 }
+                dispatch(LoadingAction.hideLoader())
                 // setloading(false)
             }).catch((error) => {
-                //error?.message && Alert.alert("Error", error?.message)
-                // setloading(false)
+                dispatch(LoadingAction.hideLoader())
             })
     }
 
@@ -53,7 +78,7 @@ const HomeScreen = (props, context) => {
                 />
             </View>
             <View style={{ backgroundColor: COLORS.white, flex: 1 }}>
-                <View style={[{ height: HEIGHT * 0.07, borderRadius: HEIGHT * 0.035, marginTop: -HEIGHT * 0.035, backgroundColor: COLORS.white, borderColor: COLORS.borderColor1, alignItems: "center", borderWidth: 1, justifyContent: "space-between" }, STYLES.flexDirection(lang)]}>
+                {/* <View style={[{ height: HEIGHT * 0.07, borderRadius: HEIGHT * 0.035, marginTop: -HEIGHT * 0.035, backgroundColor: COLORS.white, borderColor: COLORS.borderColor1, alignItems: "center", borderWidth: 1, justifyContent: "space-between" }, STYLES.flexDirection(lang)]}>
                     <View style={{ flex: 1 }}>
                         <CustomTextInput style={{ height: HEIGHT * 0.07, borderWidth: 0, }}
                             placeholder="Search"
@@ -62,7 +87,8 @@ const HomeScreen = (props, context) => {
                             textColor={COLORS.black}
                         />
                     </View>
-                </View>
+                    <Image style={{ marginHorizontal: WIDTH * 0.05, width: WIDTH * 0.1 }} source={filter} resizeMode="contain" />
+                </View> */}
                 <View style={{ height: HEIGHT * 0.2, justifyContent: "space-evenly" }}>
                     <Text style={[{ color: COLORS.borderColor2, marginHorizontal: WIDTH * 0.05, marginVertical: WIDTH * 0.025, fontSize: 18 }, STYLES.textAlign(lang), STYLES.fontSpecial()]}>{context.t("meals")}</Text>
                     <FlatList
@@ -95,9 +121,10 @@ const HomeScreen = (props, context) => {
                         data={categoryList}
                         keyExtractor={(item, index) => index.toString()}
                         renderItem={({ item, index }) => {
-                            return (<Pressable onPress={() => navigation.navigate("ChooseRestaurantsScreen", { item, type: "category" })} style={{ height: WIDTH * 0.27, width: WIDTH * 0.27, marginLeft: lang == "en" ? WIDTH * 0.05 : 0, marginRight: lang == "ar" ? WIDTH * 0.05 : 0, borderRadius: WIDTH * 0.05, overflow: "hidden", marginTop: WIDTH * 0.03, }}>
-                                <ImageBackground source={item?.media && item?.media.length > 0 ? { uri: item?.media[0]?.url } : dummy} style={{ flex: 1, justifyContent: "center", alignItems: "center" }} resizeMode="cover">
-                                    <View style={{ flex: 1, justifyContent: "center", alignItems: "center", }}>
+                            return (<Pressable onPress={() => navigation.navigate("ChooseRestaurantsScreen", { item, type: "category" })} style={{ height: WIDTH * 0.27, width: WIDTH * 0.27, marginLeft: lang == "en" ? WIDTH * 0.05 : 0, marginRight: lang == "ar" ? WIDTH * 0.05 : 0, borderRadius: WIDTH * 0.05, overflow: "hidden", marginTop: WIDTH * 0.03 }}>
+                                <ImageBackground source={item?.media && item?.media.length > 0 ? { uri: item?.media[0]?.url } : dummy} style={{ flex: 1, }} resizeMode="cover">
+                                    <LinearGradient start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} colors={colorArray()} style={{ flex: 1, justifyContent: "center", alignItems: "center", opacity: 0.65, position: "absolute", top: 0, left: 0, right: 0, bottom: 0 }} />
+                                    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
                                         <Text style={[{ color: COLORS.white, marginHorizontal: WIDTH * 0.05, marginVertical: WIDTH * 0.025, fontSize: 15, }, STYLES.fontBold()]}>{item?.name}</Text>
                                     </View>
                                 </ImageBackground>
@@ -114,9 +141,11 @@ HomeScreen.contextTypes = {
     t: PropTypes.func,
 }
 
-const mapStateToProps = ({ i18nState }) => {
+const mapStateToProps = ({ i18nState, ProfileReducer }) => {
     return {
         lang: i18nState.lang,
+        pickupMode: ProfileReducer.pickupMode,
+        askForPickupMode: ProfileReducer.askForPickupMode,
     }
 }
 const mapDispatchToProps = {}

@@ -27,8 +27,6 @@ const OurRestaurantsScreen = (props, context) => {
                 hideLoader()
             }).catch((error) => {
                 hideLoader()
-                //error?.message && Alert.alert("Error", error?.message)
-                // setloading(false)
             })
     }
 

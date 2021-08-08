@@ -22,6 +22,7 @@ const ChooseRestaurantsScreen = (props) => {
         const { item: { id }, type } = route.params
         const url = type == "meal" ? API.mealRestaurants(id) : API.restaurantsCategories(id)
         await Axios.get(url).then(async (response) => {
+            setRestaurantList(response)
             if (has(response, "success") && response.success) {
                 setRestaurantList(response.data)
             }
@@ -29,8 +30,6 @@ const ChooseRestaurantsScreen = (props) => {
         }).catch((error) => {
             hideLoader()
             console.log("error ==>", error);
-            //error?.message && Alert.alert("Error", error?.message)
-            // setloading(false)
         })
     }
 

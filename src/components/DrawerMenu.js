@@ -1,13 +1,12 @@
 import React from 'react';
-import { View, Text, Image, FlatList } from 'react-native';
+import { View, Text, Image, FlatList, Pressable } from 'react-native';
 import PropTypes from 'prop-types';
 import { connect, useDispatch } from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
-import { SetLanguageAction } from './../redux/actions';
+import { AlertAction, profileAction, SetLanguageAction } from './../redux/actions';
 import { HEIGHT, COLORS, WIDTH, STYLES } from './../constants';
-import { logo, email, shop, offers, myorders, settings, language, logout } from './../../assets/images';
-import { Pressable } from 'react-native';
+import { logo, email, shop, offers, myorders, settings, language, logout, location, locationoutline } from './../../assets/images';
 
 
 
@@ -25,7 +24,7 @@ const DrawerMenu = (props, context) => {
       }
     },
     {
-      label: 'Offers',
+      label: 'Coupons',
       icon: offers,
       onPress: () => {
         navigation.navigate("OffersScreen")
@@ -36,6 +35,31 @@ const DrawerMenu = (props, context) => {
       icon: settings,
       onPress: () => {
         navigation.navigate("Settings")
+      }
+    },
+    {
+      label: "Order type",
+      icon: locationoutline,
+      onPress: async () => {
+        dispatch(AlertAction.handleAlert({
+          visible: true,
+          title: "Order Type",
+          message: "Please choose one method to continue",
+          buttons: [{
+            title: "Delivery",
+            onPress: () => {
+              dispatch(profileAction.setPickupMode("delivery"))
+              dispatch(AlertAction.handleAlert({ visible: false, }))
+            }
+          }, {
+            title: "Pickup",
+            onPress: () => {
+              dispatch(profileAction.setPickupMode("pickup"))
+              dispatch(AlertAction.handleAlert({ visible: false, }))
+            }
+          }]
+        }))
+        navigation.closeDrawer()
       }
     }/* ,
     {

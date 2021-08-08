@@ -1,7 +1,7 @@
 import React, { useRef, useEffect } from 'react'
 import { View, Image, Animated, Easing, Keyboard } from 'react-native'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
-import { createStackNavigator } from '@react-navigation/stack'
+import { CardStyleInterpolators, createStackNavigator } from '@react-navigation/stack'
 import { isEmpty, has } from "lodash"
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
@@ -20,6 +20,7 @@ import {
 } from './../screens'
 
 import { HEIGHT, WIDTH, COLORS } from '../constants'
+import SearchScreen from '../screens/SearchScreen'
 
 const TABBAR_HEIGHT = HEIGHT * 0.08
 const TABBAR_WIDTH = WIDTH / 5
@@ -89,11 +90,12 @@ const HomeScreenStack = createStackNavigator()
 const HomeScreenRoute = () => {
     return (
         <HomeScreenStack.Navigator
-            screenOptions={{ headerShown: false, }}
+            screenOptions={{ headerShown: false, cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS }}
             initialRouteName="HomeScreen">
             <HomeScreenStack.Screen name="HomeScreen" component={HomeScreen} />
             <HomeScreenStack.Screen name="RestaurantDetailsScreen" component={RestaurantDetailsScreen} />
             <HomeScreenStack.Screen name="ChooseRestaurantsScreen" component={ChooseRestaurantsScreen} />
+            <HomeScreenStack.Screen name="SearchScreen" component={SearchScreen} />
         </HomeScreenStack.Navigator>
     )
 }
@@ -101,10 +103,11 @@ const OurRestaurantsScreenStack = createStackNavigator()
 const OurRestaurantsScreenRoute = () => {
     return (
         <OurRestaurantsScreenStack.Navigator
-            screenOptions={{ headerShown: false, }}
+            screenOptions={{ headerShown: false, cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS }}
             initialRouteName="OurRestaurantsScreen">
             <OurRestaurantsScreenStack.Screen name="OurRestaurantsScreen" component={OurRestaurantsScreen} />
             <OurRestaurantsScreenStack.Screen name="RestaurantDetailsScreen" component={RestaurantDetailsScreen} />
+            <OurRestaurantsScreenStack.Screen name="SearchScreen" component={SearchScreen} />
         </OurRestaurantsScreenStack.Navigator>
     )
 }
@@ -113,7 +116,7 @@ const CheckoutScreenStack = createStackNavigator()
 const CheckoutScreenRoute = () => {
     return (
         <CheckoutScreenStack.Navigator
-            screenOptions={{ headerShown: false, }}
+            screenOptions={{ headerShown: false, cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS }}
             initialRouteName="CartScreen">
             <CheckoutScreenStack.Screen name="CartScreen" component={CartScreen} />
             <CheckoutScreenStack.Screen name="CheckOutScreen" component={CheckOutScreen} />

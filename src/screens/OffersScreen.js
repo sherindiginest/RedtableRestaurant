@@ -3,10 +3,11 @@ import { View, Text, Image, FlatList, ImageBackground } from 'react-native'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { isEmpty, has } from "lodash"
+import LinearGradient from 'react-native-linear-gradient';
 
 import { backarrow, dummy } from '../../assets/images'
 import { Header, RestaurantComponent } from '../components'
-import { API, Axios, COLORS, HEIGHT, STYLES, WIDTH } from '../constants'
+import { API, Axios, colorArray, COLORS, HEIGHT, STYLES, WIDTH } from '../constants'
 import { LoadingAction } from '../redux/actions'
 
 const OffersScreen = (props) => {
@@ -28,12 +29,10 @@ const OffersScreen = (props) => {
         }).catch((error) => {
             hideLoader()
             console.log("error ==>", error);
-            //error?.message && Alert.alert("Error", error?.message)
-            // setloading(false)
         })
     }
 
-    return (<Header backgroundColor={COLORS.white} title="offers">
+    return (<Header backgroundColor={COLORS.white} title="Coupons">
         <View style={{ flex: 1 }}>
             <FlatList
                 showsVerticalScrollIndicator={false}
@@ -41,9 +40,10 @@ const OffersScreen = (props) => {
                 contentContainerStyle={{ alignItems: "center" }}
                 data={offersList}
                 keyExtractor={(item, index) => index.toString()}
-                renderItem={({ item, index }) => <ImageBackground source={dummy} style={{ borderWidth: 1, height: HEIGHT * 0.2, width: WIDTH * 0.8, marginBottom: HEIGHT * 0.03, borderRadius: HEIGHT * 0.03, overflow: "hidden", justifyContent: "flex-end" }}>
-                    <View style={{ height: HEIGHT * 0.06, borderRadius: HEIGHT * 0.03, backgroundColor: `${COLORS.primary}90`, justifyContent: "center", alignItems: "center" }}>
-                        <Text style={{ color: COLORS.white, fontSize: 15, fontWeight: "bold" }}>{`${item.discount}${item.discount_type == "percent" ? " %" : "SR"} Off, Use code "${item.code}"`}</Text>
+                renderItem={({ item, index }) => <ImageBackground source={item?.media && item?.media.length > 0 ? { uri: item?.media[0]?.url } : dummy} style={{ height: HEIGHT * 0.2, width: WIDTH * 0.8, marginBottom: HEIGHT * 0.03, borderRadius: HEIGHT * 0.03, overflow: "hidden", justifyContent: "flex-end" }}>
+                    <View style={{ height: HEIGHT * 0.06, borderRadius: HEIGHT * 0.03, justifyContent: "center", alignItems: "center" }}>
+                        <LinearGradient start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} colors={colorArray()} style={{ flex: 1, justifyContent: "center", alignItems: "center", opacity: 0.65, position: "absolute", top: 0, left: 0, right: 0, bottom: 0, borderRadius: HEIGHT * 0.025, }} />
+                        <Text style={{ color: COLORS.white, fontSize: 15, fontWeight: "bold" }}>{`${item.discount}${item.discount_type == "percent" ? " %" : " SR"} Off, Use code "${item.code}"`}</Text>
                     </View>
                 </ImageBackground>}
             />

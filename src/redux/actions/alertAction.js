@@ -1,10 +1,10 @@
-import { SHOW_ALERT } from '../../constants/constants'
+import { SHOWALERT } from '../../constants/constants'
 
 
 const handleAlert = (obj = {}) => {
     return dispatch => {
         dispatch({
-            type: SHOW_ALERT, payload: obj
+            type: SHOWALERT, payload: obj
         })
     }
 }

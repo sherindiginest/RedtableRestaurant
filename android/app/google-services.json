@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "93796788349",
+    "project_id": "salkara-4d9e1",
+    "storage_bucket": "salkara-4d9e1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:93796788349:android:cbd98cd185208552c6e914",
+        "android_client_info": {
+          "package_name": "com.diginest.salkara"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "93796788349-hmue9tduuf1vroqm80esbvej74mmcvbk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDQ0ejNFcJoZrNpOI-cvZ68sHutviYFSQo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "93796788349-hmue9tduuf1vroqm80esbvej74mmcvbk.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

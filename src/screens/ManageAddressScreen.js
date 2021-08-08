@@ -1,21 +1,20 @@
 import React, { useEffect, useState } from 'react'
 import { View, Text, Image, FlatList, Pressable } from 'react-native'
 import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
+import { connect, useDispatch } from 'react-redux'
 import { isEmpty, has, isNull } from "lodash"
 
 import { backarrow, dummy } from '../../assets/images'
 import { Header, RestaurantComponent, AddAddressModal } from '../components'
 import { API, Axios, COLORS, HEIGHT, STYLES, WIDTH } from '../constants'
-import { Alert } from 'react-native'
-import { LoadingAction, profileAction } from '../redux/actions'
+import { AlertAction, LoadingAction, profileAction } from '../redux/actions'
 
 const ManageAddressScreen = (props) => {
     const { route, navigation, lang, userData, addressList, setAddressList, showLoader, hideLoader } = props
     // const [addressList, setaddressList] = useState([])
-    const [addnewAddress, setaddnewAddress] = useState(false)
+    /* const [addnewAddress, setaddnewAddress] = useState(false) */
     const [addressData, setaddressData] = useState({})
-
+    const dispatch = useDispatch()
     useEffect(() => {
         //console.log(route?.params?.title || "empreer")
         //setTitle(route.params?.title || "Our Restaurants")
@@ -34,9 +33,35 @@ const ManageAddressScreen = (props) => {
 
     const handleDelete = (item) => {
         if (item?.is_default) {
-            return Alert.alert("Warning", "Make another addess as default and try again")
+            dispatch(AlertAction.handleAlert({
+                visible: true,
+                title: "Error",
+                message: "Make another addess as default and try again",
+                buttons: [{
+                    title: "Okay",
+                    onPress: () => {
+                        dispatch(AlertAction.handleAlert({ visible: false, }))
+                    }
+                }]
+            }))
         } else {
-            Alert.alert("Warning", "Are you sure?", [{ text: "Delete", onPress: () => deleteAction(item) }, { text: "Cancel", style: "cancel" }])
+            dispatch(AlertAction.handleAlert({
+                visible: true,
+                title: "Warning",
+                message: "Are you sure?",
+                buttons: [{
+                    title: "Delete",
+                    onPress: () => {
+                        deleteAction(item)
+                        dispatch(AlertAction.handleAlert({ visible: false, }))
+                    }
+                }, {
+                    title: "Cancel",
+                    onPress: () => {
+                        dispatch(AlertAction.handleAlert({ visible: false, }))
+                    }
+                }]
+            }))
         }
     }
 
@@ -65,7 +90,18 @@ const ManageAddressScreen = (props) => {
                     hideLoader()
                 }).catch((error) => { hideLoader() })
             } else {
-                return Alert.alert("Warning", "Make another addess as default and try again")
+                dispatch(AlertAction.handleAlert({
+                    visible: true,
+                    title: "Error",
+                    message: "Make another addess as default and try again",
+                    buttons: [{
+                        title: "Okay",
+                        onPress: () => {
+                            hideLoader()
+                            dispatch(AlertAction.handleAlert({ visible: false, }))
+                        }
+                    }]
+                }))
             }
         } else {
             await Axios.put(API.editAddress, { ...data, default: 1, api_token }).then(async (res) => {
@@ -105,10 +141,8 @@ const ManageAddressScreen = (props) => {
                             </Pressable>
                             <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
                                 <Pressable onPress={() => {
-                                    const { api_token } = userData
                                     const { id, description, address, is_default, area_id, user_id } = item
-                                    setaddressData({ id, api_token, description, address, default: is_default, area_id, user_id })
-                                    setaddnewAddress(true)
+                                    dispatch(profileAction.showAddNewAddress({ visible: true, addressData: { id, description, address, default: is_default, area_id } }))
                                 }}>
                                     <Text style={[{ color: COLORS.green2, fontWeight: "bold" }]}>EDIT</Text>
                                 </Pressable>
@@ -120,14 +154,13 @@ const ManageAddressScreen = (props) => {
                         </View>
                     </View>}
                 />
-                <Pressable onPress={() => setaddnewAddress(true)} style={{ height: HEIGHT * 0.06, backgroundColor: COLORS.primary, borderRadius: HEIGHT * 0.036, justifyContent: "center", alignItems: "center", margin: WIDTH * 0.05 }}>
+                <Pressable onPress={() => dispatch(profileAction.showAddNewAddress({ visible: true }))} style={{ height: HEIGHT * 0.06, backgroundColor: COLORS.primary, borderRadius: HEIGHT * 0.036, justifyContent: "center", alignItems: "center", margin: WIDTH * 0.05 }}>
                     <Text style={{ color: COLORS.white, fontWeight: "bold" }}>
                         {`+ ADD ADDRESS`}
                     </Text>
                 </Pressable>
             </View>
         </Header>
-        <AddAddressModal visible={addnewAddress} onClose={() => { setaddressData({}), setaddnewAddress(false) }} addressData={addressData} />
     </>
     )
 }

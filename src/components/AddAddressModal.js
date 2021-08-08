@@ -1,33 +1,38 @@
 import React, { useState, useEffect } from 'react'
 import { View, Text, Modal, Pressable, Image, Switch } from 'react-native'
 import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
-import { isEmpty, has, isNull } from "lodash"
+import { connect, useDispatch } from 'react-redux'
+import { isEmpty, has } from "lodash"
 import RNPickerSelect from 'react-native-picker-select'
 
 import { CustomTextInput } from '.'
 import { backarrow, close } from '../../assets/images'
 import { API, Axios, COLORS, HEIGHT, STYLES, WIDTH } from '../constants'
 import { LoadingAction, profileAction } from '../redux/actions'
+import CustomButton from './CustomButton'
 
 const AddAddressModal = (props) => {
-    const { visible, onClose, lang, addressData, userData, setAddressList, restaurantSpecific = false, cartList, setCartList, resId } = props
-
+    const { addnewAddressParams, lang, userData, setAddressList, cartList, setCartList } = props
+    const { visible, addressData, resId, } = addnewAddressParams
+    const [loading, setloading] = useState(false)
     const [address, setaddress] = useState(addressData)
     const [areaList, setareaList] = useState([])
     const [error, setError] = useState(false)
+    const dispatch = useDispatch()
 
     useEffect(() => {
         getAreacodes()
     }, [])
 
     useEffect(() => {
+        getAreacodes()
+    }, [visible])
+
+    useEffect(() => {
         if (isEmpty(addressData)) {
             setaddress({
                 description: "HOME",
                 default: false,
-                user_id: userData.id,
-                api_token: userData.api_token,
                 area_id: null,
                 address: ""
             })
@@ -36,6 +41,10 @@ const AddAddressModal = (props) => {
         }
     }, [addressData])
 
+    const onClose = () => {
+        setaddress({})
+        dispatch(profileAction.showAddNewAddress())
+    }
 
     const setData = (field, value) => {
         address[field] = value
@@ -68,15 +77,7 @@ const AddAddressModal = (props) => {
 
     const getAreacodes = async () => {
         const { api_token } = userData
-        let restaurant_id = null
-        if (restaurantSpecific) {
-            if (has(cartList, "cartDetails")) {
-                restaurant_id = cartList?.cartDetails[0]?.restaurant_id
-            } else if (resId) {
-                restaurant_id = resId
-            }
-        }
-        await Axios.get(API.areaCodes(restaurant_id), { params: { api_token } })
+        await Axios.get(API.areaCodes(resId || ""), { params: { api_token } })
             .then(async (response) => {
                 if (has(response, "success") && response.success) {
                     setareaList(response.data)
@@ -87,10 +88,10 @@ const AddAddressModal = (props) => {
 
     const handleAction = async () => {
         if (has(address, "address") && !isEmpty(address.address)) {
-            const data = { ...address, default: address.default ? 1 : 0 }
+            setloading(true)
+            const data = { ...address, default: address.default ? 1 : 0, user_id: userData.id, api_token: userData.api_token }
             if (isEmpty(addressData)) {
                 await Axios.post(API.createAddress, data).then(async (res) => {
-                    console.log(res);
                     if (has(res, "success") && res.success) {
                         await getAddresses()
                         await getCartList()
@@ -104,6 +105,7 @@ const AddAddressModal = (props) => {
                     }
                 }).catch((error) => { })
             }
+            setloading(false)
         } else {
             setError(true)
         }
@@ -173,11 +175,15 @@ const AddAddressModal = (props) => {
                         <Text style={{}}>Set as Default address for all purchases</Text>
                         <Switch value={address?.default} thumbColor={address?.default ? COLORS.green2 : COLORS.color3} trackColor={{ false: COLORS.color2, true: COLORS.color1 }} onValueChange={(value) => setData("default", value)} />
                     </View>
-                    <Pressable onPress={() => handleAction()} style={{ height: HEIGHT * 0.06, backgroundColor: COLORS.primary, borderRadius: HEIGHT * 0.036, justifyContent: "center", alignItems: "center", bottom: -1 }}>
-                        <Text style={{ color: COLORS.white, fontWeight: "bold" }}>
-                            {isEmpty(addressData) ? `+ ADD ADDRESS` : "SAVE ADDRESS"}
-                        </Text>
-                    </Pressable>
+                    <CustomButton
+                        title={isEmpty(addressData) ? `+ ADD ADDRESS` : "SAVE ADDRESS"}
+                        onPress={() => {
+                            handleAction()
+                            //navigation.navigate('OtpScreen');
+                        }}
+                        loading={loading}
+                        style={{ backgroundColor: COLORS.addToCartButton, height: HEIGHT * 0.06 }}
+                    />
                 </View>
             </View>
         </View>
@@ -192,7 +198,8 @@ const mapStateToProps = ({ i18nState, ProfileReducer }) => {
     return {
         lang: i18nState.lang,
         userData: ProfileReducer.userData,
-        cartList: ProfileReducer.cartList
+        cartList: ProfileReducer.cartList,
+        addnewAddressParams: ProfileReducer.addnewAddressParams
     }
 }
 const mapDispatchToProps = {

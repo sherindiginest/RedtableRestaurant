@@ -3,20 +3,21 @@ import { ImageBackground, Image, View, Text, Pressable, FlatList, ScrollView, Mo
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { isEmpty, has } from "lodash"
+import RenderHtml from 'react-native-render-html';
+import LinearGradient from 'react-native-linear-gradient';
 
 import { backarrow, dummy, location, call, direction, filter, search, star, mailoutline, calloutline, locationoutline, clockoutline, close, heart } from '../../assets/images'
 import { Header, CustomTextInput, RenderItem, AddAddressModal, PickupMethodModal } from '../components'
-import { API, Axios, COLORS, HEIGHT, STYLES, WIDTH } from '../constants'
+import { API, Axios, colorArray, COLORS, HEIGHT, STYLES, WIDTH } from '../constants'
 import { LoadingAction } from '../redux/actions'
 
 const RestaurantDetailsScreen = (props) => {
-    const { lang, route: { params: { item, type, mealId = null, categoryId = null } }, showLoader, hideLoader } = props
+    const { lang, route: { params: { item, type, mealId = null, categoryId = null, selectedTab = 0 } }, showLoader, hideLoader, navigation } = props
     let scrollViewref = useRef(null)
     let scrollViewref1 = useRef(null)
     let scrollViewref2 = useRef(null)
-    const [tab, setTab] = useState(0)
+    const [tab, setTab] = useState(selectedTab)
     const [categoryList, setcategoryList] = useState([])
-    const [showAddAddress, setshowAddAddress] = useState(false)
     const [showPickupModal, setshowPickupModal] = useState(false)
     const [bestoffers, setBestoffers] = useState([])
     const [todaylist, setTodaylist] = useState([])
@@ -32,8 +33,6 @@ const RestaurantDetailsScreen = (props) => {
     useEffect(() => {
         if (has(details, "foods") && !isEmpty(details.foods)) {
             const list = details.foods.filter((data) => data.category_id == selectdCategory)
-
-
             //setfoodList(list)
             try {
                 const index = categoryList.findIndex((data) => data.id == selectdCategory)
@@ -71,8 +70,6 @@ const RestaurantDetailsScreen = (props) => {
         }).catch((error) => {
             console.log("error ==>", error);
             hideLoader()
-            //error?.message && Alert.alert("Error", error?.message)
-            // setloading(false)
         })
     }
 
@@ -87,8 +84,6 @@ const RestaurantDetailsScreen = (props) => {
         }).catch((error) => {
             hideLoader()
             console.log("error ==>", JSON.stringify(error));
-            //error?.message && Alert.alert("Error", error?.message)
-            // setloading(false)
         })
     }
 
@@ -99,8 +94,6 @@ const RestaurantDetailsScreen = (props) => {
                     setBestoffers(response.data)
                 }
             }).catch((error) => {
-                //error?.message && Alert.alert("Error", error?.message)
-                // setloading(false)
             })
     }
 
@@ -111,8 +104,6 @@ const RestaurantDetailsScreen = (props) => {
                     setTodaylist(response.data)
                 }
             }).catch((error) => {
-                //error?.message && Alert.alert("Error", error?.message)
-                // setloading(false)
             })
     }
 
@@ -159,27 +150,15 @@ const RestaurantDetailsScreen = (props) => {
                     </View>
                 </ImageBackground>
                 <View style={{ flex: 1, backgroundColor: COLORS.white }}>
-                    <View style={[{ height: HEIGHT * 0.07, borderRadius: HEIGHT * 0.035, marginTop: -HEIGHT * 0.035, backgroundColor: COLORS.white, borderColor: COLORS.borderColor1, alignItems: "center", borderWidth: 1 }, STYLES.flexDirection(lang)]}>
-                        {/*  <Image style={{}} source={search} resizeMode="contain" /> */}
-                        <View style={{ flex: 1 }}>
-                            <CustomTextInput style={{ height: HEIGHT * 0.07, borderWidth: 0, }}
-                                placeholder="Search Menu"
-                                image={search}
-                                placeholderTextColor={COLORS.placeHolderColor}
-                                textColor={COLORS.black}
-                            />
-                        </View>
-                        {/* <Image style={{ marginHorizontal: WIDTH * 0.05, tintColor: COLORS.primary }} source={filter} resizeMode="contain" /> */}
-                    </View>
-                    <View style={{ height: HEIGHT * 0.07, marginTop: HEIGHT * 0.01 }}>
+                    <View style={{ height: HEIGHT * 0.07, marginTop: HEIGHT * 0.025 }}>
                         <FlatList
                             showsHorizontalScrollIndicator={false}
                             horizontal
                             inverted={lang == "ar"}
-                            data={["Menu", "About", "Featured", "Reviews"]}
+                            data={["Menu", "About", "Featured"/* , "Reviews" */]}
                             keyExtractor={(item, index) => index.toString()}
                             renderItem={({ item, index }) => <View style={{ justifyContent: "center", }}>
-                                <Pressable onPress={() => setTab(index)} style={{ justifyContent: "center", alignItems: "center", borderRadius: HEIGHT * 0.01, elevation: 3, backgroundColor: tab == index ? COLORS.statusbar : COLORS.white, height: HEIGHT * 0.03, marginLeft: index == 0 ? WIDTH * 0.05 : 0, marginRight: index == 3 ? WIDTH * 0.05 : 0, width: WIDTH * 0.2, }}>
+                                <Pressable onPress={() => setTab(index)} style={{ justifyContent: "center", alignItems: "center", borderRadius: HEIGHT * 0.01, elevation: 3, backgroundColor: tab == index ? COLORS.statusbar : COLORS.white, height: HEIGHT * 0.03, marginLeft: index == 0 ? WIDTH * 0.05 : 0, marginRight: index == 2 ? WIDTH * 0.05 : 0, width: WIDTH * 0.2, width: WIDTH * 0.27 }}>
                                     <Text style={[{ color: tab == index ? COLORS.white : COLORS.black, fontSize: 12 }, STYLES.fontRegular()]}>{item}</Text>
                                 </Pressable>
                             </View>}
@@ -205,7 +184,12 @@ const RestaurantDetailsScreen = (props) => {
                                     onContentSizeChange={() => {
                                         try {
                                             const index = categoryList.findIndex((data) => data.id == selectdCategory)
-                                            if (index > -1 && scrollViewref1 != null && categoryId && categoryId != null) { scrollViewref1.current.scrollToIndex({ index, animted: true, viewPosition: 0.5 }) }
+                                            if (index > -1 && scrollViewref1 != null && categoryId && categoryId != null) {
+                                                scrollViewref1.current.scrollToIndex({
+                                                    index, animted: true, viewPosition: 0.5
+                                                })
+                                                scrollViewref2 != null && scrollViewref2.current.scrollTo({ x: index * WIDTH, y: 0, animted: true, })
+                                            }
                                         } catch (error) {
                                             console.log(error);
                                         }
@@ -224,10 +208,13 @@ const RestaurantDetailsScreen = (props) => {
                                         } catch (error) {
                                             console.log(error);
                                         }
-                                    }} style={{ justifyContent: "center", alignItems: "center", borderRadius: HEIGHT * 0.025, elevation: 3, backgroundColor: selectdCategory == item.id ? COLORS.statusbar : COLORS.white, width: WIDTH * 0.35, marginLeft: lang != "ar" ? WIDTH * 0.05 : index == details?.categories.length - 1 ? WIDTH * 0.03 : 0, marginRight: lang == "ar" ? WIDTH * 0.05 : index == details?.categories.length - 1 ? WIDTH * 0.03 : 0, marginVertical: HEIGHT * 0.01, }}>
-                                        <Text style={[{ color: selectdCategory == item.id ? COLORS.white : COLORS.black, }, STYLES.fontRegular()]}>
-                                            {item?.name}
-                                        </Text>
+                                    }} style={{ justifyContent: "center", alignItems: "center", borderRadius: HEIGHT * 0.025, elevation: 3, backgroundColor: COLORS.white, width: WIDTH * 0.35, marginLeft: lang != "ar" ? WIDTH * 0.05 : index == details?.categories.length - 1 ? WIDTH * 0.03 : 0, marginRight: lang == "ar" ? WIDTH * 0.05 : index == details?.categories.length - 1 ? WIDTH * 0.03 : 0, marginVertical: HEIGHT * 0.01, }}>
+                                        <ImageBackground source={item?.media && item?.media.length > 0 ? { uri: item?.media[0]?.icon } : dummy} style={{ width: WIDTH * 0.35, height: "100%", borderRadius: HEIGHT * 0.025, justifyContent: "center", alignItems: "center", overflow: "hidden" }} resizeMode="cover">
+                                            <LinearGradient start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} colors={colorArray()} style={{ flex: 1, justifyContent: "center", alignItems: "center", opacity: 0.65, position: "absolute", top: 0, left: 0, right: 0, bottom: 0, borderRadius: HEIGHT * 0.025, }} />
+                                            <Text style={[{ color: COLORS.white }, STYLES.fontMedium()]}>
+                                                {item?.name}
+                                            </Text>
+                                        </ImageBackground>
                                     </Pressable>}
                                 />
                             </View>
@@ -241,7 +228,7 @@ const RestaurantDetailsScreen = (props) => {
                                             keyExtractor={(item, index) => index.toString()}
                                             contentContainerStyle={[STYLES.alignItems(lang)]}
                                             numColumns={2}
-                                            renderItem={({ item, index }) => <RenderItem setshowPickupModal={(value) => setshowPickupModal(value)} setshowAddAddress={(value) => setshowAddAddress(value)} item={item} restaurant_id={details.id} />}
+                                            renderItem={({ item, index }) => <RenderItem setshowPickupModal={(value) => setshowPickupModal(value)} item={item} restaurant_id={details.id} />}
                                         />
                                     </View>
                                     )
@@ -274,8 +261,8 @@ const RestaurantDetailsScreen = (props) => {
                                 <Text style={[{ color: COLORS.arrowColor }, STYLES.fontRegular()]}>{details?.email}</Text>
                             </View>
                             <View style={[{ paddingHorizontal: WIDTH * 0.05, alignItems: "center" }, STYLES.flexDirection(lang)]}>
-                                <Image style={{ marginHorizontal: WIDTH * 0.05, width: WIDTH * 0.05, height: HEIGHT * 0.05 }} source={clockoutline} resizeMode="contain" />
-                                <Text style={[{ color: COLORS.arrowColor }, STYLES.fontRegular()]}>{details?.working_hours}</Text>
+                                <Image style={{ marginHorizontal: WIDTH * 0.05, width: WIDTH * 0.05, height: HEIGHT * 0.05, alignSelf: "flex-start" }} source={clockoutline} resizeMode="contain" />
+                                <RenderHtml contentWidth={WIDTH * 0.7} source={{ html: details?.working_hours }} />
                             </View>
                         </View>
                         {/* FEATURED */}
@@ -290,7 +277,7 @@ const RestaurantDetailsScreen = (props) => {
                                         showsHorizontalScrollIndicator={false}
                                         keyExtractor={(item, index) => index.toString()}
                                         contentContainerStyle={[STYLES.alignItems(lang)]}
-                                        renderItem={({ item, index }) => <RenderItem setshowPickupModal={(value) => setshowPickupModal(value)} setshowAddAddress={(value) => setshowAddAddress(value)} item={item} lang={lang} vertLast={todaylist?.length - 1 == index} restaurant_id={details.id} />}
+                                        renderItem={({ item, index }) => <RenderItem setshowPickupModal={(value) => setshowPickupModal(value)} item={item} lang={lang} vertLast={todaylist?.length - 1 == index} restaurant_id={details.id} />}
                                     />
                                 </View>
                                 <Text style={[{ marginHorizontal: WIDTH * 0.05, fontSize: 20, color: COLORS.title3 }, STYLES.textAlign(lang), STYLES.fontSpecial()]}>Best Offers</Text>
@@ -302,14 +289,14 @@ const RestaurantDetailsScreen = (props) => {
                                         showsHorizontalScrollIndicator={false}
                                         keyExtractor={(item, index) => index.toString()}
                                         contentContainerStyle={[STYLES.alignItems(lang)]}
-                                        renderItem={({ item, index }) => <RenderItem setshowPickupModal={(value) => setshowPickupModal(value)} setshowAddAddress={(value) => setshowAddAddress(value)} item={item} lang={lang} vertLast={bestoffers?.length - 1 == index} bestOffer restaurant_id={details.id} />}
+                                        renderItem={({ item, index }) => <RenderItem setshowPickupModal={(value) => setshowPickupModal(value)} item={item} lang={lang} vertLast={bestoffers?.length - 1 == index} bestOffer restaurant_id={details.id} />}
                                     />
                                 </View>
                             </ScrollView>
                         </View>
                         {/* REVIEW */}
-                        <View style={{ flex: 1, width: WIDTH }}>
-                            <Text style={[{ marginHorizontal: WIDTH * 0.05, fontSize: 20, color: COLORS.title3 }, STYLES.textAlign(lang), STYLES.fontSpecial()]}>Reviews & Ratings</Text>
+                        {/* <View style={{ flex: 1, width: WIDTH }}>
+                            <Text style={[{ marginHorizontal: WIDTH * 0.05, fontSize: 20, }, STYLES.textAlign(lang), STYLES.fontSpecial()]}>Reviews & Ratings</Text>
                             <View style={{ flex: 1 }}>
                                 <FlatList
                                     data={details?.restaurant_reviews}
@@ -336,13 +323,18 @@ const RestaurantDetailsScreen = (props) => {
                                 />
 
                             </View>
-                        </View>
+                        </View> */}
                     </ScrollView>
                 </View>
+                <Pressable onPress={() => navigation.navigate("SearchScreen", { details })} style={[{ height: HEIGHT * 0.07, borderRadius: HEIGHT * 0.035, marginTop: HEIGHT * 0.315, backgroundColor: COLORS.white, borderColor: COLORS.borderColor1, alignItems: "center", borderWidth: 1, position: "absolute", width: WIDTH }, STYLES.flexDirection(lang)]}>
+                    <View style={[{ flex: 1, alignItems: "center" }, STYLES.flexDirection(lang)]}>
+                        <Image style={[{ marginHorizontal: WIDTH * 0.05, }]} source={search} resizeMode="contain" />
+                        <Text style={[{ color: COLORS.black, fontSize: 15 }, STYLES.fontRegular()]}>Search Menu</Text>
+                    </View>
+                </Pressable>
             </ScrollView>
         </Header>
-        <AddAddressModal visible={showAddAddress} onClose={() => setshowAddAddress(false)} addressData={{}} restaurantSpecific resId={item.restaurant_id || item.id} />
-        <PickupMethodModal visible={showPickupModal} onClose={() => setshowPickupModal(false)} setshowAddAddress={(value) => setshowAddAddress(value)} />
+        <PickupMethodModal visible={showPickupModal} onClose={() => setshowPickupModal(false)} />
     </>)
 }
 
