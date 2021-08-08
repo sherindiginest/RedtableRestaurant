@@ -3,18 +3,20 @@ import { ImageBackground, Image, View, Text, Pressable, FlatList, ScrollView, Mo
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { isEmpty, has } from "lodash"
+import RenderHtml from 'react-native-render-html';
+import LinearGradient from 'react-native-linear-gradient';
 
 import { backarrow, dummy, location, call, direction, filter, search, star, mailoutline, calloutline, locationoutline, clockoutline, close, heart } from '../../assets/images'
 import { Header, CustomTextInput, RenderItem, AddAddressModal, PickupMethodModal } from '../components'
-import { API, Axios, COLORS, HEIGHT, STYLES, WIDTH } from '../constants'
+import { API, Axios, colorArray, COLORS, HEIGHT, STYLES, WIDTH } from '../constants'
 import { LoadingAction } from '../redux/actions'
 
 const RestaurantDetailsScreen = (props) => {
-    const { lang, route: { params: { item, type, mealId = null, categoryId = null } }, showLoader, hideLoader, navigation } = props
+    const { lang, route: { params: { item, type, mealId = null, categoryId = null, selectedTab = 0 } }, showLoader, hideLoader, navigation } = props
     let scrollViewref = useRef(null)
     let scrollViewref1 = useRef(null)
     let scrollViewref2 = useRef(null)
-    const [tab, setTab] = useState(0)
+    const [tab, setTab] = useState(selectedTab)
     const [categoryList, setcategoryList] = useState([])
     const [showPickupModal, setshowPickupModal] = useState(false)
     const [bestoffers, setBestoffers] = useState([])
@@ -90,7 +92,6 @@ const RestaurantDetailsScreen = (props) => {
             .then(async (response) => {
                 if (has(response, "success") && response.success) {
                     setBestoffers(response.data)
-                    console.log(JSON.stringify(response.data));
                 }
             }).catch((error) => {
             })
@@ -157,7 +158,7 @@ const RestaurantDetailsScreen = (props) => {
                             data={["Menu", "About", "Featured"/* , "Reviews" */]}
                             keyExtractor={(item, index) => index.toString()}
                             renderItem={({ item, index }) => <View style={{ justifyContent: "center", }}>
-                                <Pressable onPress={() => setTab(index)} style={{ justifyContent: "center", alignItems: "center", borderRadius: HEIGHT * 0.01, elevation: 3, backgroundColor: tab == index ? COLORS.statusbar : COLORS.white, height: HEIGHT * 0.03, marginLeft: index == 0 ? WIDTH * 0.05 : 0, marginRight: index == 2 ? WIDTH * 0.05 : 0, width: WIDTH * 0.2, }}>
+                                <Pressable onPress={() => setTab(index)} style={{ justifyContent: "center", alignItems: "center", borderRadius: HEIGHT * 0.01, elevation: 3, backgroundColor: tab == index ? COLORS.statusbar : COLORS.white, height: HEIGHT * 0.03, marginLeft: index == 0 ? WIDTH * 0.05 : 0, marginRight: index == 2 ? WIDTH * 0.05 : 0, width: WIDTH * 0.2, width: WIDTH * 0.27 }}>
                                     <Text style={[{ color: tab == index ? COLORS.white : COLORS.black, fontSize: 12 }, STYLES.fontRegular()]}>{item}</Text>
                                 </Pressable>
                             </View>}
@@ -207,10 +208,13 @@ const RestaurantDetailsScreen = (props) => {
                                         } catch (error) {
                                             console.log(error);
                                         }
-                                    }} style={{ justifyContent: "center", alignItems: "center", borderRadius: HEIGHT * 0.025, elevation: 3, backgroundColor: selectdCategory == item.id ? COLORS.statusbar : COLORS.white, width: WIDTH * 0.35, marginLeft: lang != "ar" ? WIDTH * 0.05 : index == details?.categories.length - 1 ? WIDTH * 0.03 : 0, marginRight: lang == "ar" ? WIDTH * 0.05 : index == details?.categories.length - 1 ? WIDTH * 0.03 : 0, marginVertical: HEIGHT * 0.01, }}>
-                                        <Text style={[{ color: selectdCategory == item.id ? COLORS.white : COLORS.black, }, STYLES.fontRegular()]}>
-                                            {item?.name}
-                                        </Text>
+                                    }} style={{ justifyContent: "center", alignItems: "center", borderRadius: HEIGHT * 0.025, elevation: 3, backgroundColor: COLORS.white, width: WIDTH * 0.35, marginLeft: lang != "ar" ? WIDTH * 0.05 : index == details?.categories.length - 1 ? WIDTH * 0.03 : 0, marginRight: lang == "ar" ? WIDTH * 0.05 : index == details?.categories.length - 1 ? WIDTH * 0.03 : 0, marginVertical: HEIGHT * 0.01, }}>
+                                        <ImageBackground source={item?.media && item?.media.length > 0 ? { uri: item?.media[0]?.icon } : dummy} style={{ width: WIDTH * 0.35, height: "100%", borderRadius: HEIGHT * 0.025, justifyContent: "center", alignItems: "center", overflow: "hidden" }} resizeMode="cover">
+                                            <LinearGradient start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} colors={colorArray()} style={{ flex: 1, justifyContent: "center", alignItems: "center", opacity: 0.65, position: "absolute", top: 0, left: 0, right: 0, bottom: 0, borderRadius: HEIGHT * 0.025, }} />
+                                            <Text style={[{ color: COLORS.white }, STYLES.fontMedium()]}>
+                                                {item?.name}
+                                            </Text>
+                                        </ImageBackground>
                                     </Pressable>}
                                 />
                             </View>
@@ -257,8 +261,8 @@ const RestaurantDetailsScreen = (props) => {
                                 <Text style={[{ color: COLORS.activeTabColor }, STYLES.fontRegular()]}>{details?.email}</Text>
                             </View>
                             <View style={[{ paddingHorizontal: WIDTH * 0.05, alignItems: "center" }, STYLES.flexDirection(lang)]}>
-                                <Image style={{ marginHorizontal: WIDTH * 0.05, width: WIDTH * 0.05, height: HEIGHT * 0.05 }} source={clockoutline} resizeMode="contain" />
-                                <Text style={[{ color: COLORS.activeTabColor, width: WIDTH * 0.5 }, STYLES.fontRegular()]}>{details?.working_hours}</Text>
+                                <Image style={{ marginHorizontal: WIDTH * 0.05, width: WIDTH * 0.05, height: HEIGHT * 0.05, alignSelf: "flex-start" }} source={clockoutline} resizeMode="contain" />
+                                <RenderHtml contentWidth={WIDTH * 0.7} source={{ html: details?.working_hours }} />
                             </View>
                         </View>
                         {/* FEATURED */}

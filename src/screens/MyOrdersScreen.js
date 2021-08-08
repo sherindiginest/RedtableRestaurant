@@ -14,7 +14,6 @@ const RenderItem = (props) => {
     const { item, getOrders, userData, last, context } = props
     const [visible, setVisible] = useState(false)
     const [priceDetails, setPriceDetails] = useState({})
-    console.log(JSON.stringify(item));
     useEffect(() => {
         let price = {
             itemTotal: 0,
@@ -118,7 +117,7 @@ const RenderItem = (props) => {
                                     PRICE</Text>
                             </View>
                         </View>
-                        {item.food_orders.map((i, index) => <View style={{ marginHorizontal: WIDTH * 0.05, flexDirection: "row", borderBottomWidth: 0.5, paddingVertical: HEIGHT * 0.01, alignItems: "center" }}>
+                        {item.food_orders.map((i, index) => <View key={index.toString()} style={{ marginHorizontal: WIDTH * 0.05, flexDirection: "row", borderBottomWidth: 0.5, paddingVertical: HEIGHT * 0.01, alignItems: "center" }}>
                             <View style={{ flex: 1, }}>
                                 <Text>{i.food.name}</Text>
                             </View>
@@ -126,7 +125,7 @@ const RenderItem = (props) => {
                                 <Text style={{}}>{i.quantity}</Text>
                             </View>
                             <View style={{ width: WIDTH * 0.25, alignItems: "flex-end" }}>
-                                <Text style={{ color: COLORS.primary }}>{context.t("price", { price: i?.food?.price })}</Text>
+                                <Text style={{ color: COLORS.primary }}>{context.t("price", { price: i.quantity * i?.food?.price })}</Text>
                             </View>
                         </View>)}
                         <View style={{ marginHorizontal: WIDTH * 0.05, borderBottomWidth: 0.5, paddingVertical: HEIGHT * 0.015, flexDirection: "row", }}>
@@ -145,7 +144,7 @@ const RenderItem = (props) => {
                         </View>
                         <View style={{ flexDirection: "row", justifyContent: "space-between", marginHorizontal: WIDTH * 0.05, marginVertical: HEIGHT * 0.02 }}>
                             <Text style={{ fontWeight: "bold" }}>Total Bill</Text>
-                            <Text style={{ fontWeight: "bold", color: COLORS.primary }}>{context.t("price", { price: priceDetails.totalBill + item.delivery_fee })}</Text>
+                            <Text style={{ fontWeight: "bold", color: COLORS.primary }}>{context.t("price", { price: priceDetails.totalBill + item.delivery_fee + Number(item?.tax) })}</Text>
                         </View>
                         {item.order_status_id == 1 && <Pressable onPress={() => cancelOrder()} style={{ marginHorizontal: WIDTH * 0.05, height: HEIGHT * 0.07, backgroundColor: COLORS.addToCartButton, marginBottom: HEIGHT * 0.01, borderRadius: HEIGHT * 0.035, justifyContent: "center", alignItems: "center" }}>
                             <Text style={{ color: COLORS.white, fontWeight: "bold" }}>

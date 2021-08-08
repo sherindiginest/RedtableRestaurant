@@ -8,7 +8,7 @@ import HomeScreen from './HomeScreen'
 import CartScreen from './CartScreen'
 import OurRestaurantsScreen from './OurRestaurantsScreen'
 import MyOrdersScreen from './MyOrdersScreen'
-//import SetLocationScreen from './SetLocationScreen'
+import SetLocationScreen from './SetLocationScreen'
 import RestaurantDetailsScreen from './RestaurantDetailsScreen'
 import CheckOutScreen from './CheckOutScreen'
 import SettingsScreen from './SettingsScreen'
@@ -29,7 +29,7 @@ export {
   CartScreen,
   OurRestaurantsScreen,
   MyOrdersScreen,
-  //SetLocationScreen,
+  SetLocationScreen,
   RestaurantDetailsScreen,
   CheckOutScreen,
   SettingsScreen,

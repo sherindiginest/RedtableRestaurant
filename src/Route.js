@@ -21,6 +21,7 @@ import {
 } from './screens'
 
 import { BottomTabs, DrawerMenu } from './components'
+import { setTopLevelNavigator } from './constants'
 
 const SettingStack = createStackNavigator()
 
@@ -61,7 +62,9 @@ const RouteStack = createStackNavigator()
 
 const Route = () => {
   return (
-    <NavigationContainer>
+    <NavigationContainer ref={navigatorRef => {
+      setTopLevelNavigator(navigatorRef);
+    }} >
       <RouteStack.Navigator screenOptions={{ headerShown: false, cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS }}
         initialRouteName="SplashScreen">
         <RouteStack.Screen name="SplashScreen" component={SplashScreen} />

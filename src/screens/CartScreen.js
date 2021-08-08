@@ -194,7 +194,7 @@ const CartScreen = (props, context) => {
                     <Text style={{ color: COLORS.white, fontWeight: "bold" }}>CHECKOUT</Text>
                 </Pressable>
             </View> */}
-            <Pressable onPress={() => onNavigate()} style={{ height: HEIGHT * 0.07, backgroundColor: !isEmpty(addressList) ? COLORS.primary : COLORS.textInputBorder, borderRadius: HEIGHT * 0.035, justifyContent: "center", alignItems: "center", marginHorizontal: WIDTH * 0.05 }}>
+            <Pressable onPress={() => onNavigate()} style={{ height: HEIGHT * 0.07, backgroundColor: !isEmpty(addressList) ? COLORS.primary : COLORS.textInputBorder, borderRadius: HEIGHT * 0.035, justifyContent: "center", alignItems: "center", marginHorizontal: WIDTH * 0.05, marginBottom: HEIGHT * 0.1 }}>
                 <Text style={{ color: COLORS.white, fontWeight: "bold" }}>CHECKOUT</Text>
             </Pressable>
         </ScrollView> : <View style={{ flex: 1, }}>

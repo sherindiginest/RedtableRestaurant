@@ -3,9 +3,10 @@ import { View, Text, FlatList, Image, ScrollView, ImageBackground, Pressable } f
 import PropTypes from 'prop-types'
 import { connect, useDispatch } from 'react-redux'
 import { isEmpty, has } from "lodash"
+import LinearGradient from 'react-native-linear-gradient';
 
 import { dummy, search, filter } from '../../assets/images'
-import { API, Axios, COLORS, HEIGHT, STYLES, WIDTH } from '../constants'
+import { API, Axios, colorArray, COLORS, HEIGHT, STYLES, WIDTH } from '../constants'
 import { Header, RestaurantComponent, CustomTextInput, RenderMealItem } from "./../components"
 import { AlertAction, LoadingAction, profileAction } from '../redux/actions'
 
@@ -20,16 +21,16 @@ const HomeScreen = (props, context) => {
             dispatch(AlertAction.handleAlert({
                 visible: true,
                 title: "Order Type",
-                message: "Please choose one method to countinue",
+                message: "Please choose one method to continue",
                 buttons: [{
-                    title: "delivery",
+                    title: "Delivery",
                     onPress: () => {
                         dispatch(profileAction.setPickupMode("delivery"))
                         dispatch(AlertAction.handleAlert({ visible: false, }))
                         dispatch(profileAction.askPickupMode(false))
                     }
                 }, {
-                    title: "pickup",
+                    title: "Pickup",
                     onPress: () => {
                         dispatch(profileAction.setPickupMode("pickup"))
                         dispatch(AlertAction.handleAlert({ visible: false, }))
@@ -121,8 +122,9 @@ const HomeScreen = (props, context) => {
                         keyExtractor={(item, index) => index.toString()}
                         renderItem={({ item, index }) => {
                             return (<Pressable onPress={() => navigation.navigate("ChooseRestaurantsScreen", { item, type: "category" })} style={{ height: WIDTH * 0.27, width: WIDTH * 0.27, marginLeft: lang == "en" ? WIDTH * 0.05 : 0, marginRight: lang == "ar" ? WIDTH * 0.05 : 0, borderRadius: WIDTH * 0.05, overflow: "hidden", marginTop: WIDTH * 0.03 }}>
-                                <ImageBackground source={item?.media && item?.media.length > 0 ? { uri: item?.media[0]?.url } : dummy} style={{ flex: 1, justifyContent: "center", alignItems: "center" }} resizeMode="cover">
-                                    <View style={{ flex: 1, justifyContent: "center", alignItems: "center", }}>
+                                <ImageBackground source={item?.media && item?.media.length > 0 ? { uri: item?.media[0]?.url } : dummy} style={{ flex: 1, }} resizeMode="cover">
+                                    <LinearGradient start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} colors={colorArray()} style={{ flex: 1, justifyContent: "center", alignItems: "center", opacity: 0.65, position: "absolute", top: 0, left: 0, right: 0, bottom: 0 }} />
+                                    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
                                         <Text style={[{ color: COLORS.white, marginHorizontal: WIDTH * 0.05, marginVertical: WIDTH * 0.025, fontSize: 15, }, STYLES.fontBold()]}>{item?.name}</Text>
                                     </View>
                                 </ImageBackground>

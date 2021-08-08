@@ -1,5 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage"
-import { SETADDRESSLIST, SETADDRESSSELECT, SETCARTLIST, SETPROFILEDATA, SETNEWADDRESS, SETPICKUPMODE, ASKPICKUPMODE } from "../../constants/constants"
+import { SETADDRESSLIST, SETADDRESSSELECT, SETCARTLIST, SETPROFILEDATA, SETNEWADDRESS, SETPICKUPMODE, ASKPICKUPMODE, SETNOTIFICATIONDATA } from "../../constants/constants"
 
 
 
@@ -64,6 +64,14 @@ const askPickupMode = (payload) => {
         })
     }
 }
+const setNotificationData = (payload = {}) => {
+    return async (dispatch) => {
+        dispatch({
+            type: SETNOTIFICATIONDATA,
+            payload,
+        })
+    }
+}
 
 
 export default {
@@ -73,5 +81,6 @@ export default {
     showAddressSelect,
     showAddNewAddress,
     setPickupMode,
-    askPickupMode
+    askPickupMode,
+    setNotificationData
 }

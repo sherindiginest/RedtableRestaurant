@@ -16,8 +16,10 @@ const ChooseAddress = (props) => {
     useEffect(() => {
         const backHandler = BackHandler.addEventListener("hardwareBackPress", () => {
             showAddressSelect()
+            return visible
         })
-    }, [])
+        return () => backHandler.remove()
+    }, [visible])
 
     useEffect(() => {
         slideDown(visible ? 1 : 0)
@@ -152,7 +154,7 @@ const mapStateToProps = ({ i18nState, ProfileReducer }) => {
         cartList: ProfileReducer.cartList,
         addressList: ProfileReducer.addressList,
         visibleSelectAddress: ProfileReducer.visibleSelectAddress,
-        userData: ProfileReducer.userData,
+        userData: ProfileReducer.userData
     }
 }
 

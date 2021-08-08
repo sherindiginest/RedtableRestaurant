@@ -3,6 +3,7 @@ import { Dimensions } from 'react-native'
 import Axios from "./axios"
 import { API } from "./api"
 import { myorders } from '../../assets/images'
+import { CommonActions } from '@react-navigation/native';
 
 const { width, height } = Dimensions.get('screen')
 const WIDTH = width
@@ -81,7 +82,24 @@ const validatePhone = (phone) => {
   return re.test(String(phone).toLowerCase())
 }
 
-export { COLORS, WIDTH, HEIGHT, STYLES, Axios, API, validateEmail, validatePhone }
+const colorArray = () => {
+  const clr = [["#FF5673","#FF8C48"],["#832BF6","#FF4665"],["#2DCEF8","#3B40FE"],["#009DC5" , "#21E590"]]
+ return clr[Math.floor(Math.random()*clr.length)]
+}
+
+let _navigator;
+
+function setTopLevelNavigator(navigatorRef) {
+    _navigator = navigatorRef;
+}
+
+function navigate(name, params) {
+    _navigator.dispatch(
+      CommonActions.navigate({ name, params })
+    );
+}
+
+export { COLORS, WIDTH, HEIGHT, STYLES, Axios, API, validateEmail, validatePhone,colorArray,setTopLevelNavigator,navigate }
 
 
   /* 

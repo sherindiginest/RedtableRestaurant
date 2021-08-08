@@ -44,15 +44,15 @@ const DrawerMenu = (props, context) => {
         dispatch(AlertAction.handleAlert({
           visible: true,
           title: "Order Type",
-          message: "Please choose one method to countinue",
+          message: "Please choose one method to continue",
           buttons: [{
-            title: "delivery",
+            title: "Delivery",
             onPress: () => {
               dispatch(profileAction.setPickupMode("delivery"))
               dispatch(AlertAction.handleAlert({ visible: false, }))
             }
           }, {
-            title: "pickup",
+            title: "Pickup",
             onPress: () => {
               dispatch(profileAction.setPickupMode("pickup"))
               dispatch(AlertAction.handleAlert({ visible: false, }))

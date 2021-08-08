@@ -166,7 +166,7 @@ const BottomTabs = (props) => {
                     tabBarIcon: (props) => <TabBarButton {...props} icon={tabmenu} />,
                 }}
             />
-            {/* <BottomTabsStack.Screen
+            <BottomTabsStack.Screen
                 name="SetLocationScreen"
                 component={SetLocationScreen}
                 options={{
@@ -174,7 +174,7 @@ const BottomTabs = (props) => {
                         <TabBarButton {...props} icon={location} isCenterTab />
                     ),
                 }}
-            /> */}
+            />
             <BottomTabsStack.Screen
                 name="MyOrdersScreen"
                 component={MyOrdersScreen}

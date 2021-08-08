@@ -209,7 +209,7 @@ const CheckOutScreen = (props, context) => {
             title="checkout"
             titleColor={COLORS.black}
         >
-            <ScrollView>
+            <ScrollView showsVerticalScrollIndicator={false}>
                 {/* <View style={{ height: HEIGHT * 0.05, marginHorizontal: WIDTH * 0.05, flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
                     <Text style={{ fontSize: 12 }}>Deliver Order</Text>
                     <Switch value={orderType} thumbColor={orderType ? COLORS.green2 : COLORS.addToCartButton} trackColor={{ false: COLORS.color4, true: COLORS.color1 }} onValueChange={(value) => setOrderType(value)} />
@@ -257,7 +257,7 @@ const CheckOutScreen = (props, context) => {
                         </Pressable> */}
                         </View>
                         <View style={{ width: WIDTH * 0.2, alignItems: "flex-end", justifyContent: "center" }}>
-                            <Text style={{ color: COLORS.primary }}>{context.t("price", { price: item?.food?.price })}</Text>
+                            <Text style={{ color: COLORS.primary }}>{context.t("price", { price: item.quantity * item?.food?.price })}</Text>
                         </View>
                     </View>}
                 />
@@ -303,7 +303,7 @@ const CheckOutScreen = (props, context) => {
                         />
                     </Animated.View>
                 </View>
-                <View style={{ marginHorizontal: WIDTH * 0.05, elevation: 3, backgroundColor: COLORS.white, borderRadius: HEIGHT * 0.038, marginBottom: HEIGHT * 0.02 }}>
+                <View style={{ marginHorizontal: WIDTH * 0.05, elevation: 3, backgroundColor: COLORS.white, borderRadius: HEIGHT * 0.038, marginBottom: HEIGHT * 0.12 }}>
                     <View style={{ height: HEIGHT * 0.06, elevation: 3, backgroundColor: COLORS.white, flexDirection: "row", borderRadius: HEIGHT * 0.035 }}>
                         <View style={{ flex: 1 }}>
                             <CustomTextInput

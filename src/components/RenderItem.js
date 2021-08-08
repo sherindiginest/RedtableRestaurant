@@ -10,10 +10,13 @@ import { AlertAction, LoadingAction, profileAction } from '../redux/actions'
 
 const RenderItem = (props, context) => {
     const { item, lang, restaurant_id, setCartList, userData, cartList, vertLast, cart, bestOffer, hideLoader, showLoader, setshowAddAddress = () => { }, setshowPickupModal = () => { }, pickupMode, addressList, showAddressSelect, } = props
-    console.log(JSON.stringify(item));
     const [visible, setVisible] = useState(false)
     const [quantity, setQuantity] = useState(null)
     const dispatch = useDispatch()
+    let disabled = false
+    if ((item.stock && item.stock <= 0) || !item?.deliverable) {
+        disabled = true
+    }
     useEffect(() => {
         if (has(cartList, "cartDetails") && !isEmpty(cartList.cartDetails)) {
             const list = cartList.cartDetails.find((i) => i.food_id == item.food_id && i.restaurant_id == restaurant_id)
@@ -82,7 +85,7 @@ const RenderItem = (props, context) => {
 
     const handleResponse = (response) => {
         setVisible(false)
-        if (pickupMode == "delivery") {
+        if (pickupMode == "delivery" && (response.error_code == "no_default_address" || response.error_code == "no_delivery_to_areacode")) {
             let message = "Delivery is unavailable in this area"
             if (response.error_code == "no_default_address") {
                 message = isEmpty(addressList) ? "Add an address to continue" : "Please set an address as default"
@@ -97,9 +100,21 @@ const RenderItem = (props, context) => {
                         dispatch(AlertAction.handleAlert({ visible: false, }))
                     }
                 }, {
-                    title: "Change address",
+                    title: isEmpty(addressList) ? "Add Address" : "Change Address",
                     onPress: () => {
                         isEmpty(addressList) ? dispatch(profileAction.showAddNewAddress({ visible: true, resId: restaurant_id })) : showAddressSelect({ visible: true, resId: restaurant_id })
+                        dispatch(AlertAction.handleAlert({ visible: false, }))
+                    }
+                }]
+            }))
+        } else {
+            dispatch(AlertAction.handleAlert({
+                visible: true,
+                title: "Warning",
+                message: response.message,
+                buttons: [{
+                    title: "Okay",
+                    onPress: () => {
                         dispatch(AlertAction.handleAlert({ visible: false, }))
                     }
                 }]
@@ -177,18 +192,23 @@ const RenderItem = (props, context) => {
             {item?.discount_percentage && <View style={[{ backgroundColor: COLORS.green, width: WIDTH * 0.1, height: WIDTH * 0.1, borderRadius: WIDTH * 0.05, position: "absolute", top: -WIDTH * 0.03, justifyContent: "center", alignItems: "center" }, lang == "ar" ? { right: -WIDTH * 0.02, } : { left: -WIDTH * 0.02, }]}>
                 <Text style={[{ fontSize: 12 }, STYLES.fontMedium()]}>{item?.discount_percentage}%</Text>
             </View>}
-            {!item?.deliverable && <View style={{ position: "absolute", top: 0, left: 0, bottom: 0, right: 0, backgroundColor: "#00000020", borderRadius: WIDTH * 0.07, }} />}
+            {disabled && <View style={{ position: "absolute", top: 0, left: 0, bottom: 0, right: 0, backgroundColor: "#00000020", borderRadius: WIDTH * 0.07, }} />}
         </Pressable> : <View style={{ marginLeft: lang == "en" ? WIDTH * 0.07 : vertLast ? WIDTH * 0.07 : 0, marginRight: lang == "ar" ? WIDTH * 0.07 : vertLast ? WIDTH * 0.07 : 0, marginBottom: WIDTH * 0.025, }}>
             <Pressable
                 onPress={() => setVisible(true)}
-                style={{ height: WIDTH * 0.4, width: WIDTH * 0.4, marginVertical: WIDTH * 0.025, borderRadius: WIDTH * 0.07, backgroundColor: item?.deliverable ? COLORS.white : "#00000020", elevation: 3, alignItems: "center", }}>
-                <Image key={item?.media[0]?.url} style={{ width: WIDTH * 0.27, height: WIDTH * 0.23, marginTop: WIDTH * 0.01, }}
-                    source={item?.media && item?.media.length > 0 ? { uri: item?.media[0]?.url } : logo} defaultSource={logo} resizeMode="contain" />
-                <Text style={[{ textAlign: "center", fontSize: 12 }, STYLES.fontRegular()]}>{item?.name}</Text>
-                <Text style={[{}, STYLES.fontBold()]}>{context.t("price", { price: item?.discount_price })}</Text>
+                style={{ height: WIDTH * 0.4, width: WIDTH * 0.4, marginVertical: WIDTH * 0.025, borderRadius: WIDTH * 0.07, backgroundColor: COLORS.white, elevation: 3, }}>
+                <View style={{ height: WIDTH * 0.4, width: WIDTH * 0.4, backgroundColor: !disabled ? COLORS.white : "#00000020", alignItems: "center", borderRadius: WIDTH * 0.07, }}>
+                    <Image key={item?.media[0]?.url} style={{ width: WIDTH * 0.27, height: WIDTH * 0.23, marginTop: WIDTH * 0.01, }}
+                        source={item?.media && item?.media.length > 0 ? { uri: item?.media[0]?.url } : logo} defaultSource={logo} resizeMode="contain" />
+                    <Text style={[{ textAlign: "center", fontSize: 12 }, STYLES.fontRegular()]}>{item?.name}</Text>
+                    <Text style={[{}, STYLES.fontBold()]}>{context.t("price", { price: item?.discount_price })}</Text>
+                    {item?.discount_percentage && <View style={[{ backgroundColor: COLORS.green, width: WIDTH * 0.1, height: WIDTH * 0.1, borderRadius: WIDTH * 0.05, position: "absolute", top: -WIDTH * 0.02, justifyContent: "center", alignItems: "center" }, lang == "ar" ? { right: -WIDTH * 0.04, } : { left: -WIDTH * 0.04, }]}>
+                        <Text style={[{ fontSize: 12 }, STYLES.fontMedium()]}>{item?.discount_percentage}%</Text>
+                    </View>}
+                </View>
             </Pressable>
             <View style={{ width: WIDTH * 0.25, height: WIDTH * 0.07, borderRadius: WIDTH * 0.035, backgroundColor: COLORS.statusbar, position: "absolute", bottom: 0, elevation: 4, alignSelf: "center" }}>
-                {item?.deliverable ? (quantity > 0 ? <View style={{ flex: 1, flexDirection: "row" }}>
+                {!disabled ? (quantity > 0 ? <View style={{ flex: 1, flexDirection: "row" }}>
                     <Pressable onPress={() => manageCart(quantity - 1)} style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
                         <Text style={{ color: COLORS.white, fontSize: 25 }}>-</Text>
                     </Pressable>
@@ -231,8 +251,8 @@ const RenderItem = (props, context) => {
                             <Text style={{ color: COLORS.titleColor }}>{item?.description}</Text>
                             <Text style={{ color: COLORS.titleColor }}>{item?.ingredients}</Text>
                         </View>
-                        <Pressable disabled={!item?.deliverable} onPress={() => manageCart(quantity + 1)} style={{ marginHorizontal: WIDTH * 0.05, height: HEIGHT * 0.07, backgroundColor: COLORS.addToCartButton, marginBottom: HEIGHT * 0.01, borderRadius: HEIGHT * 0.035, justifyContent: "center", alignItems: "center" }}>
-                            <Text style={{ color: COLORS.white, fontWeight: "bold" }}>{item?.deliverable ? "Add To Order" : "Out of Stock"}</Text>
+                        <Pressable disabled={disabled} onPress={() => manageCart(quantity + 1)} style={{ marginHorizontal: WIDTH * 0.05, height: HEIGHT * 0.07, backgroundColor: COLORS.addToCartButton, marginBottom: HEIGHT * 0.01, borderRadius: HEIGHT * 0.035, justifyContent: "center", alignItems: "center" }}>
+                            <Text style={{ color: COLORS.white, fontWeight: "bold" }}>{!disabled ? "Add To Order" : "Out of Stock"}</Text>
                         </Pressable>
                     </View>
                 </View>

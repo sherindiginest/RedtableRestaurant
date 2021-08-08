@@ -1,4 +1,4 @@
-package com.redtablerestaurant;
+package com.diginest.redtable;
 
 import com.facebook.react.ReactActivity;
 
