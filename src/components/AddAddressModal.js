@@ -32,7 +32,7 @@ const AddAddressModal = (props) => {
         if (isEmpty(addressData)) {
             setaddress({
                 description: "HOME",
-                default: false,
+                default: true,
                 area_id: null,
                 address: ""
             })

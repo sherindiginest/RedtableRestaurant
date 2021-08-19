@@ -159,8 +159,10 @@ const RenderItem = (props, context) => {
                 if (has(response, "success") && response.success) {
                     setCartList(response.data)
                 }
+                console.log(response);
                 hideLoader()
             }).catch((error) => {
+                console.log(error);
                 hideLoader()
             })
     }
@@ -230,9 +232,14 @@ const RenderItem = (props, context) => {
                 <Pressable onPress={() => setVisible(false)} style={{ flex: 1 }}>
                 </Pressable>
                 <View style={{ backgroundColor: COLORS.white, height: HEIGHT * 0.5, borderTopLeftRadius: WIDTH * 0.05, borderTopRightRadius: WIDTH * 0.05, overflow: "hidden" }}>
-                    <ImageBackground style={{ width: WIDTH, height: WIDTH * 0.4, alignItems: "flex-end", justifyContent: "space-between" }} source={item?.media && item?.media.length > 0 ? { uri: item?.media[0]?.url } : dummy} resizeMode="cover">
-                        <Pressable style={{ backgroundColor: COLORS.white, margin: WIDTH * 0.03, borderRadius: WIDTH * 0.035 }} onPress={() => setVisible(false)}>
-                            <Image style={{ width: WIDTH * 0.03, height: WIDTH * 0.03, margin: WIDTH * 0.015, }} source={close} resizeMode="contain" />
+                    <ImageBackground style={{ width: WIDTH, height: WIDTH * 0.4, flexDirection: "row", justifyContent: "space-between" }} source={item?.media && item?.media.length > 0 ? { uri: item?.media[0]?.url } : dummy} resizeMode="cover">
+                        <View>
+                            {item?.discount_percentage && <View style={[{ backgroundColor: COLORS.green, width: WIDTH * 0.1, height: WIDTH * 0.1, borderRadius: WIDTH * 0.05, justifyContent: "center", alignItems: "center", margin: HEIGHT * 0.01, }]}>
+                                <Text style={[{ fontSize: 12 }, STYLES.fontMedium()]}>{item?.discount_percentage}%</Text>
+                            </View>}
+                        </View>
+                        <Pressable style={{ backgroundColor: COLORS.white, margin: HEIGHT * 0.01, borderRadius: HEIGHT * 0.015, height: HEIGHT * 0.03, width: HEIGHT * 0.03, justifyContent: "center", alignItems: "center" }} onPress={() => setVisible(false)}>
+                            <Image style={{ width: HEIGHT * 0.015, height: HEIGHT * 0.015, }} source={close} resizeMode="contain" />
                         </Pressable>
                         {/* <View style={{ backgroundColor: COLORS.white, width: WIDTH * 0.15, height: WIDTH * 0.1, justifyContent: "center", alignItems: "center", borderRadius: WIDTH * 0.07, marginBottom: -WIDTH * 0.05, marginHorizontal: WIDTH * 0.05 }}>
                             <Image style={{ width: WIDTH * 0.05, height: WIDTH * 0.05, }} source={heart} resizeMode="contain" />
@@ -251,9 +258,23 @@ const RenderItem = (props, context) => {
                             <Text style={{ color: COLORS.titleColor }}>{item?.description}</Text>
                             <Text style={{ color: COLORS.titleColor }}>{item?.ingredients}</Text>
                         </View>
-                        <Pressable disabled={disabled} onPress={() => manageCart(quantity + 1)} style={{ marginHorizontal: WIDTH * 0.05, height: HEIGHT * 0.07, backgroundColor: COLORS.addToCartButton, marginBottom: HEIGHT * 0.01, borderRadius: HEIGHT * 0.035, justifyContent: "center", alignItems: "center" }}>
-                            <Text style={{ color: COLORS.white, fontWeight: "bold" }}>{!disabled ? "Add To Order" : "Out of Stock"}</Text>
-                        </Pressable>
+                        <View style={{ flexDirection: "row", marginHorizontal: WIDTH * 0.05, borderRadius: HEIGHT * 0.035, height: HEIGHT * 0.07, backgroundColor: COLORS.addToCartButton, marginBottom: HEIGHT * 0.01, }}>
+                            {!disabled ? (quantity > 0 ? <>
+                                <Pressable onPress={() => manageCart(quantity - 1)} style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+                                    <Text style={{ color: COLORS.white, fontSize: 25 }}>-</Text>
+                                </Pressable>
+                                <View style={{ backgroundColor: COLORS.white, flex: 1, justifyContent: "center", alignItems: "center", borderWidth: 2, borderColor: COLORS.addToCartButton }}>
+                                    <Text style={[{ color: COLORS.black, fontSize: 14 }, STYLES.fontMedium()]}>{quantity}</Text>
+                                </View>
+                                <Pressable onPress={() => manageCart(quantity + 1)} style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+                                    <Text style={{ color: COLORS.white, fontSize: 15 }}>+</Text>
+                                </Pressable>
+                            </> : <Pressable onPress={() => manageCart(1)} style={{ justifyContent: "center", alignItems: "center", flex: 1 }}>
+                                <Text style={[{ color: COLORS.white, fontWeight: "bold" }, STYLES.fontRegular()]}>Add to order</Text>
+                            </Pressable>) : <View style={{ justifyContent: "center", alignItems: "center", flex: 1 }}>
+                                <Text style={[{ color: COLORS.white, fontWeight: "bold" }, STYLES.fontRegular()]}>Out of stock</Text>
+                            </View>}
+                        </View>
                     </View>
                 </View>
             </View>

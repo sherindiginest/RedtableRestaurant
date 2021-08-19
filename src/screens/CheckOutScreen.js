@@ -82,6 +82,11 @@ const CheckOutScreen = (props, context) => {
                 data.order_type = "1"
                 data.delivery_address_id = addressList.find((add) => add?.is_default)?.id
             }
+
+            if (!isEmpty(couponStatus)) {
+                data.coupon_code = coupon_code
+            }
+
             await Axios.post(API.createOrder, data).then(async (response) => {
                 if (has(response, "success") && response.success) {
                     setCartList({})
@@ -136,11 +141,15 @@ const CheckOutScreen = (props, context) => {
             const { api_token } = userData
             const data = {
                 api_token,
-                area_id: addressList.find((add) => add?.is_default)?.area_id,
                 item_total: cartList.cartTotal,
                 coupon_code,
                 restaurant_id: cartList.cartDetails[0].restaurant_id
             }
+
+            if (pickupMode != "pickup") {
+                data.area_id = addressList.find((add) => add?.is_default)?.area_id
+            }
+
             await Axios.post(API.applyCoupon, data)
                 .then(async (response) => {
                     if (has(response, "success") && response.success) {
@@ -163,7 +172,7 @@ const CheckOutScreen = (props, context) => {
                     dispatch(AlertAction.handleAlert({
                         visible: true,
                         title: "Error",
-                        message: error?.message,
+                        message: JSON.stringify(error?.message),
                         buttons: [{
                             title: "Okay",
                             onPress: () => {

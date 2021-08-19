@@ -17,7 +17,7 @@ const CartScreen = (props, context) => {
     useEffect(() => {
         if (has(cartList, "cartDetails") && !isEmpty(cartList.cartDetails)) {
             const addRestaurants = addressList.find((add) => add?.is_default)?.restaurants
-            setdisableAddress(addRestaurants.find((i) => i == cartList?.cartDetails[0]?.restaurant_id))
+            setdisableAddress(addRestaurants?.find((i) => i == cartList?.cartDetails[0]?.restaurant_id))
         }
     }, [cartList, pickupMode])
 
@@ -194,7 +194,7 @@ const CartScreen = (props, context) => {
                     <Text style={{ color: COLORS.white, fontWeight: "bold" }}>CHECKOUT</Text>
                 </Pressable>
             </View> */}
-            <Pressable onPress={() => onNavigate()} style={{ height: HEIGHT * 0.07, backgroundColor: !isEmpty(addressList) ? COLORS.primary : COLORS.textInputBorder, borderRadius: HEIGHT * 0.035, justifyContent: "center", alignItems: "center", marginHorizontal: WIDTH * 0.05, marginBottom: HEIGHT * 0.1 }}>
+            <Pressable onPress={() => onNavigate()} style={{ height: HEIGHT * 0.07, backgroundColor: (pickupMode != "delivery" || !isEmpty(addressList)) ? COLORS.primary : COLORS.textInputBorder, borderRadius: HEIGHT * 0.035, justifyContent: "center", alignItems: "center", marginHorizontal: WIDTH * 0.05, marginBottom: HEIGHT * 0.1 }}>
                 <Text style={{ color: COLORS.white, fontWeight: "bold" }}>CHECKOUT</Text>
             </Pressable>
         </ScrollView> : <View style={{ flex: 1, }}>
