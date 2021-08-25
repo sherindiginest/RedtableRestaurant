@@ -86,7 +86,7 @@ const CheckOutScreen = (props, context) => {
             if (!isEmpty(couponStatus)) {
                 data.coupon_code = coupon_code
             }
-
+            console.log("PAYLOAD", data);
             await Axios.post(API.createOrder, data).then(async (response) => {
                 if (has(response, "success") && response.success) {
                     setCartList({})
@@ -266,7 +266,7 @@ const CheckOutScreen = (props, context) => {
                         </Pressable> */}
                         </View>
                         <View style={{ width: WIDTH * 0.2, alignItems: "flex-end", justifyContent: "center" }}>
-                            <Text style={{ color: COLORS.primary }}>{context.t("price", { price: item.quantity * item?.food?.price })}</Text>
+                            <Text style={[{ color: COLORS.primary }, STYLES.fontRegular()]}>{item?.food?.discount_price < item?.food?.price && <Text style={{ textDecorationLine: "line-through", fontSize: 10, color: COLORS.placeHolderColor }}>{context.t("price", { price: item.quantity * item?.food?.price })} </Text>}{context.t("price", { price: item.quantity * item?.food?.discount_price })}</Text>
                         </View>
                     </View>}
                 />
@@ -334,20 +334,20 @@ const CheckOutScreen = (props, context) => {
                     <View style={{ padding: HEIGHT * 0.015, flexDirection: "row", }}>
                         <View style={{ flex: 1 }}>
                             <Text>Item Total</Text>
-                            <Text>Discount</Text>
+                            {parseFloat(couponStatus?.cartDiscount ? couponStatus?.cartDiscount : cartList.cartDiscount) > 0 && <Text>Discount</Text>}
                             <Text>{`Tax (${cartList?.taxPercentage}%)`}</Text>
                             {deliveryFee > 0 && <Text>Delivery Fee</Text>}
                         </View>
                         <View style={{ width: WIDTH * 0.2, alignItems: "flex-end" }}>
                             <Text>{context.t("price", { price: cartList.cartTotal })}</Text>
-                            <Text>{context.t("price", { price: parseFloat(couponStatus?.cartDiscount ? couponStatus?.cartDiscount : cartList.cartDiscount) })}</Text>
+                            {parseFloat(couponStatus?.cartDiscount ? couponStatus?.cartDiscount : cartList.cartDiscount) > 0 && <Text>- {context.t("price", { price: parseFloat(couponStatus?.cartDiscount ? couponStatus?.cartDiscount : cartList.cartDiscount) })}</Text>}
                             <Text>{context.t("price", { price: parseFloat(couponStatus?.tax ? couponStatus?.tax : cartList.tax) })}</Text>
                             {deliveryFee > 0 && <Text>{context.t("price", { price: deliveryFee })}</Text>}
                         </View>
                     </View>
                     <View style={{ flexDirection: "row", justifyContent: "space-between", marginHorizontal: HEIGHT * 0.015, paddingVertical: HEIGHT * 0.01, borderTopWidth: 0.5 }}>
                         <Text>Total Bill</Text>
-                        <Text>{context.t("price", { price: (parseFloat(couponStatus?.totalBill ? couponStatus?.totalBill : cartList.totalBill) + deliveryFee) })}</Text>
+                        <Text>{context.t("price", { price: (parseFloat(couponStatus?.totalBill ? couponStatus?.totalBill : cartList.totalBill) + deliveryFee).toFixed(2) })}</Text>
                     </View>
                     <Pressable onPress={() => createOrder()} style={{ height: HEIGHT * 0.07, backgroundColor: COLORS.primary, borderRadius: HEIGHT * 0.035, justifyContent: "center", alignItems: "center", bottom: -1 }}>
                         <Text style={{ color: COLORS.white, fontWeight: "bold" }}>CONFIRM ORDER</Text>

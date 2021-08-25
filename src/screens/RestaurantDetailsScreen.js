@@ -28,6 +28,9 @@ const RestaurantDetailsScreen = (props) => {
         getDetails()
         getBestoffers()
         getTodayspecials()
+        try {
+            scrollViewref != null && scrollViewref.current.scrollTo({ x: tab * WIDTH, y: 0, animted: true })
+        } catch (error) { }
     }, [])
 
     useEffect(() => {
@@ -88,7 +91,7 @@ const RestaurantDetailsScreen = (props) => {
     }
 
     const getBestoffers = async () => {
-        await Axios.get(API.restaurantBestoffers(item.id))
+        await Axios.get(API.restaurantBestoffers(item.restaurant_id || item.id))
             .then(async (response) => {
                 if (has(response, "success") && response.success) {
                     setBestoffers(response.data)
@@ -98,7 +101,7 @@ const RestaurantDetailsScreen = (props) => {
     }
 
     const getTodayspecials = async () => {
-        await Axios.get(API.restaurantSpecials(item.id))
+        await Axios.get(API.restaurantSpecials(item.restaurant_id || item.id))
             .then(async (response) => {
                 if (has(response, "success") && response.success) {
                     setTodaylist(response.data)
