@@ -69,7 +69,7 @@ const AddAddressModal = (props) => {
               buttonPositive: "OK"
             }
           );
-          console.log(granted);
+          //console.log(granted);
           if (granted === PermissionsAndroid.RESULTS.GRANTED) {
             Geolocation.getCurrentPosition(
                 (position) => {
@@ -83,16 +83,16 @@ const AddAddressModal = (props) => {
                     setLongitude(null)
                     setLocationDetails(null);
                   // See error code charts below.
-                  console.log(error.code, error.message);
+                  //console.log(error.code, error.message);
                 },
                 { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
             );
           } else {
               Alert.alert("Permission Required", "Please Enable Location Permission to continue");
-            console.log("Camera permission denied");
+            //console.log("Camera permission denied");
           }
         } catch (err) {
-          console.warn(err);
+          //console.warn(err);
         }
     };
 
@@ -110,6 +110,7 @@ const AddAddressModal = (props) => {
         const { api_token } = userData
         await Axios.get(API.addresses(), { params: { api_token, "search": `user_id:${userData.id}` } })
             .then(async (response) => {
+                //console.log(response);
                 if (has(response, "success") && response.success) {
                     setAddressList(response.data)
                     onClose()
@@ -144,8 +145,8 @@ const AddAddressModal = (props) => {
     const handleAction = async () => {
         if (has(address, "address") && !isEmpty(address.address)) {
             setloading(true)
-            const data = { ...address, default: address.default ? 1 : 0, user_id: userData.id, api_token: userData.api_token, latitude: locationDetails.latitude, longitude: locationDetails.longitude }
-            console.log(data)
+            const data = { ...address, default: address.default ? 1 : 0, user_id: userData.id, api_token: userData.api_token, latitude: locationDetails.latitude.toString(), longitude: locationDetails.longitude.toString() }
+            //console.log(data)
             if (isEmpty(addressData)) {
                 await Axios.post(API.createAddress, data).then(async (res) => {
                     if (has(res, "success") && res.success) {
@@ -153,7 +154,9 @@ const AddAddressModal = (props) => {
                         await getCartList()
                         setLocationDetails(null)
                     }
-                }).catch((error) => { })
+                }).catch((error) => { 
+                    //console.log(error)
+                })
             } else {
                 await Axios.put(API.editAddress, data).then(async (res) => {
                     if (has(res, "success") && res.success) {
