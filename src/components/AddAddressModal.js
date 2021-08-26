@@ -88,6 +88,7 @@ const AddAddressModal = (props) => {
                 { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
             );
           } else {
+              Alert.alert("Permission Required", "Please Enable Location Permission to continue");
             console.log("Camera permission denied");
           }
         } catch (err) {
