@@ -4,26 +4,19 @@ import { Provider } from 'react-redux'
 import I18n from 'redux-i18n'
 import { messaging, notifications } from 'react-native-firebase';
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import { has } from "lodash"
 
 import Route from './src/Route'
 import configureStore from './src/redux/store'
 import { translations } from './src/constants/translations'
 import { COLORS, navigate } from './src/constants'
 import { ChooseAddress, Loader, CustomAlert, AddAddressModal } from './src/components'
-import { profileAction } from './src/redux/actions';
 LogBox.ignoreLogs(["Warning: Can't perform a React state update on an unmounted component", "VirtualizedLists should never be nested inside plain ScrollViews with the same orientation"])
 let store = configureStore()
 
 const App = () => {
 
   useEffect(() => {
-    notifications().getInitialNotification().then((notificationOpen) => {
-      if (notificationOpen) {
-        const { data } = notificationOpen.notification
-        data.item = JSON.parse(data.item)
-        store.dispatch(profileAction.setNotificationData(data))
-      }
-    });
     onNotification()
   }, []);
 
@@ -69,10 +62,11 @@ const App = () => {
     })
     await notifications().onNotificationOpened((notificationOpen) => {
       if (notificationOpen) {
-        const { data } = notificationOpen.notification
-        data.item = JSON.parse(data.item)
-        notificationAction(data)
-        //store.dispatch(profileAction.setNotificationData(data))
+        const { _data } = notificationOpen.notification
+        if (has(_data, "restaurant")) {
+          _data.restaurant = JSON.parse(_data.restaurant)
+        }
+        notificationAction(_data)
       }
     })
   }
@@ -82,8 +76,8 @@ const App = () => {
     if (api_token != null) {
       const navPath = {
         coupon: { screen: "OffersScreen" },
-        restaurant: { screen: "Bottom", params: { screen: "HomeTab", params: { screen: "RestaurantDetailsScreen", params: { item: data?.item } } } },
-        myorder: { screen: "Bottom", params: { screen: "MyOrdersScreen" } }
+        restaurant: { screen: "Bottom", params: { screen: "HomeTab", params: { screen: "RestaurantDetailsScreen", params: { item: data?.restaurant } } } },
+        order: { screen: "Bottom", params: { screen: "MyOrdersScreen" } }
       }
       navigate('Home', navPath[data.type])
       notifications().removeAllDeliveredNotifications()

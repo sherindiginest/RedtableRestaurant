@@ -151,9 +151,9 @@ const RestaurantDetailsScreen = (props) => {
                             </Pressable>
                         </View>
                     </View>
-                    {(details.closed || !details.available_for_delivery) && <View style={{ backgroundColor: COLORS.primary, position: "absolute", marginTop: HEIGHT * 0.06, }}>
+                    {(details?.closed || !details?.available_for_delivery) && <View style={{ backgroundColor: COLORS.primary, position: "absolute", marginTop: HEIGHT * 0.06, }}>
                         <Text style={[{ color: COLORS.white, textAlign: "center", margin: WIDTH * 0.01 }, STYLES.fontMedium()]}>
-                            {details.closed ? "Shop Closed" : details.available_for_delivery ? "" : "Only Pickup"}
+                            {details?.closed ? "Shop Closed" : details?.available_for_delivery ? "" : "Only Pickup"}
                         </Text>
                     </View>}
                 </ImageBackground>

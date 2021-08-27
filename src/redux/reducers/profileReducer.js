@@ -1,4 +1,4 @@
-import { SETPROFILEDATA, SETADDRESSLIST, SETCARTLIST, SETADDRESSSELECT, SETNEWADDRESS, SETPICKUPMODE, ASKPICKUPMODE, SETNOTIFICATIONDATA } from "../../constants/constants"
+import { SETPROFILEDATA, SETADDRESSLIST, SETCARTLIST, SETADDRESSSELECT, SETNEWADDRESS, SETPICKUPMODE, ASKPICKUPMODE, SETFCMTOKEN } from "../../constants/constants"
 
 const initialState = {
     userData: {},
@@ -8,7 +8,7 @@ const initialState = {
     addnewAddressParams: { visible: false },
     pickupMode: "delivery",
     askForPickupMode: true,
-    notificationData: {}
+    fcmToken: ""
 }
 
 const profileReducer = (state = initialState, action) => {
@@ -48,10 +48,10 @@ const profileReducer = (state = initialState, action) => {
                 ...state,
                 askForPickupMode: action.payload
             }
-        case SETNOTIFICATIONDATA:
+        case SETFCMTOKEN:
             return {
                 ...state,
-                notificationData: action.payload
+                fcmToken: action.payload
             }
         default:
             return { ...state }

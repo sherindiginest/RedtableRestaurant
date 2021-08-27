@@ -11,7 +11,7 @@ import { StatusBar } from 'react-native'
 
 const Header = (props, context) => {
     const navigation = useNavigation()
-    const { backgroundColor = COLORS.white, transparent = false, lang, title, titleColor = COLORS.white, cartAction, cartButton = false } = props
+    const { backgroundColor = COLORS.white, transparent = false, lang, title, titleColor = COLORS.white, cartAction, cartButton = false, notificationButton = true, userData } = props
 
     return (
         <View style={{ flex: 1, backgroundColor, }}>
@@ -22,9 +22,14 @@ const Header = (props, context) => {
                 </Pressable>
                 {!transparent ? <Image source={logo} style={{ height: HEIGHT * 0.07, width: WIDTH * 0.2 }} /> : <View style={{ width: WIDTH * 0.8 }}>
                 </View>}
-                <Pressable onPress={() => { }}>
+                {notificationButton ? <Pressable onPress={() => { navigation.navigate("NotificationScreen") }}>
                     <Image source={notification} style={{}} resizeMode="contain" />
-                </Pressable>
+                    {userData?.notificationCount > 0 && <View style={{ position: "absolute", backgroundColor: COLORS.primary, width: WIDTH * 0.04, height: WIDTH * 0.04, borderRadius: WIDTH * 0.025, justifyContent: "center", alignItems: "center", right: -WIDTH * 0.02, top: -WIDTH * 0.02 }}>
+                        <Text style={[{ color: COLORS.white, fontSize: 10 }, STYLES.fontRegular()]}>
+                            {userData?.notificationCount}
+                        </Text>
+                    </View>}
+                </Pressable> : <View />}
             </View>}
             <View style={{ flex: 1 }}>
                 {title && <View style={[{ height: HEIGHT * 0.07, paddingHorizontal: WIDTH * 0.05, alignItems: "center" }, STYLES.flexDirection(lang)]}>
@@ -50,8 +55,13 @@ const Header = (props, context) => {
                 </Pressable>
                 <View style={{ width: WIDTH * 0.8 }}>
                 </View>
-                <Pressable onPress={() => { }}>
+                <Pressable onPress={() => { navigation.navigate("NotificationScreen") }}>
                     <Image source={notification} style={{ tintColor: COLORS.white }} resizeMode="contain" />
+                    {userData?.notificationCount > 0 && <View style={{ position: "absolute", backgroundColor: COLORS.primary, width: WIDTH * 0.04, height: WIDTH * 0.04, borderRadius: WIDTH * 0.025, justifyContent: "center", alignItems: "center", right: -WIDTH * 0.02, top: -WIDTH * 0.02 }}>
+                        <Text style={[{ color: COLORS.white, fontSize: 10 }, STYLES.fontRegular()]}>
+                            {userData?.notificationCount}
+                        </Text>
+                    </View>}
                 </Pressable>
             </View>}
         </View>
@@ -62,9 +72,10 @@ Header.contextTypes = {
     t: PropTypes.func,
 }
 
-const mapStateToProps = ({ i18nState }) => {
+const mapStateToProps = ({ i18nState, ProfileReducer }) => {
     return {
         lang: i18nState.lang,
+        userData: ProfileReducer.userData
     }
 }
 const mapDispatchToProps = {}

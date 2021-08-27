@@ -148,10 +148,8 @@ const MyOrdersScreen = (props, context) => {
                     setOrderList(response.data)
                     hideLoader()
                 }
-                console.log("response", JSON.stringify(response));
                 hideLoader()
             }).catch((error) => {
-                console.log(JSON.stringify(error));
                 hideLoader()
             })
     }

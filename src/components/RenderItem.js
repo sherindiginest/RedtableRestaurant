@@ -159,10 +159,8 @@ const RenderItem = (props, context) => {
                 if (has(response, "success") && response.success) {
                     setCartList(response.data)
                 }
-                console.log(response);
                 hideLoader()
             }).catch((error) => {
-                console.log(error);
                 hideLoader()
             })
     }

@@ -17,7 +17,8 @@ import {
   EditProfileScreen,
   ManageAddressScreen,
   ChangePasswordScreen,
-  OffersScreen
+  OffersScreen,
+  NotificationScreen
 } from './screens'
 
 import { BottomTabs, DrawerMenu } from './components'
@@ -75,6 +76,7 @@ const Route = () => {
         <RouteStack.Screen name="OtpScreen" component={OtpScreen} />
         <RouteStack.Screen name="Home" component={Home} />
         <RouteStack.Screen name="CheckOutScreen" component={CheckOutScreen} />
+        <RouteStack.Screen name="NotificationScreen" component={NotificationScreen} />
       </RouteStack.Navigator>
     </NavigationContainer>
   )

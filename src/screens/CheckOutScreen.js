@@ -86,7 +86,6 @@ const CheckOutScreen = (props, context) => {
             if (!isEmpty(couponStatus)) {
                 data.coupon_code = coupon_code
             }
-            console.log("PAYLOAD", data);
             await Axios.post(API.createOrder, data).then(async (response) => {
                 if (has(response, "success") && response.success) {
                     setCartList({})

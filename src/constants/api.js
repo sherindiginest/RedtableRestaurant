@@ -28,6 +28,8 @@ export const API = {
     applyCoupon: "applycoupon",
     coupons: "coupons",
     passwordReset: "password_reset",
-    passwordForgot: "send_reset_link_email"
+    passwordForgot: "send_reset_link_email",
+    notification: (userid) => `getnotifications/${userid}`,
+    notificationStatus: "updatestatus"
 
 }

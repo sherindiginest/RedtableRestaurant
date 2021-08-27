@@ -6,13 +6,12 @@ import { isEmpty, has } from "lodash"
 import RNPickerSelect from 'react-native-picker-select'
 
 import { CustomTextInput } from '.'
-import { backarrow, close } from '../../assets/images'
+import { backarrow, close,location } from '../../assets/images'
 import { API, Axios, COLORS, HEIGHT, STYLES, WIDTH } from '../constants'
 import { LoadingAction, profileAction } from '../redux/actions'
 import CustomButton from './CustomButton'
 import Maps from './Maps'
 import Geolocation from 'react-native-geolocation-service';
-import { location } from './../../assets/images'
 
 const AddAddressModal = (props) => {
     const { addnewAddressParams, lang, userData, setAddressList, cartList, setCartList, navigation } = props
@@ -110,7 +109,6 @@ const AddAddressModal = (props) => {
         const { api_token } = userData
         await Axios.get(API.addresses(), { params: { api_token, "search": `user_id:${userData.id}` } })
             .then(async (response) => {
-                //console.log(response);
                 if (has(response, "success") && response.success) {
                     setAddressList(response.data)
                     onClose()

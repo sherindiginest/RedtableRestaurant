@@ -35,7 +35,9 @@ continue to reset your password`,
     change_password: "Change Password",
     checkout: "Checkout",
     price: `{price} SR`,
-    offers: "Offers"
+    offers: "Offers",
+    notifications: "Notifications",
+    coupons: "Coupons"
   },
   ar: {
     choose_your_language: 'CHOOSE YOUR LANGUAGE',
@@ -73,6 +75,8 @@ continue to reset your password`,
     change_password: "Change Password",
     checkout: "Checkout",
     price: `{price} SR`,
-    offers: "Offers"
+    offers: "Offers",
+    notifications: "Notifications",
+    coupons: "Coupons"
   },
 }
