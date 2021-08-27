@@ -17,6 +17,7 @@ import EditProfileScreen from './EditProfileScreen'
 import ManageAddressScreen from './ManageAddressScreen'
 import ChooseRestaurantsScreen from './ChooseRestaurantsScreen'
 import OffersScreen from './OffersScreen'
+import NotificationScreen from './NotificationScreen'
 
 export {
   SplashScreen,
@@ -37,5 +38,6 @@ export {
   EditProfileScreen,
   ManageAddressScreen,
   ChooseRestaurantsScreen,
-  OffersScreen
+  OffersScreen,
+  NotificationScreen
 }

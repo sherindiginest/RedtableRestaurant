@@ -1,22 +1,34 @@
 import React, { useEffect } from 'react';
-import { View, Text, ImageBackground, StatusBar, Image, Alert, Platform } from 'react-native';
+import { View, ImageBackground, StatusBar, Image, Platform } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { connect, useDispatch } from 'react-redux';
-import { isEmpty, has, isNull } from "lodash"
+import { isEmpty, has } from "lodash"
 import { messaging, notifications } from 'react-native-firebase';
 
 import { profileAction, SetLanguageAction } from "./../redux/actions"
-
 import { backgroundImage, logo } from './../../assets/images';
-import { COLORS, Axios, API, } from './../constants';
+import { COLORS, Axios, API, navigate, } from './../constants';
 
 const SplashScreen = (props) => {
-  const { navigation, setProfileData, setLang, setAddressList, setCartList, notificationData, setNotificationData } = props;
+  const { navigation, setProfileData, setLang, setAddressList, setCartList } = props;
   const dispatch = useDispatch()
 
   useEffect(() => {
-    getProfileData()
+    onNotification()
   }, []);
+
+  const onNotification = async () => {
+    let notificationOpen = await notifications().getInitialNotification()
+    if (notificationOpen) {
+      const { _data } = notificationOpen.notification
+      if (has(_data, "restaurant")) {
+        _data.restaurant = JSON.parse(_data.restaurant)
+      }
+      return getProfileData(_data)
+    }
+    getProfileData({})
+    return false
+  }
 
   const getToken = async () => {
     try {
@@ -28,6 +40,7 @@ const SplashScreen = (props) => {
       } else {
         dToken = await messaging().getToken()
       }
+      dispatch(profileAction.setFCMToken(dToken))
       console.log("FCM => ", dToken);
       return dToken
     } catch (e) {
@@ -36,7 +49,7 @@ const SplashScreen = (props) => {
     }
   }
 
-  const getProfileData = async () => {
+  const getProfileData = async (n_data) => {
     const firebase_token = await getToken()
     const api_token = await AsyncStorage.getItem("api_token")
     const order_type = await AsyncStorage.getItem("pickupMode")
@@ -46,7 +59,6 @@ const SplashScreen = (props) => {
       await Axios.get(API.userProfile, { params: { api_token, firebase_token } })
         .then(async (response) => {
           if (has(response, "success") && response.success) {
-            console.log(JSON.stringify(response));
             setProfileData(response.data)
             route = "Home"
             await Axios.get(API.addresses(), { params: { api_token, "search": `user_id:${response?.data?.id}` } })
@@ -66,25 +78,24 @@ const SplashScreen = (props) => {
           console.log("error ==>", error);
         })
     }
-
     setTimeout(() => {
-      if (!isEmpty(notificationData)) {
-        notificationAction(notificationData)
+      if (!isEmpty(n_data)) {
+        notificationAction(n_data)
       } else {
         navigation.replace(route)
       }
     }, 1500);
   }
 
-  const getLanguage = async (route) => {
+  const getLanguage = async (route, n_data) => {
     const lang = await AsyncStorage.getItem("lang")
     if (isEmpty(lang)) {
       navigation.replace("LanguageSwitchScreen")
     } else {
       setLang(lang)
       //navigation.popToTop()
-      if (!isEmpty(notificationData)) {
-        notificationAction(notificationData)
+      if (!isEmpty(n_data)) {
+        notificationAction(n_data)
       } else {
         navigation.replace(route)
       }
@@ -94,11 +105,10 @@ const SplashScreen = (props) => {
   const notificationAction = (data) => {
     const navPath = {
       coupon: { screen: "OffersScreen" },
-      restaurant: { screen: "Bottom", params: { screen: "HomeTab", params: { screen: "RestaurantDetailsScreen", item: data?.item } } },
-      myorder: { screen: "Bottom", params: { screen: "MyOrdersScreen" } }
+      restaurant: { screen: "Bottom", params: { screen: "HomeTab", params: { screen: "RestaurantDetailsScreen", params: { item: data?.restaurant } } } },
+      order: { screen: "Bottom", params: { screen: "MyOrdersScreen" } }
     }
     navigate('Home', navPath[data.type])
-    setNotificationData()
     notifications().removeAllDeliveredNotifications()
   }
 
@@ -110,10 +120,9 @@ const SplashScreen = (props) => {
   );
 };
 
-const mapStateToProps = ({ i18nState, ProfileReducer }) => {
+const mapStateToProps = ({ i18nState }) => {
   return {
     lang: i18nState.lang,
-    notificationData: ProfileReducer.notificationData
   };
 };
 
@@ -121,8 +130,7 @@ const mapDispatchToProps = {
   setProfileData: (userData) => profileAction.setProfileData(userData),
   setAddressList: (address) => profileAction.setAddressList(address),
   setCartList: (cart) => profileAction.setCartList(cart),
-  setLang: SetLanguageAction.setLang,
-  setNotificationData: profileAction.setNotificationData()
+  setLang: SetLanguageAction.setLang
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(SplashScreen);

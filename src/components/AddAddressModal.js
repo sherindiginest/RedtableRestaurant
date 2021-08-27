@@ -1,26 +1,36 @@
 import React, { useState, useEffect } from 'react'
-import { View, Text, Modal, Pressable, Image, Switch } from 'react-native'
+import { View, Text, Modal, Pressable, Image, Switch, Alert, Button, PermissionsAndroid } from 'react-native'
 import PropTypes from 'prop-types'
 import { connect, useDispatch } from 'react-redux'
 import { isEmpty, has } from "lodash"
 import RNPickerSelect from 'react-native-picker-select'
 
 import { CustomTextInput } from '.'
-import { backarrow, close } from '../../assets/images'
+import { backarrow, close,location } from '../../assets/images'
 import { API, Axios, COLORS, HEIGHT, STYLES, WIDTH } from '../constants'
 import { LoadingAction, profileAction } from '../redux/actions'
 import CustomButton from './CustomButton'
+import Maps from './Maps'
+import Geolocation from 'react-native-geolocation-service';
 
 const AddAddressModal = (props) => {
-    const { addnewAddressParams, lang, userData, setAddressList, cartList, setCartList } = props
+    const { addnewAddressParams, lang, userData, setAddressList, cartList, setCartList, navigation } = props
     const { visible, addressData, resId, } = addnewAddressParams
     const [loading, setloading] = useState(false)
     const [address, setaddress] = useState(addressData)
     const [areaList, setareaList] = useState([])
     const [error, setError] = useState(false)
+
+    const [latitude, setLatitude] = useState(null);
+    const [longitude, setLongitude] = useState(null);
+
+    const [ locationDetails, setLocationDetails ] = useState(null)
+
+    const [visibleMap, setVisibleMap] = useState(false)
     const dispatch = useDispatch()
 
     useEffect(() => {
+        //requestLocationPermission()
         getAreacodes()
     }, [])
 
@@ -32,14 +42,58 @@ const AddAddressModal = (props) => {
         if (isEmpty(addressData)) {
             setaddress({
                 description: "HOME",
-                default: false,
+                default: true,
                 area_id: null,
-                address: ""
+                address: "",
+                latitude: locationDetails?.latitude,
+                longitude: locationDetails?.longitude
             })
         } else {
             setaddress(addressData)
         }
     }, [addressData])
+
+
+    const requestLocationPermission = async () => {
+        try {
+          const granted = await PermissionsAndroid.request(
+            PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+            {
+              title: "RedTable Location Permission",
+              message:
+                "RedTable needs access to your location " +
+                "so you can choose your current location.",
+              buttonNeutral: "Ask Me Later",
+              buttonNegative: "Cancel",
+              buttonPositive: "OK"
+            }
+          );
+          //console.log(granted);
+          if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+            Geolocation.getCurrentPosition(
+                (position) => {
+                    setLatitude(position.coords.latitude)
+                    setLongitude(position.coords.longitude)
+                    setLocationDetails(null);
+                    setVisibleMap(true)
+                },
+                (error) => {
+                    setLatitude(null)
+                    setLongitude(null)
+                    setLocationDetails(null);
+                  // See error code charts below.
+                  //console.log(error.code, error.message);
+                },
+                { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
+            );
+          } else {
+              Alert.alert("Permission Required", "Please Enable Location Permission to continue");
+            //console.log("Camera permission denied");
+          }
+        } catch (err) {
+          //console.warn(err);
+        }
+    };
 
     const onClose = () => {
         setaddress({})
@@ -89,14 +143,18 @@ const AddAddressModal = (props) => {
     const handleAction = async () => {
         if (has(address, "address") && !isEmpty(address.address)) {
             setloading(true)
-            const data = { ...address, default: address.default ? 1 : 0, user_id: userData.id, api_token: userData.api_token }
+            const data = { ...address, default: address.default ? 1 : 0, user_id: userData.id, api_token: userData.api_token, latitude: locationDetails.latitude.toString(), longitude: locationDetails.longitude.toString() }
+            //console.log(data)
             if (isEmpty(addressData)) {
                 await Axios.post(API.createAddress, data).then(async (res) => {
                     if (has(res, "success") && res.success) {
                         await getAddresses()
                         await getCartList()
+                        setLocationDetails(null)
                     }
-                }).catch((error) => { })
+                }).catch((error) => { 
+                    //console.log(error)
+                })
             } else {
                 await Axios.put(API.editAddress, data).then(async (res) => {
                     if (has(res, "success") && res.success) {
@@ -111,7 +169,8 @@ const AddAddressModal = (props) => {
         }
     }
 
-    return (<Modal animationType="slide" visible={visible}
+    return (<View>
+        <Modal animationType="slide" visible={visible}
         onRequestClose={() => onClose()}
         transparent
     >
@@ -152,6 +211,21 @@ const AddAddressModal = (props) => {
                         }}
                         value={address?.area_id}
                     />
+                    <View style={{ flexDirection:'row', justifyContent:'space-between' }}>
+                        <Pressable 
+                        style={{ backgroundColor:'red', width: 30, height: 30, borderRadius: 15, alignItems:'center', justifyContent:'center' }}
+                        onPress={()=> {
+                            requestLocationPermission()
+                            
+                            }}>
+                            <Image source={location} style={{ width: 20, height: 20,  }} resizeMode='contain' />
+                        </Pressable>
+                        <View>
+                            {locationDetails && <Text>Latitude: {locationDetails.latitude} </Text>}
+                            {locationDetails && <Text>Longitude: {locationDetails.longitude} </Text> }
+                        </View>
+                    </View>
+                    
                     {/*  <CustomTextInput
                         placeholder="Landmark"
                         placeholderTextColor={COLORS.placeHolderColor}
@@ -187,7 +261,39 @@ const AddAddressModal = (props) => {
                 </View>
             </View>
         </View>
-    </Modal>)
+    </Modal>
+    <Modal animationType="slide" visible={visibleMap}
+        onRequestClose={() => setVisibleMap(false)}
+        transparent
+    >
+        <View style={{ flex: 1, backgroundColor: "#00000030", }}>
+            <Pressable onPress={() => setVisibleMap(false)} style={{ flex: 1 }}>
+            </Pressable>
+            <View style={{ backgroundColor: COLORS.white, height: HEIGHT * 0.62, borderTopLeftRadius: WIDTH * 0.05, borderTopRightRadius: WIDTH * 0.05, overflow: "hidden" }}>
+                <Pressable style={{}} onPress={() => setVisibleMap(false)}>
+                    <Image style={{ width: WIDTH * 0.03, height: WIDTH * 0.03, margin: WIDTH * 0.015, }} source={close} resizeMode="contain" />
+                </Pressable>
+                <View style={{ marginHorizontal: WIDTH * 0.05 }}>
+                    <Maps 
+                        latitude={latitude} 
+                        longitude={longitude} 
+                        onSelectLocation = { (e) => {
+                            setLatitude(e.nativeEvent.coordinate.latitude);
+                            setLongitude(e.nativeEvent.coordinate.longitude);
+                        } }
+                    />
+                </View>
+            </View>
+            <Button color="red" title="Confirm Location" onPress={ () => {
+                setLocationDetails({
+                    latitude,
+                    longitude
+                })
+                setVisibleMap(false);
+            } } />
+        </View>
+    </Modal>
+    </View>)
 }
 
 AddAddressModal.contextTypes = {

@@ -17,7 +17,7 @@ const DrawerMenu = (props, context) => {
 
   const MENULIST = [
     {
-      label: 'Discover',
+      label: 'Home',
       icon: shop,
       onPress: () => {
         navigation.navigate("Bottom")

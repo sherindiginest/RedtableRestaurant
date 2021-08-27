@@ -28,6 +28,9 @@ const RestaurantDetailsScreen = (props) => {
         getDetails()
         getBestoffers()
         getTodayspecials()
+        try {
+            scrollViewref != null && scrollViewref.current.scrollTo({ x: tab * WIDTH, y: 0, animted: true })
+        } catch (error) { }
     }, [])
 
     useEffect(() => {
@@ -88,7 +91,7 @@ const RestaurantDetailsScreen = (props) => {
     }
 
     const getBestoffers = async () => {
-        await Axios.get(API.restaurantBestoffers(item.id))
+        await Axios.get(API.restaurantBestoffers(item.restaurant_id || item.id))
             .then(async (response) => {
                 if (has(response, "success") && response.success) {
                     setBestoffers(response.data)
@@ -98,7 +101,7 @@ const RestaurantDetailsScreen = (props) => {
     }
 
     const getTodayspecials = async () => {
-        await Axios.get(API.restaurantSpecials(item.id))
+        await Axios.get(API.restaurantSpecials(item.restaurant_id || item.id))
             .then(async (response) => {
                 if (has(response, "success") && response.success) {
                     setTodaylist(response.data)
@@ -111,14 +114,14 @@ const RestaurantDetailsScreen = (props) => {
         <Header transparent backgroundColor={"transparent"} >
             <ScrollView contentContainerStyle={{ paddingBottom: HEIGHT * 0.09 }} style={{ backgroundColor: COLORS.white, }} /* scrollEnabled={tab == 0 || tab == 3} */ showsVerticalScrollIndicator={false}>
                 <ImageBackground source={details?.media && details?.media.length > 0 ? { uri: details?.media[0]?.url } : dummy} style={{ height: HEIGHT * 0.35, width: WIDTH }} >
-                    <View style={{ PaddingTop: HEIGHT * 0.07, flex: 1, backgroundColor: COLORS.textInputBorder, justifyContent: "flex-end", alignItems: "center" }}>
+                    <View style={{ paddingTop: HEIGHT * 0.07, flex: 1, backgroundColor: COLORS.textInputBorder, justifyContent: "flex-end", alignItems: "center" }}>
                         <View style={{ height: HEIGHT * 0.13, alignItems: "center" }}>
                             <Text style={[{ fontSize: 20, color: COLORS.white }, STYLES.fontBold()]}>
                                 {details?.name}
                             </Text>
                             <View style={[{}, STYLES.flexDirection(lang)]}>
-                                <Image source={location} style={{ height: HEIGHT * 0.02, width: WIDTH * 0.05, }} resizeMode="contain" />
-                                <Text style={[{ color: COLORS.white, }, STYLES.fontMedium()]}>
+                                {/*  <Image source={location} style={{ height: HEIGHT * 0.02, width: WIDTH * 0.05, }} resizeMode="contain" /> */}
+                                <Text style={[{ color: COLORS.white, width: WIDTH * 0.7, textAlign: "center" }, STYLES.fontMedium()]}>
                                     {details?.address}
                                 </Text>
                             </View>
@@ -148,6 +151,11 @@ const RestaurantDetailsScreen = (props) => {
                             </Pressable>
                         </View>
                     </View>
+                    {(details?.closed || !details?.available_for_delivery) && <View style={{ backgroundColor: COLORS.primary, position: "absolute", marginTop: HEIGHT * 0.06, }}>
+                        <Text style={[{ color: COLORS.white, textAlign: "center", margin: WIDTH * 0.01 }, STYLES.fontMedium()]}>
+                            {details?.closed ? "Shop Closed" : details?.available_for_delivery ? "" : "Only Pickup"}
+                        </Text>
+                    </View>}
                 </ImageBackground>
                 <View style={{ flex: 1, backgroundColor: COLORS.white }}>
                     <View style={{ height: HEIGHT * 0.07, marginTop: HEIGHT * 0.025 }}>

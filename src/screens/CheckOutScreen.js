@@ -82,6 +82,10 @@ const CheckOutScreen = (props, context) => {
                 data.order_type = "1"
                 data.delivery_address_id = addressList.find((add) => add?.is_default)?.id
             }
+
+            if (!isEmpty(couponStatus)) {
+                data.coupon_code = coupon_code
+            }
             await Axios.post(API.createOrder, data).then(async (response) => {
                 if (has(response, "success") && response.success) {
                     setCartList({})
@@ -101,7 +105,7 @@ const CheckOutScreen = (props, context) => {
                         }
                     }]
                 }))
-                console.log(JSON.stringify(error));
+                console.log("API.createOrder ==>", JSON.stringify(error));
             })
         } catch (error) {
             hideLoader()
@@ -136,11 +140,15 @@ const CheckOutScreen = (props, context) => {
             const { api_token } = userData
             const data = {
                 api_token,
-                area_id: addressList.find((add) => add?.is_default)?.area_id,
                 item_total: cartList.cartTotal,
                 coupon_code,
                 restaurant_id: cartList.cartDetails[0].restaurant_id
             }
+
+            if (pickupMode != "pickup") {
+                data.area_id = addressList.find((add) => add?.is_default)?.area_id
+            }
+
             await Axios.post(API.applyCoupon, data)
                 .then(async (response) => {
                     if (has(response, "success") && response.success) {
@@ -163,7 +171,7 @@ const CheckOutScreen = (props, context) => {
                     dispatch(AlertAction.handleAlert({
                         visible: true,
                         title: "Error",
-                        message: error?.message,
+                        message: JSON.stringify(error?.message),
                         buttons: [{
                             title: "Okay",
                             onPress: () => {
@@ -257,7 +265,7 @@ const CheckOutScreen = (props, context) => {
                         </Pressable> */}
                         </View>
                         <View style={{ width: WIDTH * 0.2, alignItems: "flex-end", justifyContent: "center" }}>
-                            <Text style={{ color: COLORS.primary }}>{context.t("price", { price: item.quantity * item?.food?.price })}</Text>
+                            <Text style={[{ color: COLORS.primary }, STYLES.fontRegular()]}>{item?.food?.discount_price < item?.food?.price && <Text style={{ textDecorationLine: "line-through", fontSize: 10, color: COLORS.placeHolderColor }}>{context.t("price", { price: item.quantity * item?.food?.price })} </Text>}{context.t("price", { price: item.quantity * item?.food?.discount_price })}</Text>
                         </View>
                     </View>}
                 />
@@ -325,20 +333,20 @@ const CheckOutScreen = (props, context) => {
                     <View style={{ padding: HEIGHT * 0.015, flexDirection: "row", }}>
                         <View style={{ flex: 1 }}>
                             <Text>Item Total</Text>
-                            <Text>Discount</Text>
+                            {parseFloat(couponStatus?.cartDiscount ? couponStatus?.cartDiscount : cartList.cartDiscount) > 0 && <Text>Discount</Text>}
                             <Text>{`Tax (${cartList?.taxPercentage}%)`}</Text>
                             {deliveryFee > 0 && <Text>Delivery Fee</Text>}
                         </View>
                         <View style={{ width: WIDTH * 0.2, alignItems: "flex-end" }}>
                             <Text>{context.t("price", { price: cartList.cartTotal })}</Text>
-                            <Text>{context.t("price", { price: parseFloat(couponStatus?.cartDiscount ? couponStatus?.cartDiscount : cartList.cartDiscount) })}</Text>
+                            {parseFloat(couponStatus?.cartDiscount ? couponStatus?.cartDiscount : cartList.cartDiscount) > 0 && <Text>- {context.t("price", { price: parseFloat(couponStatus?.cartDiscount ? couponStatus?.cartDiscount : cartList.cartDiscount) })}</Text>}
                             <Text>{context.t("price", { price: parseFloat(couponStatus?.tax ? couponStatus?.tax : cartList.tax) })}</Text>
                             {deliveryFee > 0 && <Text>{context.t("price", { price: deliveryFee })}</Text>}
                         </View>
                     </View>
                     <View style={{ flexDirection: "row", justifyContent: "space-between", marginHorizontal: HEIGHT * 0.015, paddingVertical: HEIGHT * 0.01, borderTopWidth: 0.5 }}>
                         <Text>Total Bill</Text>
-                        <Text>{context.t("price", { price: (parseFloat(couponStatus?.totalBill ? couponStatus?.totalBill : cartList.totalBill) + deliveryFee) })}</Text>
+                        <Text>{context.t("price", { price: (parseFloat(couponStatus?.totalBill ? couponStatus?.totalBill : cartList.totalBill) + deliveryFee).toFixed(2) })}</Text>
                     </View>
                     <Pressable onPress={() => createOrder()} style={{ height: HEIGHT * 0.07, backgroundColor: COLORS.primary, borderRadius: HEIGHT * 0.035, justifyContent: "center", alignItems: "center", bottom: -1 }}>
                         <Text style={{ color: COLORS.white, fontWeight: "bold" }}>CONFIRM ORDER</Text>

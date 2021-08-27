@@ -11,7 +11,7 @@ import { Header, RestaurantComponent, CustomTextInput, RenderMealItem } from "./
 import { AlertAction, LoadingAction, profileAction } from '../redux/actions'
 
 const HomeScreen = (props, context) => {
-    const { lang, navigation, pickupMode, askForPickupMode } = props
+    const { lang, navigation, pickupMode, askForPickupMode, firebase_token, userData } = props
     const [homeList, sethomeList] = useState({})
     const [categoryList, setcategoryList] = useState([])
     const dispatch = useDispatch()
@@ -40,6 +40,7 @@ const HomeScreen = (props, context) => {
             }))
         }
         getData()
+        getProfileData()
     }, [])
 
     const getData = async () => {
@@ -62,6 +63,18 @@ const HomeScreen = (props, context) => {
                 // setloading(false)
             }).catch((error) => {
                 dispatch(LoadingAction.hideLoader())
+            })
+    }
+
+    const getProfileData = async () => {
+        const { api_token } = userData
+        await Axios.get(API.userProfile, { params: { api_token, firebase_token } })
+            .then(async (response) => {
+                if (has(response, "success") && response.success) {
+                    dispatch(profileAction.setProfileData(response.data))
+                }
+            }).catch((error) => {
+                console.log("error ==>", error);
             })
     }
 
@@ -146,6 +159,8 @@ const mapStateToProps = ({ i18nState, ProfileReducer }) => {
         lang: i18nState.lang,
         pickupMode: ProfileReducer.pickupMode,
         askForPickupMode: ProfileReducer.askForPickupMode,
+        firebase_token: ProfileReducer.fcmToken,
+        userData: ProfileReducer.userData,
     }
 }
 const mapDispatchToProps = {}

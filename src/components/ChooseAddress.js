@@ -68,7 +68,6 @@ const ChooseAddress = (props) => {
             })
     }
 
-
     const slideDown = (toValue) => {
         Animated.timing(AnimatedValue, {
             toValue,

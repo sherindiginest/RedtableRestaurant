@@ -13,35 +13,6 @@ import { LoadingAction } from '../redux/actions'
 const RenderItem = (props) => {
     const { item, getOrders, userData, last, context } = props
     const [visible, setVisible] = useState(false)
-    const [priceDetails, setPriceDetails] = useState({})
-    useEffect(() => {
-        let price = {
-            itemTotal: 0,
-            discount: 0,
-            totalBill: 0
-        }
-        item.food_orders.map((data) => {
-            price.itemTotal = price.itemTotal + (data.quantity * data.food.price)
-            price.totalBill = price.totalBill + (data.quantity * data.food.discount_price)
-            price.discount = price.itemTotal - price.totalBill
-        })
-        setPriceDetails(price)
-    }, [])
-
-    useEffect(() => {
-        let price = {
-            itemTotal: 0,
-            discount: 0,
-            totalBill: 0
-        }
-        item.food_orders.map((data) => {
-            price.itemTotal = price.itemTotal + (data.quantity * data.food.price)
-            price.totalBill = price.totalBill + (data.quantity * data.food.discount_price)
-            price.discount = price.itemTotal - price.totalBill
-        })
-        setPriceDetails(price)
-    }, [item])
-
 
     const cancelOrder = async () => {
         const { api_token } = userData
@@ -52,7 +23,6 @@ const RenderItem = (props) => {
                 }
             }).catch((error) => { console.log(error); })
     }
-
 
     return (<>
         <Pressable style={{ marginBottom: last ? HEIGHT * 0.1 : 0 }} onPress={() => setVisible(true)}>
@@ -131,22 +101,22 @@ const RenderItem = (props) => {
                         <View style={{ marginHorizontal: WIDTH * 0.05, borderBottomWidth: 0.5, paddingVertical: HEIGHT * 0.015, flexDirection: "row", }}>
                             <View style={{ flex: 1 }}>
                                 <Text>Item Total</Text>
-                                {priceDetails.discount > 0 && <Text>Discount</Text>}
+                                {(item.itemTotalPrice - item.itemTotalDiscountPrice) > 0 && <Text>Discount</Text>}
                                 {item?.delivery_fee > 0 && <Text>Delivery Fee</Text>}
                                 {Number(item?.tax) > 0 && <Text>Tax</Text>}
                             </View>
                             <View style={{ width: WIDTH * 0.2, alignItems: "flex-end" }}>
-                                <Text style={{ color: COLORS.primary }}>{context.t("price", { price: priceDetails.itemTotal })}</Text>
-                                {priceDetails.discount > 0 && <Text style={{ color: COLORS.primary }}>{context.t("price", { price: priceDetails.discount })}</Text>}
+                                <Text style={{ color: COLORS.primary }}>{context.t("price", { price: item.itemTotalPrice })}</Text>
+                                {(item.itemTotalPrice - item.itemTotalDiscountPrice) > 0 && <Text style={{ color: COLORS.primary }}>-{context.t("price", { price: item.itemTotalPrice - item.itemTotalDiscountPrice })}</Text>}
                                 {item?.delivery_fee > 0 && <Text style={{ color: COLORS.primary }}>{context.t("price", { price: item.delivery_fee })}</Text>}
                                 {Number(item?.tax) > 0 && <Text style={{ color: COLORS.primary }}>{context.t("price", { price: item.tax })}</Text>}
                             </View>
                         </View>
                         <View style={{ flexDirection: "row", justifyContent: "space-between", marginHorizontal: WIDTH * 0.05, marginVertical: HEIGHT * 0.02 }}>
                             <Text style={{ fontWeight: "bold" }}>Total Bill</Text>
-                            <Text style={{ fontWeight: "bold", color: COLORS.primary }}>{context.t("price", { price: priceDetails.totalBill + item.delivery_fee + Number(item?.tax) })}</Text>
+                            <Text style={{ fontWeight: "bold", color: COLORS.primary }}>{context.t("price", { price: (item.delivery_fee + Number(item?.totalBill)).toFixed(2) })}</Text>
                         </View>
-                        {item.order_status_id == 1 && <Pressable onPress={() => cancelOrder()} style={{ marginHorizontal: WIDTH * 0.05, height: HEIGHT * 0.07, backgroundColor: COLORS.statusbar, marginBottom: HEIGHT * 0.01, borderRadius: HEIGHT * 0.035, justifyContent: "center", alignItems: "center" }}>
+                        {item.order_status_id == 1 && <Pressable onPress={() => cancelOrder()} style={{ marginHorizontal: WIDTH * 0.05, height: HEIGHT * 0.07, backgroundColor: COLORS.addToCartButton, marginBottom: HEIGHT * 0.01, borderRadius: HEIGHT * 0.035, justifyContent: "center", alignItems: "center" }}>
                             <Text style={{ color: COLORS.white, fontWeight: "bold" }}>
                                 CANCEL ORDER
                             </Text>
