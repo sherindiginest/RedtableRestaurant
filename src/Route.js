@@ -55,6 +55,7 @@ const Home = () => {
       <HomeStack.Screen name="Bottom" component={BottomTabs} />
       <HomeStack.Screen name="OffersScreen" component={OffersScreen} />
       <HomeStack.Screen name="Settings" component={Settings} />
+      <HomeStack.Screen name="NotificationScreen" component={NotificationScreen} />
     </HomeStack.Navigator>
   )
 }
@@ -76,7 +77,6 @@ const Route = () => {
         <RouteStack.Screen name="OtpScreen" component={OtpScreen} />
         <RouteStack.Screen name="Home" component={Home} />
         <RouteStack.Screen name="CheckOutScreen" component={CheckOutScreen} />
-        <RouteStack.Screen name="NotificationScreen" component={NotificationScreen} />
       </RouteStack.Navigator>
     </NavigationContainer>
   )
