@@ -67,6 +67,7 @@ const RenderItem = (props, context) => {
                 }
             }).catch((error) => {
                 console.log("error", error)
+                handleResponse(error)
                 hideLoader()
             })
         } else {
@@ -77,6 +78,7 @@ const RenderItem = (props, context) => {
                     handleResponse(response)
                 }
             }).catch((error) => {
+                handleResponse(error)
                 console.log("error", error)
                 hideLoader()
             })
