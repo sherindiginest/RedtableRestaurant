@@ -8,7 +8,7 @@
     "start": "react-native start",
     "test": "jest",
     "lint": "eslint .",
-    "apk": "cd android && ./gradlew assembleRelease"
+    "apk": "cd android && ./gradlew clean && ./gradlew assembleRelease"
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "^1.15.4",

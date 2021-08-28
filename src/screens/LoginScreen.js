@@ -11,7 +11,7 @@ import { backgroundImage, logo, email, password, eye } from './../../assets/imag
 import { COLORS, HEIGHT, STYLES, WIDTH, Axios, API, validateEmail } from './../constants';
 
 const LoginScreen = (props, context) => {
-  const { navigation, lang, setProfileData, setAddressList } = props;
+  const { navigation, lang, setProfileData, setAddressList, setCartList } = props;
   const [form, setForm] = useState({})
   const [errors, setErrors] = useState({})
   const [loading, setloading] = useState(false)
@@ -28,14 +28,20 @@ const LoginScreen = (props, context) => {
       await Axios.post(API.login, form)
         .then(async (response) => {
           if (has(response, "success") && response.success) {
+            const { api_token } = response.data
             setProfileData(response.data)
-            await AsyncStorage.setItem('api_token', response?.data?.api_token)
-            await Axios.get(API.addresses(), { params: { api_token: response?.data?.api_token, "search": `user_id:${response?.data?.id}` } })
+            await AsyncStorage.setItem('api_token', api_token)
+            Axios.get(API.addresses(), { params: { api_token, "search": `user_id:${response?.data?.id}` } })
               .then(async (res) => {
                 if (has(res, "success") && res.success) {
                   setAddressList(res.data)
                 }
               }).catch((error) => { })
+            Axios.get(API.carts(), { params: { api_token } }).then(async (response) => {
+              if (has(response, "success") && response.success) {
+                setCartList(response.data)
+              }
+            }).catch((error) => { })
             //navigation.popToTop()
             navigation.replace('Home')
           }
@@ -171,6 +177,7 @@ const mapStateToProps = ({ i18nState }) => {
 const mapDispatchToProps = {
   setProfileData: (userData) => profileAction.setProfileData(userData),
   setAddressList: (address) => profileAction.setAddressList(address),
+  setCartList: (cart) => profileAction.setCartList(cart)
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(LoginScreen);

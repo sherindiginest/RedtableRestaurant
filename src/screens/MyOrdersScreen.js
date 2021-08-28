@@ -32,7 +32,7 @@ const RenderItem = (props) => {
                     <Text style={{ fontSize: 14, fontWeight: "bold" }}>
                         {`ORDER #${item.id}`}
                     </Text>
-                    {item.food_orders.map((i, index) => <Text key={index.toString()} style={{ fontSize: 12, color: COLORS.textInputBorder }}>
+                    {item.food_orders.slice(0, 5).map((i, index) => <Text key={index.toString()} style={{ fontSize: 12, color: COLORS.textInputBorder }}>
                         {`${i.quantity} X ${i.food.name}`}
                     </Text>)}
                 </View>
