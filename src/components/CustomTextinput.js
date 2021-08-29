@@ -24,7 +24,7 @@ const CustomTextinput = (props) => {
     STYLES.flexDirection(lang),
     ]}>
       {image && <Image
-        style={[{ marginHorizontal: WIDTH * 0.05, }, tintColor && { tintColor }]}
+        style={[{ marginLeft: WIDTH * 0.05, marginRight: WIDTH * 0.025, width: WIDTH * 0.07 }, tintColor && { tintColor }]}
         source={image}
         resizeMode="contain"
       />}
