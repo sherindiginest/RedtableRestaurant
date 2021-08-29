@@ -30,7 +30,7 @@ const CustomMarker = ({ item, lang, liveLocation, distanceUnit, context }) => {
     }
 
     return (<View>
-        <View style={{ width: WIDTH * 0.8, backgroundColor: `${COLORS.statusbar}80`, padding: WIDTH * 0.025, borderRadius: WIDTH * 0.025, flexDirection: "row", }}>
+        <View style={{ width: WIDTH * 0.8, backgroundColor: `${COLORS.statusbar}`, padding: WIDTH * 0.025, borderRadius: WIDTH * 0.025, flexDirection: "row", }}>
             <View style={{ width: WIDTH * 0.2, borderRadius: WIDTH * 0.025, height: HEIGHT * 0.1, overflow: "hidden" }}>
                 <WebView source={{ uri: item?.media[0]?.url }} style={{ flex: 0, width: WIDTH * 0.2, height: HEIGHT * 0.1, resizeMode: 'cover', borderRadius: WIDTH * 0.02, }} />
             </View>
@@ -64,7 +64,7 @@ const SetLocationScreen = () => {
         })
     }
 
-    return (<Header backgroundColor={`${COLORS.statusbar}80`} title="Discover">
+    return (<Header backgroundColor={COLORS.yellow2} title="Discover">
         <View style={{ flex: 1 }}>
             <MapView
                 provider={PROVIDER_GOOGLE}

@@ -30,7 +30,7 @@ const OurRestaurantsScreen = (props, context) => {
             })
     }
 
-    return (<Header backgroundColor={`${COLORS.statusbar}80`} title="our_restaurants">
+    return (<Header backgroundColor={COLORS.buttonYellow} title="our_restaurants">
         <View style={{ flex: 1 }}>
             <FlatList
                 showsVerticalScrollIndicator={false}

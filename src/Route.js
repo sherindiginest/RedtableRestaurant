@@ -18,7 +18,8 @@ import {
   ManageAddressScreen,
   ChangePasswordScreen,
   OffersScreen,
-  NotificationScreen
+  NotificationScreen,
+  CountrySwitchScreen
 } from './screens'
 
 import { BottomTabs, DrawerMenu } from './components'
@@ -70,7 +71,8 @@ const Route = () => {
       <RouteStack.Navigator screenOptions={{ headerShown: false, cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS }}
         initialRouteName="SplashScreen">
         <RouteStack.Screen name="SplashScreen" component={SplashScreen} />
-        <RouteStack.Screen name="LanguageSwitchScreen" component={LanguageSwitchScreen} />
+        {/* <RouteStack.Screen name="LanguageSwitchScreen" component={LanguageSwitchScreen} /> */}
+        <RouteStack.Screen name="CountrySwitchScreen" component={CountrySwitchScreen} />
         <RouteStack.Screen name="LoginScreen" component={LoginScreen} />
         <RouteStack.Screen name="ForgotPasswordScreen" component={ForgotPasswordScreen} />
         <RouteStack.Screen name="SignupScreen" component={SignupScreen} />

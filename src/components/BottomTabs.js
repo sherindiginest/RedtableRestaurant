@@ -57,7 +57,7 @@ const TabBarButton = (props) => {
                 style={{
                     top,
                     borderRadius: TABBAR_HEIGHT,
-                    backgroundColor: focused ? COLORS.activeTabColor : COLORS.primary,
+                    backgroundColor: focused ? COLORS.primary : COLORS.yellow1,
                     width: TABBAR_HEIGHT,
                     height: TABBAR_HEIGHT,
                     justifyContent: 'center',

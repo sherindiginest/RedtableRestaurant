@@ -30,7 +30,7 @@ const CustomAlert = () => {
         <Animated.View style={{ flex: 1, justifyContent: "center", alignItems: "center", backgroundColor }}>
             <View style={{ width: WIDTH * 0.9, borderRadius: WIDTH * 0.05, backgroundColor: COLORS.white, elevation: 4 }}>
                 <View style={{ height: HEIGHT * 0.06, backgroundColor: COLORS.primary, borderTopRightRadius: WIDTH * 0.05, borderTopLeftRadius: WIDTH * 0.05, alignItems: "center" }}>
-                    <Image source={logo} style={{ height: HEIGHT * 0.12, width: WIDTH * 0.3, marginTop: - HEIGHT * 0.04 }} resizeMode="contain" />
+                    <Image source={logo} style={{ height: HEIGHT * 0.1, width: WIDTH * 0.2, marginTop: - HEIGHT * 0.04 }} resizeMode="contain" />
                 </View>
                 <View style={{ alignItems: "center", padding: WIDTH * 0.02 }}>
                     <Text style={[{ fontSize: 18, color: COLORS.title3, marginTop: HEIGHT * 0.02 }, STYLES.fontMedium()]}>

@@ -137,7 +137,7 @@ const ManageAddressScreen = (props) => {
                         </View>
                         <View style={[{ flex: 1, justifyContent: "space-evenly" },]}>
                             <Pressable style={{ height: HEIGHT * 0.025, width: WIDTH * 0.15, alignSelf: lang == "ar" ? "flex-start" : "flex-end", alignItems: "flex-end", justifyContent: "center" }} onPress={() => defaultAction(item)}>
-                                <Text style={[STYLES.textAlign(lang), { color: item?.is_default ? COLORS.primary : COLORS.title3, fontWeight: "bold", fontSize: 8 }]}>{item?.is_default ? "Default" : "Make Default"}</Text>
+                                <Text style={[STYLES.textAlign(lang), { color: item?.is_default ? COLORS.red : COLORS.title3, fontWeight: "bold", fontSize: 8 }]}>{item?.is_default ? "Default" : "Make Default"}</Text>
                             </Pressable>
                             <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
                                 <Pressable onPress={() => {
@@ -148,13 +148,13 @@ const ManageAddressScreen = (props) => {
                                 </Pressable>
                                 <View style={{ width: 1, borderWidth: 1 }} />
                                 <Pressable onPress={() => handleDelete(item)}>
-                                    <Text style={[{ color: COLORS.primary, fontWeight: "bold" }]}>DELETE</Text>
+                                    <Text style={[{ color: COLORS.red, fontWeight: "bold" }]}>DELETE</Text>
                                 </Pressable>
                             </View>
                         </View>
                     </View>}
                 />
-                <Pressable onPress={() => dispatch(profileAction.showAddNewAddress({ visible: true }))} style={{ height: HEIGHT * 0.06, backgroundColor: COLORS.addToCartButton, borderRadius: HEIGHT * 0.036, justifyContent: "center", alignItems: "center", margin: WIDTH * 0.05 }}>
+                <Pressable onPress={() => dispatch(profileAction.showAddNewAddress({ visible: true }))} style={{ height: HEIGHT * 0.06, backgroundColor: COLORS.primary, borderRadius: HEIGHT * 0.036, justifyContent: "center", alignItems: "center", margin: WIDTH * 0.05 }}>
                     <Text style={{ color: COLORS.white, fontWeight: "bold" }}>
                         {`+ ADD ADDRESS`}
                     </Text>

@@ -61,7 +61,7 @@ const DrawerMenu = (props, context) => {
         }))
         navigation.closeDrawer()
       }
-    },
+    }/* ,
     {
       label: context.t('language'),
       icon: language,
@@ -71,7 +71,7 @@ const DrawerMenu = (props, context) => {
         await AsyncStorage.setItem('lang', ln)
         navigation.closeDrawer()
       }
-    },
+    } */,
     {
       label: 'Logout',
       icon: logout,

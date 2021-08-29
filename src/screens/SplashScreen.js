@@ -79,16 +79,16 @@ const SplashScreen = (props) => {
         })
     }
     setTimeout(() => {
-      getLanguage(route, n_data)
+      getCountry(route, n_data)
     }, 1500);
   }
 
-  const getLanguage = async (route, n_data) => {
-    const lang = await AsyncStorage.getItem("lang")
+  const getCountry = async (route, n_data) => {
+    const lang = await AsyncStorage.getItem("country")
     if (isEmpty(lang)) {
-      navigation.replace("LanguageSwitchScreen")
+      navigation.replace("CountrySwitchScreen")
     } else {
-      setLang(lang)
+      //setLang(lang)
       //navigation.popToTop()
       if (!isEmpty(n_data)) {
         notificationAction(n_data)

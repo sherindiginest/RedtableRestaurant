@@ -37,7 +37,10 @@ continue to reset your password`,
     price: `{price} SR`,
     offers: "Offers",
     notifications: "Notifications",
-    coupons: "Coupons"
+    coupons: "Coupons",
+    choose_your_country: 'Choose Your Country',
+    saudi_arabia: "Saudi Arabia",
+    bahrain: "Bahrain"
   },
   ar: {
     choose_your_language: 'CHOOSE YOUR LANGUAGE',
@@ -77,6 +80,9 @@ continue to reset your password`,
     price: `{price} SR`,
     offers: "Offers",
     notifications: "Notifications",
-    coupons: "Coupons"
+    coupons: "Coupons",
+    choose_your_country: 'Choose Your Country',
+    saudi_arabia: "Saudi Arabia",
+    bahrain: "Bahrain"
   },
 }

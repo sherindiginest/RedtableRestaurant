@@ -1,7 +1,7 @@
 import axios from 'axios'
 //import {apiConfig} from '../config/config';
 const debug = false
-const baseUrl = "http://redtableapplication.diginestsolutions.in/public/"
+const baseUrl = "http://ruchiappdemo.diginestsolutions.in/public/"
 const apiUrl = `${baseUrl}api/`
 
 const Axios = axios.create({

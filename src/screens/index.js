@@ -18,6 +18,7 @@ import ManageAddressScreen from './ManageAddressScreen'
 import ChooseRestaurantsScreen from './ChooseRestaurantsScreen'
 import OffersScreen from './OffersScreen'
 import NotificationScreen from './NotificationScreen'
+import CountrySwitchScreen from './CountrySwitchScreen'
 
 export {
   SplashScreen,
@@ -39,5 +40,6 @@ export {
   ManageAddressScreen,
   ChooseRestaurantsScreen,
   OffersScreen,
-  NotificationScreen
+  NotificationScreen,
+  CountrySwitchScreen
 }

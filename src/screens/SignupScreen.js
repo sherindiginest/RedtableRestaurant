@@ -102,15 +102,14 @@ const SignupScreen = (props, context) => {
               <ScrollView showsVerticalScrollIndicator={false} style={{ flex: 1 }}>
                 <View
                   style={{
-                    justifyContent: 'flex-end',
                     alignItems: 'center',
-                    height: HEIGHT * 0.3,
-                    marginTop: HEIGHT * 0.03,
+                    height: HEIGHT * 0.34,
                   }}>
                   <Image
                     style={{
-                      width: WIDTH * 0.6,
-                      height: HEIGHT * 0.3,
+                      width: WIDTH * 0.4,
+                      height: HEIGHT * 0.32,
+                      marginTop: HEIGHT * 0.055,
                     }}
                     source={logo}
                     resizeMode="contain"

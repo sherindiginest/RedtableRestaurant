@@ -11,7 +11,7 @@ import { StatusBar } from 'react-native'
 
 const Header = (props, context) => {
     const navigation = useNavigation()
-    const { backgroundColor = COLORS.white, transparent = false, lang, title, titleColor = COLORS.white, cartAction, cartButton = false, notificationButton = true, userData } = props
+    const { backgroundColor = COLORS.white, transparent = false, lang, title, titleColor = COLORS.title4, cartAction, cartButton = false, notificationButton = true, userData } = props
 
     return (
         <View style={{ flex: 1, backgroundColor, }}>
@@ -20,7 +20,7 @@ const Header = (props, context) => {
                 <Pressable onPress={() => navigation.openDrawer()}>
                     <Image source={menu} style={{}} resizeMode="contain" />
                 </Pressable>
-                {!transparent ? <Image source={logo} style={{ height: HEIGHT * 0.07, width: WIDTH * 0.2 }} /> : <View style={{ width: WIDTH * 0.8 }}>
+                {!transparent ? <Image source={logo} style={{ height: HEIGHT * 0.07, width: WIDTH * 0.15 }} resizeMode="contain" /> : <View style={{ width: WIDTH * 0.8 }}>
                 </View>}
                 {notificationButton ? <Pressable onPress={() => { navigation.navigate("NotificationScreen") }}>
                     <Image source={notification} style={{}} resizeMode="contain" />

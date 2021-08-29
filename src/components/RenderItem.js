@@ -260,12 +260,12 @@ const RenderItem = (props, context) => {
                             <Text style={{ color: COLORS.titleColor }}>{item?.description}</Text>
                             <Text style={{ color: COLORS.titleColor }}>{item?.ingredients}</Text>
                         </View>
-                        <View style={{ flexDirection: "row", marginHorizontal: WIDTH * 0.05, borderRadius: HEIGHT * 0.035, height: HEIGHT * 0.07, backgroundColor: COLORS.addToCartButton, marginBottom: HEIGHT * 0.01, }}>
+                        <View style={{ flexDirection: "row", marginHorizontal: WIDTH * 0.05, borderRadius: HEIGHT * 0.035, height: HEIGHT * 0.07, backgroundColor: COLORS.primary, marginBottom: HEIGHT * 0.01, }}>
                             {!disabled ? (quantity > 0 ? <>
                                 <Pressable onPress={() => manageCart(quantity - 1)} style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
                                     <Text style={{ color: COLORS.white, fontSize: 25 }}>-</Text>
                                 </Pressable>
-                                <View style={{ backgroundColor: COLORS.white, flex: 1, justifyContent: "center", alignItems: "center", borderWidth: 2, borderColor: COLORS.addToCartButton }}>
+                                <View style={{ backgroundColor: COLORS.white, flex: 1, justifyContent: "center", alignItems: "center", borderWidth: 2, borderColor: COLORS.primary }}>
                                     <Text style={[{ color: COLORS.black, fontSize: 14 }, STYLES.fontMedium()]}>{quantity}</Text>
                                 </View>
                                 <Pressable onPress={() => manageCart(quantity + 1)} style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>

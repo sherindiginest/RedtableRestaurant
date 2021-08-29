@@ -40,6 +40,8 @@ const settings = require('./settings/settings.png')
 const shop = require('./shop/shop.png')
 const emptyCart = require('./emptyCart/emptyCart.png')
 const mappin = require('./mappin/mappin.png')
+const saudi = require('./saudi/saudi.png')
+const bahrain = require('./bahrain/bahrain.png')
 
 
 
@@ -87,5 +89,7 @@ export {
   shop,
   logout,
   emptyCart,
-  mappin
+  mappin,
+  saudi,
+  bahrain
 }

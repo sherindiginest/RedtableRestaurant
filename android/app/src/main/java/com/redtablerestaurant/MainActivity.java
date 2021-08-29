@@ -1,4 +1,4 @@
-package com.diginest.redtable;
+package com.diginest.ruchi;
 
 import com.facebook.react.ReactActivity;
 

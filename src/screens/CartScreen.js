@@ -158,6 +158,7 @@ const CartScreen = (props, context) => {
                 placeholder="Delivery Notes..."
                 textColor={COLORS.black}
                 placeholderTextColor={COLORS.titleColor}
+                tintColor={COLORS.black}
                 onChangeText={(text) => setdeliveryNotes(text)}
                 style={{ borderRadius: HEIGHT * 0.02, marginHorizontal: WIDTH * 0.05, borderWidth: 0.5, height: HEIGHT * 0.06, marginVertical: HEIGHT * 0.03 }} />
             {/* <View style={{ marginHorizontal: WIDTH * 0.05, elevation: 3, backgroundColor: COLORS.white, borderRadius: HEIGHT * 0.038, marginBottom: HEIGHT * 0.1 }}>

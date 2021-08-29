@@ -10,12 +10,12 @@ const WIDTH = width
 const HEIGHT = height
 
 const COLORS = {
-  primary: '#FF0000',
-  statusbar: '#E8262E',
+  primary: '#A74237',
+  statusbar: '#A74237',
   textInputBorder: '#00000044',
   textInputBackground: '#FFFFFF33',
   white: '#FFFFFF',
-  buttonYellow: '#FFB300',
+  buttonYellow: '#FEEFBD',
   buttondark: '#00000056',
   activeTabColor: '#5663FF',
   inactiveTabColor: '#6E7FAA',
@@ -35,11 +35,17 @@ const COLORS = {
   backgroundColor: "#F2F2F2",
   title2: "#222455",
   title3: "#3E3F68",
+  title4:"#454F63",
   arrowColor: "#8A98BA",
   color1: "#8AE378",
   color2: "#D8D8D8",
   color3: "#C1C1C1",
-  color4: "#E37878"
+  color4: "#E37878",
+  red:"#FF0000",
+  iconColor:"#FF5543",
+  red1:"#F98A60",
+  yellow1:"#DEBF3A",
+  yellow2:"#FFF0BE"
 }
 
 const STYLES = {

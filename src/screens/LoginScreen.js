@@ -95,7 +95,11 @@ const LoginScreen = (props, context) => {
             source={backgroundImage}
             resizeMode="cover">
             <Image
-              style={{ width: WIDTH * 0.6, height: HEIGHT * 0.3 }}
+              style={{
+                width: WIDTH * 0.4,
+                height: HEIGHT * 0.32,
+                marginTop: HEIGHT * 0.02,
+              }}
               source={logo}
               resizeMode="contain"
             />
@@ -121,7 +125,7 @@ const LoginScreen = (props, context) => {
             <View style={[{ alignSelf: 'stretch', }, STYLES.alignItems(lang == 'ar' ? 'en' : 'ar'),]}>
               <Pressable
                 onPress={() => navigation.navigate('ForgotPasswordScreen')}>
-                <Text style={[{ color: COLORS.white, fontSize: 15 }, STYLES.fontMedium()]}>
+                <Text style={[{ color: COLORS.red1, fontSize: 15 }, STYLES.fontMedium()]}>
                   {`${context.t('forgot_password')}?`}
                 </Text>
               </Pressable>
@@ -150,7 +154,7 @@ const LoginScreen = (props, context) => {
               <Pressable onPress={() => navigation.navigate('SignupScreen')}>
                 <Text
                   style={[{
-                    color: COLORS.primary,
+                    color: COLORS.red,
                     fontSize: 15,
                   }, STYLES.fontBold()]}>
                   {`${context.t('register_here')} `}

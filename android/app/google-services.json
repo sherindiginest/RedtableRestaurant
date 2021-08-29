@@ -1,33 +1,33 @@
 {
   "project_info": {
-    "project_number": "873597149192",
-    "project_id": "redtable-29460",
-    "storage_bucket": "redtable-29460.appspot.com"
+    "project_number": "631050614456",
+    "project_id": "ruchi-e5234",
+    "storage_bucket": "ruchi-e5234.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:873597149192:android:6058d8983ada8ddbff71bd",
+        "mobilesdk_app_id": "1:631050614456:android:d4aea460047ea8d9bf264d",
         "android_client_info": {
-          "package_name": "com.diginest.redtable"
+          "package_name": "com.diginest.ruchi"
         }
       },
       "oauth_client": [
         {
-          "client_id": "873597149192-0qiqln6otpfa5ffpek4ongdrrsdsflsi.apps.googleusercontent.com",
+          "client_id": "631050614456-9nj8do5o1b5iilve38cjhia7gfpd26p8.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAhlMoxPuoPH0YGT5om97nj4jG-LXP_A8M"
+          "current_key": "AIzaSyDom5JSwsNM9Kp185kCKaV5CDezbb37OOo"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "873597149192-0qiqln6otpfa5ffpek4ongdrrsdsflsi.apps.googleusercontent.com",
+              "client_id": "631050614456-9nj8do5o1b5iilve38cjhia7gfpd26p8.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

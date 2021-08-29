@@ -90,7 +90,7 @@ const HomeScreen = (props, context) => {
                     renderItem={({ item, index }) => <RestaurantComponent slider item={item} lastelement={index == homeList?.slides.length - 1} />}
                 />
             </View>
-            <View style={{ backgroundColor: `${COLORS.statusbar}80`, flex: 1 }}>
+            <View style={{ backgroundColor: COLORS.buttonYellow, flex: 1 }}>
                 {/* <View style={[{ height: HEIGHT * 0.07, borderRadius: HEIGHT * 0.035, marginTop: -HEIGHT * 0.035, backgroundColor: COLORS.white, borderColor: COLORS.borderColor1, alignItems: "center", borderWidth: 1, justifyContent: "space-between" }, STYLES.flexDirection(lang)]}>
                     <View style={{ flex: 1 }}>
                         <CustomTextInput style={{ height: HEIGHT * 0.07, borderWidth: 0, }}
@@ -103,7 +103,7 @@ const HomeScreen = (props, context) => {
                     <Image style={{ marginHorizontal: WIDTH * 0.05, width: WIDTH * 0.1 }} source={filter} resizeMode="contain" />
                 </View> */}
                 <View style={{ height: HEIGHT * 0.2, justifyContent: "space-evenly" }}>
-                    <Text style={[{ color: COLORS.white, marginHorizontal: WIDTH * 0.05, marginVertical: WIDTH * 0.025, fontSize: 18 }, STYLES.textAlign(lang), STYLES.fontSpecial()]}>{context.t("meals")}</Text>
+                    <Text style={[{ color: COLORS.title4, marginHorizontal: WIDTH * 0.05, marginVertical: WIDTH * 0.025, fontSize: 18 }, STYLES.textAlign(lang), STYLES.fontSpecial()]}>{context.t("meals")}</Text>
                     <FlatList
                         horizontal
                         inverted={lang == "ar"}
@@ -114,7 +114,7 @@ const HomeScreen = (props, context) => {
                     />
                 </View>
                 <View style={{ height: HEIGHT * 0.27, justifyContent: "space-evenly" }}>
-                    <Text style={[{ color: COLORS.white, marginHorizontal: WIDTH * 0.05, marginVertical: WIDTH * 0.025, fontSize: 18 }, STYLES.textAlign(lang), STYLES.fontSpecial()]}>{context.t("our_restaurants")}</Text>
+                    <Text style={[{ color: COLORS.title4, marginHorizontal: WIDTH * 0.05, marginVertical: WIDTH * 0.025, fontSize: 18 }, STYLES.textAlign(lang), STYLES.fontSpecial()]}>{context.t("our_restaurants")}</Text>
                     <FlatList
                         horizontal
                         showsHorizontalScrollIndicator={false}
@@ -126,7 +126,7 @@ const HomeScreen = (props, context) => {
                     />
                 </View>
                 <View style={{ marginBottom: HEIGHT * 0.09 }}>
-                    <Text style={[{ color: COLORS.white, marginHorizontal: WIDTH * 0.05, fontSize: 18 }, STYLES.textAlign(lang), STYLES.fontSpecial()]}>{context.t("categories")}</Text>
+                    <Text style={[{ color: COLORS.title4, marginHorizontal: WIDTH * 0.05, fontSize: 18 }, STYLES.textAlign(lang), STYLES.fontSpecial()]}>{context.t("categories")}</Text>
                     <FlatList
                         scrollEnabled={false}
                         contentContainerStyle={{ alignItems: lang == "ar" ? 'flex-end' : "flex-start" }}

@@ -116,7 +116,7 @@ const RenderItem = (props) => {
                             <Text style={{ fontWeight: "bold" }}>Total Bill</Text>
                             <Text style={{ fontWeight: "bold", color: COLORS.primary }}>{context.t("price", { price: (item.delivery_fee + Number(item?.totalBill)).toFixed(2) })}</Text>
                         </View>
-                        {item.order_status_id == 1 && <Pressable onPress={() => cancelOrder()} style={{ marginHorizontal: WIDTH * 0.05, height: HEIGHT * 0.07, backgroundColor: COLORS.addToCartButton, marginBottom: HEIGHT * 0.01, borderRadius: HEIGHT * 0.035, justifyContent: "center", alignItems: "center" }}>
+                        {item.order_status_id == 1 && <Pressable onPress={() => cancelOrder()} style={{ marginHorizontal: WIDTH * 0.05, height: HEIGHT * 0.07, backgroundColor: COLORS.primary, marginBottom: HEIGHT * 0.01, borderRadius: HEIGHT * 0.035, justifyContent: "center", alignItems: "center" }}>
                             <Text style={{ color: COLORS.white, fontWeight: "bold" }}>
                                 CANCEL ORDER
                             </Text>

@@ -33,7 +33,7 @@ const ChooseRestaurantsScreen = (props) => {
         })
     }
 
-    return (<Header backgroundColor={`${COLORS.statusbar}80`} title="choose_restaurants">
+    return (<Header backgroundColor={`${COLORS.buttonYellow}80`} title="choose_restaurants">
         <View style={{ flex: 1 }}>
             <FlatList
                 showsVerticalScrollIndicator={false}

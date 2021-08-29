@@ -213,7 +213,7 @@ const AddAddressModal = (props) => {
                         />
                         <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                             <Pressable
-                                style={{ backgroundColor: 'red', width: 30, height: 30, borderRadius: 15, alignItems: 'center', justifyContent: 'center' }}
+                                style={{ backgroundColor: COLORS.primary, width: 30, height: 30, borderRadius: 15, alignItems: 'center', justifyContent: 'center' }}
                                 onPress={() => {
                                     requestLocationPermission()
 
@@ -235,13 +235,13 @@ const AddAddressModal = (props) => {
                             <Text style={{ textTransform: "uppercase" }}>Save address as</Text>
                             <View style={[STYLES.flexDirection(lang)]}>
                                 <Pressable onPress={() => setData("description", "HOME")} style={{ height: HEIGHT * 0.07, justifyContent: "center", alignItems: "center", flex: 1, }}>
-                                    <Text style={{ textTransform: "uppercase", color: address?.description == "HOME" ? COLORS.primary : COLORS.black, fontWeight: "bold" }}>HOME</Text>
+                                    <Text style={{ textTransform: "uppercase", color: address?.description == "HOME" ? COLORS.red : COLORS.black, fontWeight: "bold" }}>HOME</Text>
                                 </Pressable>
                                 <Pressable onPress={() => setData("description", "WORK")} style={{ height: HEIGHT * 0.07, justifyContent: "center", alignItems: "center", flex: 1 }}>
-                                    <Text style={{ textTransform: "uppercase", color: address?.description == "WORK" ? COLORS.primary : COLORS.black, fontWeight: "bold" }}>WORK</Text>
+                                    <Text style={{ textTransform: "uppercase", color: address?.description == "WORK" ? COLORS.red : COLORS.black, fontWeight: "bold" }}>WORK</Text>
                                 </Pressable>
                                 <Pressable onPress={() => setData("description", "OTHER")} style={{ height: HEIGHT * 0.07, justifyContent: "center", alignItems: "center", flex: 1 }}>
-                                    <Text style={{ textTransform: "uppercase", color: address?.description == "OTHER" ? COLORS.primary : COLORS.black, fontWeight: "bold" }}>OTHER</Text>
+                                    <Text style={{ textTransform: "uppercase", color: address?.description == "OTHER" ? COLORS.red : COLORS.black, fontWeight: "bold" }}>OTHER</Text>
                                 </Pressable>
                             </View>
                         </View>
@@ -256,7 +256,7 @@ const AddAddressModal = (props) => {
                                 //navigation.navigate('OtpScreen');
                             }}
                             loading={loading}
-                            style={{ backgroundColor: COLORS.addToCartButton, height: HEIGHT * 0.06 }}
+                            style={{ backgroundColor: COLORS.primary, height: HEIGHT * 0.06 }}
                         />
                     </View>
                 </View>

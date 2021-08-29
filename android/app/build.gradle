@@ -129,7 +129,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.diginest.redtable"
+        applicationId "com.diginest.ruchi"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
