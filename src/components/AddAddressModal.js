@@ -96,7 +96,14 @@ const AddAddressModal = (props) => {
     };
 
     const onClose = () => {
-        setaddress({})
+        setaddress({
+            description: "HOME",
+            default: true,
+            area_id: null,
+            address: "",
+            latitude: locationDetails?.latitude,
+            longitude: locationDetails?.longitude
+        })
         dispatch(profileAction.showAddNewAddress())
     }
 
@@ -143,7 +150,7 @@ const AddAddressModal = (props) => {
     const handleAction = async () => {
         if (has(address, "address") && !isEmpty(address.address)) {
             setloading(true)
-            const data = { ...address, default: address.default ? 1 : 0, user_id: userData.id, api_token: userData.api_token, latitude: locationDetails?.latitude.toString(), longitude: locationDetails?.longitude.toString() }
+            const data = { ...address, default: address.default ? 1 : 0, user_id: userData.id, api_token: userData.api_token, latitude: locationDetails?.latitude, longitude: locationDetails?.longitude }
             //console.log(data)
             if (isEmpty(addressData)) {
                 await Axios.post(API.createAddress, data).then(async (res) => {
