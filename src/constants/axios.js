@@ -1,8 +1,12 @@
 import axios from 'axios'
 //import {apiConfig} from '../config/config';
 const debug = false
-const baseUrl = "http://redtableapplication.diginestsolutions.in/public/"
-const apiUrl = `${baseUrl}api/`
+const env = "live"
+const baseUrls = {
+    live: "https://deliveryapp.redtablerestaurant.com",
+    dev: "http://redtableapplication.diginestsolutions.in"
+}
+const apiUrl = `${baseUrls[env]}/public/api/`
 
 const Axios = axios.create({
     baseURL: apiUrl,
