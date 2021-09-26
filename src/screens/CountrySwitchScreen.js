@@ -8,19 +8,20 @@ import {
   ImageBackground,
 } from 'react-native';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import { connect, useDispatch } from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
 import { COLORS, HEIGHT, STYLES, WIDTH } from '../constants';
 import { backgroundImage, bahrain, logo, saudi } from '../../assets/images';
-import { SetLanguageAction } from '../redux/actions';
+import { profileAction, SetLanguageAction } from '../redux/actions';
 import { CustomButton } from '../components';
 
 const LanguageSwitchScreen = (props, context) => {
   const { navigation } = props;
-  const [country, setCountry] = useState("saudi_arabia")
-
+  const [country, setCountry] = useState("SA")
+  const dispatch = useDispatch()
   const countryChange = async (country) => {
+    dispatch(profileAction.setCountry(country))
     await AsyncStorage.setItem('country', country)
     //props.setLang(lang);
     setCountry(country)
@@ -51,7 +52,7 @@ const LanguageSwitchScreen = (props, context) => {
         </Text>
 
         <View style={{ alignSelf: 'stretch', height: HEIGHT * 0.2, marginTop: HEIGHT * 0.04, borderRadius: HEIGHT * 0.04, backgroundColor: `${COLORS.white}20` }}>
-          <Pressable onPress={() => countryChange('saudi_arabia')} style={{ flex: 1, alignItems: 'center', justifyContent: 'space-evenly', flexDirection: "row" }}>
+          <Pressable onPress={() => countryChange('SA')} style={{ flex: 1, alignItems: 'center', justifyContent: 'space-evenly', flexDirection: "row" }}>
             <View style={{ width: WIDTH * 0.5, flexDirection: "row", alignItems: 'center', }}>
               <Image style={{ width: WIDTH * 0.12, height: HEIGHT * 0.05, }}
                 source={saudi}
@@ -66,11 +67,11 @@ const LanguageSwitchScreen = (props, context) => {
               width: WIDTH * 0.06, alignItems: 'center', justifyContent: 'center',
               height: WIDTH * 0.06, borderWidth: 2, borderRadius: WIDTH * 0.03, borderColor: COLORS.primary, backgroundColor: COLORS.white
             }}>
-              {country == "saudi_arabia" && <View style={{ width: WIDTH * 0.035, height: WIDTH * 0.035, borderRadius: WIDTH * 0.0175, backgroundColor: COLORS.primary }} />}
+              {country == "SA" && <View style={{ width: WIDTH * 0.035, height: WIDTH * 0.035, borderRadius: WIDTH * 0.0175, backgroundColor: COLORS.primary }} />}
             </View>
           </Pressable>
           <View style={{ borderBottomWidth: 1, borderColor: COLORS.primary, marginHorizontal: WIDTH * 0.1 }} />
-          <Pressable onPress={() => countryChange('bahrain')} style={{ flex: 1, alignItems: 'center', justifyContent: 'space-evenly', flexDirection: "row" }}>
+          <Pressable onPress={() => countryChange('BH')} style={{ flex: 1, alignItems: 'center', justifyContent: 'space-evenly', flexDirection: "row" }}>
             <View style={{ width: WIDTH * 0.5, flexDirection: "row", alignItems: 'center', }}>
               <Image style={{ width: WIDTH * 0.12, height: HEIGHT * 0.05, }}
                 source={bahrain}
@@ -85,13 +86,14 @@ const LanguageSwitchScreen = (props, context) => {
               width: WIDTH * 0.06, alignItems: 'center', justifyContent: 'center',
               height: WIDTH * 0.06, borderWidth: 2, borderRadius: WIDTH * 0.03, borderColor: COLORS.primary, backgroundColor: COLORS.white
             }}>
-              {country == "bahrain" && <View style={{ width: WIDTH * 0.035, height: WIDTH * 0.035, borderRadius: WIDTH * 0.0175, backgroundColor: COLORS.primary }} />}
+              {country == "BH" && <View style={{ width: WIDTH * 0.035, height: WIDTH * 0.035, borderRadius: WIDTH * 0.0175, backgroundColor: COLORS.primary }} />}
             </View>
           </Pressable>
         </View>
         <CustomButton
           title={context.t('next')}
           onPress={() => {
+            countryChange(country)
             navigation.replace('LoginScreen');
           }}
           style={{ marginTop: HEIGHT * 0.04, width: WIDTH * 0.6, alignSelf: "center", }}

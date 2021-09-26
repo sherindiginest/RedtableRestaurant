@@ -129,7 +129,7 @@ const RenderItem = (props) => {
     )
 }
 const MyOrdersScreen = (props, context) => {
-    const { userData, navigation, hideLoader, showLoader } = props
+    const { userData, navigation, hideLoader, showLoader, country } = props
     const [orderList, setOrderList] = useState([])
 
     useEffect(() => {
@@ -138,6 +138,10 @@ const MyOrdersScreen = (props, context) => {
         });
         return unsubscribe;
     }, [])
+
+    useEffect(() => {
+        getOrders()
+    }, [country])
 
     const getOrders = async () => {
         showLoader()
@@ -176,6 +180,7 @@ const mapStateToProps = ({ i18nState, ProfileReducer }) => {
     return {
         lang: i18nState.lang,
         userData: ProfileReducer.userData,
+        country: ProfileReducer.country,
     }
 }
 const mapDispatchToProps = {

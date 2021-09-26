@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { store } from '../../App'
 //import {apiConfig} from '../config/config';
 const debug = false
 const baseUrl = "http://ruchiappdemo.diginestsolutions.in/public/"
@@ -9,13 +10,15 @@ const Axios = axios.create({
     headers: {
         "Content-Type": 'application/json',
         Accept: 'application/json'
-    }
+    },
+    params: { country_code: store?.getState()?.ProfileReducer?.country || "SA" }
 })
 export default Axios
 
 Axios.interceptors.request.use(
     config => {
         debug && console.log(config)
+        config.params["country_code"] = store?.getState()?.ProfileReducer?.country || "SA"
         return config
     }, error => Promise.reject(error))
 // Intercept all responses

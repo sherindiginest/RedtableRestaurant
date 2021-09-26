@@ -8,4 +8,5 @@ export const SETPICKUPMODE = 'SETPICKUPMODE';
 export const ASKPICKUPMODE = 'ASKPICKUPMODE';
 export const SHOWALERT = 'SHOWALERT';
 export const SETFCMTOKEN = 'SETFCMTOKEN';
+export const SETCOUNTRY = 'SETCOUNTRY';
 

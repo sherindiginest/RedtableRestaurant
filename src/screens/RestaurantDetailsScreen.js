@@ -12,7 +12,7 @@ import { API, Axios, colorArray, COLORS, HEIGHT, STYLES, WIDTH } from '../consta
 import { LoadingAction } from '../redux/actions'
 
 const RestaurantDetailsScreen = (props) => {
-    const { lang, route: { params: { item, type, mealId = null, categoryId = null, selectedTab = 0 } }, showLoader, hideLoader, navigation } = props
+    const { lang, route: { params: { item, type, mealId = null, categoryId = null, selectedTab = 0 } }, showLoader, hideLoader, navigation, country } = props
     let scrollViewref = useRef(null)
     let scrollViewref1 = useRef(null)
     let scrollViewref2 = useRef(null)
@@ -32,6 +32,12 @@ const RestaurantDetailsScreen = (props) => {
             scrollViewref != null && scrollViewref.current.scrollTo({ x: tab * WIDTH, y: 0, animted: true })
         } catch (error) { }
     }, [])
+
+    useEffect(() => {
+        getDetails()
+        getBestoffers()
+        getTodayspecials()
+    }, [country])
 
     useEffect(() => {
         if (has(details, "foods") && !isEmpty(details.foods)) {
@@ -350,9 +356,10 @@ RestaurantDetailsScreen.contextTypes = {
     t: PropTypes.func,
 }
 
-const mapStateToProps = ({ i18nState }) => {
+const mapStateToProps = ({ i18nState, ProfileReducer }) => {
     return {
         lang: i18nState.lang,
+        country: ProfileReducer.country,
     }
 }
 

@@ -11,7 +11,7 @@ import { Header, RestaurantComponent, CustomTextInput, RenderMealItem } from "./
 import { AlertAction, LoadingAction, profileAction } from '../redux/actions'
 
 const HomeScreen = (props, context) => {
-    const { lang, navigation, pickupMode, askForPickupMode, firebase_token, userData } = props
+    const { lang, navigation, pickupMode, askForPickupMode, firebase_token, userData, country } = props
     const [homeList, sethomeList] = useState({})
     const [categoryList, setcategoryList] = useState([])
     const dispatch = useDispatch()
@@ -42,6 +42,10 @@ const HomeScreen = (props, context) => {
         getData()
         getProfileData()
     }, [])
+
+    useEffect(() => {
+        getData()
+    }, [country])
 
     const getData = async () => {
         dispatch(LoadingAction.showLoader())
@@ -161,6 +165,7 @@ const mapStateToProps = ({ i18nState, ProfileReducer }) => {
         askForPickupMode: ProfileReducer.askForPickupMode,
         firebase_token: ProfileReducer.fcmToken,
         userData: ProfileReducer.userData,
+        country: ProfileReducer.country,
     }
 }
 const mapDispatchToProps = {}

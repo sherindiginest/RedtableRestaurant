@@ -10,12 +10,16 @@ import { LoadingAction } from '../redux/actions'
 
 
 const OurRestaurantsScreen = (props, context) => {
-    const { route, navigation, lang, showLoader, hideLoader } = props
+    const { route, navigation, lang, showLoader, hideLoader, country } = props
     const [restaurantList, setRestaurantList] = useState([])
 
     useEffect(() => {
         getData()
     }, [])
+
+    useEffect(() => {
+        getData()
+    }, [country])
 
     const getData = async () => {
         showLoader()
@@ -51,9 +55,10 @@ OurRestaurantsScreen.contextTypes = {
     t: PropTypes.func,
 }
 
-const mapStateToProps = ({ i18nState }) => {
+const mapStateToProps = ({ i18nState, ProfileReducer }) => {
     return {
         lang: i18nState.lang,
+        country: ProfileReducer.country,
     }
 }
 

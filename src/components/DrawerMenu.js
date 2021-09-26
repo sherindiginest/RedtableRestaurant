@@ -61,6 +61,30 @@ const DrawerMenu = (props, context) => {
         }))
         navigation.closeDrawer()
       }
+    }, {
+      label: "Switch Country",
+      icon: locationoutline,
+      onPress: async () => {
+        dispatch(AlertAction.handleAlert({
+          visible: true,
+          title: "Order Type",
+          message: "Please choose one method to continue",
+          buttons: [{
+            title: context.t("saudi_arabia"),
+            onPress: () => {
+              dispatch(profileAction.setCountry("SA"))
+              dispatch(AlertAction.handleAlert({ visible: false, }))
+            }
+          }, {
+            title: context.t("bahrain"),
+            onPress: () => {
+              dispatch(profileAction.setCountry("BH"))
+              dispatch(AlertAction.handleAlert({ visible: false, }))
+            }
+          }]
+        }))
+        navigation.closeDrawer()
+      }
     }/* ,
     {
       label: context.t('language'),

@@ -84,12 +84,13 @@ const SplashScreen = (props) => {
   }
 
   const getCountry = async (route, n_data) => {
-    const lang = await AsyncStorage.getItem("country")
-    if (isEmpty(lang)) {
+    const country = await AsyncStorage.getItem("country")
+    if (isEmpty(country)) {
       navigation.replace("CountrySwitchScreen")
     } else {
       //setLang(lang)
       //navigation.popToTop()
+      dispatch(profileAction.setCountry(country))
       if (!isEmpty(n_data)) {
         notificationAction(n_data)
       } else {

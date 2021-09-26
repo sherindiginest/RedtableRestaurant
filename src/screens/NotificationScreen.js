@@ -9,15 +9,20 @@ import { API, Axios, COLORS, HEIGHT, navigate, STYLES, WIDTH } from '../constant
 import { LoadingAction, profileAction } from '../redux/actions'
 
 const NotificationScreen = (props, context) => {
-    const { route, navigation, lang, showLoader, hideLoader, userData, setProfileData } = props
+    const { route, navigation, lang, showLoader, hideLoader, userData, setProfileData, country } = props
     const { api_token, id } = userData
     const [notificationList, setNotificationList] = useState([])
     const [metaData, setmetaData] = useState({});
+
     useEffect(() => {
         navigation.addListener('focus', () => {
             getData()
         });
     }, [])
+
+    useEffect(() => {
+        getData()
+    }, [country])
 
     const getData = async (page = 1) => {
         if (!has(metaData, "last_page") || metaData.last_page >= page) {
@@ -109,7 +114,8 @@ const mapStateToProps = (state) => {
     const { ProfileReducer, i18nState } = state
     return {
         lang: i18nState.lang,
-        userData: ProfileReducer.userData
+        userData: ProfileReducer.userData,
+        country: ProfileReducer.country,
     };
 }
 

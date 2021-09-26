@@ -11,12 +11,16 @@ import { API, Axios, colorArray, COLORS, HEIGHT, STYLES, WIDTH } from '../consta
 import { LoadingAction } from '../redux/actions'
 
 const OffersScreen = (props) => {
-    const { route, navigation, lang, hideLoader, showLoader, userData } = props
+    const { route, navigation, lang, hideLoader, showLoader, userData, country } = props
     const [offersList, setOffersList] = useState([])
 
     useEffect(() => {
         getData()
     }, [])
+
+    useEffect(() => {
+        getData()
+    }, [country])
 
     const getData = async () => {
         showLoader()
@@ -60,6 +64,7 @@ const mapStateToProps = ({ i18nState, ProfileReducer }) => {
     return {
         lang: i18nState.lang,
         userData: ProfileReducer.userData,
+        country: ProfileReducer.country
     }
 }
 
