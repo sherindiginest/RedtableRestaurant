@@ -95,7 +95,7 @@ const RenderItem = (props) => {
                                 <Text style={{}}>{i.quantity}</Text>
                             </View>
                             <View style={{ width: WIDTH * 0.25, alignItems: "flex-end" }}>
-                                <Text style={{ color: COLORS.primary }}>{context.t("price", { price: i.quantity * i?.food?.price })}</Text>
+                                <Text style={{ color: COLORS.primary }}>{context.t(`price_${country}`, { price: i.quantity * i?.food?.price })}</Text>
                             </View>
                         </View>)}
                         <View style={{ marginHorizontal: WIDTH * 0.05, borderBottomWidth: 0.5, paddingVertical: HEIGHT * 0.015, flexDirection: "row", }}>
@@ -106,15 +106,15 @@ const RenderItem = (props) => {
                                 {Number(item?.tax) > 0 && <Text>Tax</Text>}
                             </View>
                             <View style={{ width: WIDTH * 0.2, alignItems: "flex-end" }}>
-                                <Text style={{ color: COLORS.primary }}>{context.t("price", { price: item.itemTotalPrice })}</Text>
-                                {(item.itemTotalPrice - item.itemTotalDiscountPrice) > 0 && <Text style={{ color: COLORS.primary }}>-{context.t("price", { price: item.itemTotalPrice - item.itemTotalDiscountPrice })}</Text>}
-                                {item?.delivery_fee > 0 && <Text style={{ color: COLORS.primary }}>{context.t("price", { price: item.delivery_fee })}</Text>}
-                                {Number(item?.tax) > 0 && <Text style={{ color: COLORS.primary }}>{context.t("price", { price: item.tax })}</Text>}
+                                <Text style={{ color: COLORS.primary }}>{context.t(`price_${country}`, { price: item.itemTotalPrice })}</Text>
+                                {(item.itemTotalPrice - item.itemTotalDiscountPrice) > 0 && <Text style={{ color: COLORS.primary }}>-{context.t(`price_${country}`, { price: item.itemTotalPrice - item.itemTotalDiscountPrice })}</Text>}
+                                {item?.delivery_fee > 0 && <Text style={{ color: COLORS.primary }}>{context.t(`price_${country}`, { price: item.delivery_fee })}</Text>}
+                                {Number(item?.tax) > 0 && <Text style={{ color: COLORS.primary }}>{context.t(`price_${country}`, { price: item.tax })}</Text>}
                             </View>
                         </View>
                         <View style={{ flexDirection: "row", justifyContent: "space-between", marginHorizontal: WIDTH * 0.05, marginVertical: HEIGHT * 0.02 }}>
                             <Text style={{ fontWeight: "bold" }}>Total Bill</Text>
-                            <Text style={{ fontWeight: "bold", color: COLORS.primary }}>{context.t("price", { price: (item.delivery_fee + Number(item?.totalBill)).toFixed(2) })}</Text>
+                            <Text style={{ fontWeight: "bold", color: COLORS.primary }}>{context.t(`price_${country}`, { price: (item.delivery_fee + Number(item?.totalBill)).toFixed(2) })}</Text>
                         </View>
                         {item.order_status_id == 1 && <Pressable onPress={() => cancelOrder()} style={{ marginHorizontal: WIDTH * 0.05, height: HEIGHT * 0.07, backgroundColor: COLORS.primary, marginBottom: HEIGHT * 0.01, borderRadius: HEIGHT * 0.035, justifyContent: "center", alignItems: "center" }}>
                             <Text style={{ color: COLORS.white, fontWeight: "bold" }}>

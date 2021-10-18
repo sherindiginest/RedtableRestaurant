@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { store } from '../../App'
 //import {apiConfig} from '../config/config';
-const debug = false
+const debug = true
 const baseUrl = "http://ruchiappdemo.diginestsolutions.in/public/"
 const apiUrl = `${baseUrl}api/`
 

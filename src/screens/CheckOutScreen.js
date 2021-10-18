@@ -25,7 +25,7 @@ const list = [
 ]
 
 const CheckOutScreen = (props, context) => {
-    const { navigation, route, cartList, addressList, lang, userData, setCartList, showAddressSelect, pickupMode, hideLoader, showLoader } = props
+    const { navigation, route, cartList, addressList, lang, userData, setCartList, showAddressSelect, pickupMode, hideLoader, showLoader, country } = props
     //const AnimatedValue = useRef(new Animated.Value(useRef)
     const [animation, setAnimation] = useState(false)
     const [paymentMode, setPaymentMode] = useState("Cash On Delivery")
@@ -265,7 +265,7 @@ const CheckOutScreen = (props, context) => {
                         </Pressable> */}
                         </View>
                         <View style={{ width: WIDTH * 0.2, alignItems: "flex-end", justifyContent: "center" }}>
-                            <Text style={[{ color: COLORS.primary }, STYLES.fontRegular()]}>{item?.food?.discount_price < item?.food?.price && <Text style={{ textDecorationLine: "line-through", fontSize: 10, color: COLORS.placeHolderColor }}>{context.t("price", { price: item.quantity * item?.food?.price })} </Text>}{context.t("price", { price: item.quantity * item?.food?.discount_price })}</Text>
+                            <Text style={[{ color: COLORS.primary }, STYLES.fontRegular()]}>{item?.food?.discount_price < item?.food?.price && <Text style={{ textDecorationLine: "line-through", fontSize: 10, color: COLORS.placeHolderColor }}>{context.t(`price_${country}`, { price: item.quantity * item?.food?.price })} </Text>}{context.t(`price_${country}`, { price: item.quantity * item?.food?.discount_price })}</Text>
                         </View>
                     </View>}
                 />
@@ -338,15 +338,15 @@ const CheckOutScreen = (props, context) => {
                             {deliveryFee > 0 && <Text>Delivery Fee</Text>}
                         </View>
                         <View style={{ width: WIDTH * 0.2, alignItems: "flex-end" }}>
-                            <Text>{context.t("price", { price: cartList.cartTotal })}</Text>
-                            {parseFloat(couponStatus?.cartDiscount ? couponStatus?.cartDiscount : cartList.cartDiscount) > 0 && <Text>- {context.t("price", { price: parseFloat(couponStatus?.cartDiscount ? couponStatus?.cartDiscount : cartList.cartDiscount) })}</Text>}
-                            <Text>{context.t("price", { price: parseFloat(couponStatus?.tax ? couponStatus?.tax : cartList.tax) })}</Text>
-                            {deliveryFee > 0 && <Text>{context.t("price", { price: deliveryFee })}</Text>}
+                            <Text>{context.t(`price_${country}`, { price: cartList.cartTotal })}</Text>
+                            {parseFloat(couponStatus?.cartDiscount ? couponStatus?.cartDiscount : cartList.cartDiscount) > 0 && <Text>- {context.t(`price_${country}`, { price: parseFloat(couponStatus?.cartDiscount ? couponStatus?.cartDiscount : cartList.cartDiscount) })}</Text>}
+                            <Text>{context.t(`price_${country}`, { price: parseFloat(couponStatus?.tax ? couponStatus?.tax : cartList.tax) })}</Text>
+                            {deliveryFee > 0 && <Text>{context.t(`price_${country}`, { price: deliveryFee })}</Text>}
                         </View>
                     </View>
                     <View style={{ flexDirection: "row", justifyContent: "space-between", marginHorizontal: HEIGHT * 0.015, paddingVertical: HEIGHT * 0.01, borderTopWidth: 0.5 }}>
                         <Text>Total Bill</Text>
-                        <Text>{context.t("price", { price: (parseFloat(couponStatus?.totalBill ? couponStatus?.totalBill : cartList.totalBill) + deliveryFee).toFixed(2) })}</Text>
+                        <Text>{context.t(`price_${country}`, { price: (parseFloat(couponStatus?.totalBill ? couponStatus?.totalBill : cartList.totalBill) + deliveryFee).toFixed(2) })}</Text>
                     </View>
                     <Pressable onPress={() => createOrder()} style={{ height: HEIGHT * 0.07, backgroundColor: COLORS.primary, borderRadius: HEIGHT * 0.035, justifyContent: "center", alignItems: "center", bottom: -1 }}>
                         <Text style={{ color: COLORS.white, fontWeight: "bold" }}>CONFIRM ORDER</Text>
@@ -463,7 +463,8 @@ const mapStateToProps = ({ i18nState, ProfileReducer }) => {
         cartList: ProfileReducer.cartList,
         userData: ProfileReducer.userData,
         addressList: ProfileReducer.addressList,
-        pickupMode: ProfileReducer.pickupMode
+        pickupMode: ProfileReducer.pickupMode,
+        country: ProfileReducer.country
     }
 }
 const mapDispatchToProps = {

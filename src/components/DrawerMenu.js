@@ -5,7 +5,7 @@ import { connect, useDispatch } from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
 import { AlertAction, profileAction, SetLanguageAction } from './../redux/actions';
-import { HEIGHT, COLORS, WIDTH, STYLES } from './../constants';
+import { HEIGHT, COLORS, WIDTH, STYLES, Axios, API } from './../constants';
 import { logo, email, shop, offers, myorders, settings, language, logout, location, locationoutline } from './../../assets/images';
 
 
@@ -14,6 +14,21 @@ const DrawerMenu = (props, context) => {
 
   const { navigation, setLang, lang, userData } = props
   const dispatch = useDispatch()
+
+  const getCartList = async (country) => {
+    const { api_token } = userData
+    await Axios.get(API.carts(), { params: { api_token } })
+      .then(async (response) => {
+        if (has(response, "success") && response.success) {
+          dispatch(profileAction.setCartList(response.data))
+        }
+      }).catch((error) => {
+        //dispatch(AlertAction.hideLoader())
+      })
+    dispatch(profileAction.setCountry(country))
+    dispatch(AlertAction.handleAlert({ visible: false, }))
+    await AsyncStorage.setItem("country", country)
+  }
 
   const MENULIST = [
     {
@@ -71,16 +86,10 @@ const DrawerMenu = (props, context) => {
           message: "Please choose one method to continue",
           buttons: [{
             title: context.t("saudi_arabia"),
-            onPress: () => {
-              dispatch(profileAction.setCountry("SA"))
-              dispatch(AlertAction.handleAlert({ visible: false, }))
-            }
+            onPress: () => getCartList("SA")
           }, {
             title: context.t("bahrain"),
-            onPress: () => {
-              dispatch(profileAction.setCountry("BH"))
-              dispatch(AlertAction.handleAlert({ visible: false, }))
-            }
+            onPress: () => getCartList("BH")
           }]
         }))
         navigation.closeDrawer()

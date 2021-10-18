@@ -9,7 +9,7 @@ import { API, Axios, COLORS, HEIGHT, STYLES, WIDTH } from '../constants'
 import { AlertAction, LoadingAction, profileAction } from '../redux/actions'
 
 const RenderItem = (props, context) => {
-    const { item, lang, restaurant_id, setCartList, userData, cartList, vertLast, cart, bestOffer, hideLoader, showLoader, setshowAddAddress = () => { }, setshowPickupModal = () => { }, pickupMode, addressList, showAddressSelect, } = props
+    const { item, lang, restaurant_id, setCartList, userData, cartList, vertLast, cart, bestOffer, hideLoader, showLoader, setshowAddAddress = () => { }, setshowPickupModal = () => { }, pickupMode, addressList, showAddressSelect, country } = props
     const [visible, setVisible] = useState(false)
     const [quantity, setQuantity] = useState(null)
     const dispatch = useDispatch()
@@ -184,8 +184,8 @@ const RenderItem = (props, context) => {
                 </Pressable>
             </View>
             <View style={{ width: WIDTH * 0.2, alignItems: "flex-end", justifyContent: "center" }}>
-                <Text style={[{}, STYLES.fontRegular()]}>{context.t("price", { price: quantity * item?.food?.discount_price })}</Text>
-                {item?.food?.discount_price < item?.food?.price && <Text style={[{ textDecorationLine: "line-through", fontSize: 10, color: COLORS.placeHolderColor }, STYLES.fontRegular()]}>{context.t("price", { price: quantity * item?.food?.price })} </Text>}
+                <Text style={[{}, STYLES.fontRegular()]}>{context.t(`price_${country}`, { price: quantity * item?.food?.discount_price })}</Text>
+                {item?.food?.discount_price < item?.food?.price && <Text style={[{ textDecorationLine: "line-through", fontSize: 10, color: COLORS.placeHolderColor }, STYLES.fontRegular()]}>{context.t(`price_${country}`, { price: quantity * item?.food?.price })} </Text>}
             </View>
         </View> : bestOffer ? <Pressable onPress={() => setVisible(true)} style={{ height: WIDTH * 0.4, width: WIDTH * 0.6, marginLeft: lang == "en" ? WIDTH * 0.07 : vertLast ? WIDTH * 0.07 : 0, marginRight: lang == "ar" ? WIDTH * 0.07 : vertLast ? WIDTH * 0.07 : 0, borderRadius: WIDTH * 0.07, backgroundColor: COLORS.white, elevation: 3, marginBottom: HEIGHT * 0.02, marginTop: WIDTH * 0.03 }}>
             <Image style={{ height: WIDTH * 0.25, width: WIDTH * 0.6, marginTop: WIDTH * 0.01, borderTopRightRadius: WIDTH * 0.05, borderTopLeftRadius: WIDTH * 0.05 }} source={item?.media && item?.media.length > 0 ? { uri: item?.media[0]?.url } : logo} defaultSource={logo} resizeMode="cover" />
@@ -204,8 +204,8 @@ const RenderItem = (props, context) => {
                     <Image key={item?.media[0]?.url} style={{ width: WIDTH * 0.27, height: WIDTH * 0.23, marginTop: WIDTH * 0.01, }}
                         source={item?.media && item?.media.length > 0 ? { uri: item?.media[0]?.url } : logo} defaultSource={logo} resizeMode="contain" />
                     <Text style={[{ textAlign: "center", fontSize: 12 }, STYLES.fontRegular()]}>{item?.name}</Text>
-                    <Text style={[{}, STYLES.fontRegular()]}>{context.t("price", { price: item?.discount_price })}</Text>
-                    {item?.discount_price < item?.price && <Text style={[{ textDecorationLine: "line-through", fontSize: 10, color: COLORS.placeHolderColor }, STYLES.fontRegular()]}>{context.t("price", { price: item?.price })} </Text>}
+                    <Text style={[{}, STYLES.fontRegular()]}>{context.t(`price_${country}`, { price: item?.discount_price })}</Text>
+                    {item?.discount_price < item?.price && <Text style={[{ textDecorationLine: "line-through", fontSize: 10, color: COLORS.placeHolderColor }, STYLES.fontRegular()]}>{context.t(`price_${country}`, { price: item?.price })} </Text>}
                     {item?.discount_percentage && <View style={[{ backgroundColor: COLORS.green, width: WIDTH * 0.1, height: WIDTH * 0.1, borderRadius: WIDTH * 0.05, position: "absolute", top: -WIDTH * 0.02, justifyContent: "center", alignItems: "center" }, lang == "ar" ? { right: -WIDTH * 0.04, } : { left: -WIDTH * 0.04, }]}>
                         <Text style={[{ fontSize: 12 }, STYLES.fontMedium()]}>{item?.discount_percentage}%</Text>
                     </View>}
@@ -250,7 +250,7 @@ const RenderItem = (props, context) => {
                     <View style={{ flex: 1, paddingTop: HEIGHT * 0.03 }}>
                         <View style={{ flexDirection: "row", justifyContent: "space-between", marginHorizontal: WIDTH * 0.05 }}>
                             <Text style={{ color: COLORS.titleColor }}>{item?.name}</Text>
-                            <Text style={[{ color: COLORS.addToCartButton }, STYLES.fontRegular()]}>{item?.discount_price < item?.price && <Text style={[{ textDecorationLine: "line-through", fontSize: 10, color: COLORS.placeHolderColor }, STYLES.fontRegular()]}>{context.t("price", { price: item?.price })} </Text>}{context.t("price", { price: item?.discount_price })}</Text>
+                            <Text style={[{ color: COLORS.addToCartButton }, STYLES.fontRegular()]}>{item?.discount_price < item?.price && <Text style={[{ textDecorationLine: "line-through", fontSize: 10, color: COLORS.placeHolderColor }, STYLES.fontRegular()]}>{context.t(`price_${country}`, { price: item?.price })} </Text>}{context.t(`price_${country}`, { price: item?.discount_price })}</Text>
                         </View>
                         <View style={{ marginHorizontal: WIDTH * 0.05 }}>
                             <Text style={{ color: COLORS.title1, fontSize: 10 }}>80 Rating</Text>
@@ -295,6 +295,7 @@ const mapStateToProps = ({ i18nState, ProfileReducer }) => {
         cartList: ProfileReducer.cartList,
         pickupMode: ProfileReducer.pickupMode,
         addressList: ProfileReducer.addressList,
+        country: ProfileReducer.country,
     }
 }
 const mapDispatchToProps = {

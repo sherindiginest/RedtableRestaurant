@@ -181,15 +181,15 @@ const CartScreen = (props, context) => {
                         {pickupMode != "pickup" && <Text>Delivery Fee</Text>}
                     </View>
                     <View style={{ width: WIDTH * 0.2, alignItems: "flex-end" }}>
-                        <Text>{context.t("price", { price: cartList.cartTotal })}</Text>
-                        <Text>{context.t("price", { price: cartList.cartDiscount })}</Text>
-                        <Text>{context.t("price", { price: cartList.tax })}</Text>
-                        {pickupMode != "pickup" && <Text>{context.t("price", { price: cartList.deliveryFee })}</Text>}
+                        <Text>{context.t(`price_${country}`, { price: cartList.cartTotal })}</Text>
+                        <Text>{context.t(`price_${country}`, { price: cartList.cartDiscount })}</Text>
+                        <Text>{context.t(`price_${country}`, { price: cartList.tax })}</Text>
+                        {pickupMode != "pickup" && <Text>{context.t(`price_${country}`, { price: cartList.deliveryFee })}</Text>}
                     </View>
                 </View>
                 <View style={{ flexDirection: "row", justifyContent: "space-between", marginHorizontal: HEIGHT * 0.015, paddingVertical: HEIGHT * 0.01, borderTopWidth: 0.5 }}>
                     <Text>Total Bill</Text>
-                    <Text>{context.t("price", { price: pickupMode != "pickup" ? (cartList.totalBill + cartList.deliveryFee) : cartList.totalBill })}</Text>
+                    <Text>{context.t(`price_${country}`, { price: pickupMode != "pickup" ? (cartList.totalBill + cartList.deliveryFee) : cartList.totalBill })}</Text>
                 </View>
                 <Pressable onPress={() => onNavigate()} style={{ height: HEIGHT * 0.07, backgroundColor: COLORS.primary, borderRadius: HEIGHT * 0.035, justifyContent: "center", alignItems: "center", }}>
                     <Text style={{ color: COLORS.white, fontWeight: "bold" }}>CHECKOUT</Text>
