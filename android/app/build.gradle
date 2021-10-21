@@ -132,7 +132,7 @@ android {
         applicationId "com.diginest.redtable"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 4
+        versionCode 5
         versionName "1.0.0"
     }
     splits {
@@ -159,7 +159,7 @@ android {
             }
         }
     }
-    //ndkVersion '22.0.7026061'
+    ndkVersion '22.0.7026061'
     buildTypes {
         debug {
             signingConfig signingConfigs.debug
