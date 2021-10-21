@@ -84,18 +84,19 @@ const SplashScreen = (props) => {
   }
 
   const getLanguage = async (route, n_data) => {
-    const lang = await AsyncStorage.getItem("lang")
-    if (isEmpty(lang)) {
+    //const lang = await AsyncStorage.getItem("lang")
+    await AsyncStorage.setItem('lang', "en")
+    /* if (isEmpty(lang)) {
       navigation.replace("LanguageSwitchScreen")
     } else {
-      setLang(lang)
-      //navigation.popToTop()
-      if (!isEmpty(n_data)) {
-        notificationAction(n_data)
-      } else {
-        navigation.replace(route)
-      }
+      setLang(lang) */
+    //navigation.popToTop()
+    if (!isEmpty(n_data)) {
+      notificationAction(n_data)
+    } else {
+      navigation.replace(route)
     }
+    //}
   }
 
   const notificationAction = (data) => {
