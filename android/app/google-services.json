@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "873597149192",
+    "project_id": "redtable-29460",
+    "storage_bucket": "redtable-29460.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:873597149192:android:6058d8983ada8ddbff71bd",
+        "android_client_info": {
+          "package_name": "com.diginest.redtable"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "873597149192-0qiqln6otpfa5ffpek4ongdrrsdsflsi.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAhlMoxPuoPH0YGT5om97nj4jG-LXP_A8M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "873597149192-0qiqln6otpfa5ffpek4ongdrrsdsflsi.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
