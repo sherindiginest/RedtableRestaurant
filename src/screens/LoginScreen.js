@@ -157,6 +157,12 @@ const LoginScreen = (props, context) => {
                 </Text>
               </Pressable>
             </Pressable>
+            <Pressable style={{ position: "absolute", right: WIDTH * 0.05, top: HEIGHT * 0.025 }}
+              onPress={() => navigation.replace('Home')}>
+              <Text style={[{ color: COLORS.white, fontSize: 15 }, STYLES.fontMedium()]}>
+                {context.t('continue_as_guest')}
+              </Text>
+            </Pressable>
           </ImageBackground>
         </ScrollView>
       </TouchableWithoutFeedback>

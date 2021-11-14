@@ -3,6 +3,7 @@ import { View, Text, Image, FlatList, Pressable } from 'react-native';
 import PropTypes from 'prop-types';
 import { connect, useDispatch } from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import { isEmpty } from "lodash"
 
 import { AlertAction, profileAction, SetLanguageAction } from './../redux/actions';
 import { HEIGHT, COLORS, WIDTH, STYLES } from './../constants';
@@ -14,7 +15,6 @@ const DrawerMenu = (props, context) => {
 
   const { navigation, setLang, lang, userData } = props
   const dispatch = useDispatch()
-
   const MENULIST = [
     {
       label: 'Home',
@@ -34,7 +34,7 @@ const DrawerMenu = (props, context) => {
       label: 'Settings',
       icon: settings,
       onPress: () => {
-        navigation.navigate("Settings")
+        navigateToLogin("Settings")
       }
     },
     {
@@ -73,16 +73,45 @@ const DrawerMenu = (props, context) => {
       }
     }, */
     {
-      label: 'Logout',
+      label: isEmpty(userData) ? "Login" : 'Logout',
       icon: logout,
       onPress: async () => {
-        navigation.replace("SplashScreen")
-        await AsyncStorage.removeItem("api_token")
-        dispatch({ type: "LOGOUT" })
+        if (!isEmpty(userData)) {
+          navigation.replace("SplashScreen")
+          await AsyncStorage.removeItem("api_token")
+          dispatch({ type: "LOGOUT" })
+        } else {
+          navigation.replace("LoginScreen")
+        }
         navigation.closeDrawer()
       }
     },
   ];
+
+  const navigateToLogin = (route) => {
+    if (!isEmpty(userData)) {
+      navigation.navigate(route)
+    } else {
+      dispatch(AlertAction.handleAlert({
+        visible: true,
+        title: "Warning",
+        message: "Login to continue",
+        buttons: [{
+          title: "Close",
+          onPress: () => {
+            dispatch(AlertAction.handleAlert({ visible: false, }))
+          }
+        }, {
+          title: "Login",
+          onPress: () => {
+            navigation.navigate("LoginScreen")
+            dispatch(AlertAction.handleAlert({ visible: false, }))
+          }
+        }]
+      }))
+      return false
+    }
+  }
 
   return (
     <View style={{ flex: 1 }}>
@@ -98,11 +127,11 @@ const DrawerMenu = (props, context) => {
           resizeMode="contain"
           style={{ height: HEIGHT * 0.1, width: WIDTH * 0.2, marginLeft: WIDTH * 0.05 }}
         />
-        <View style={[STYLES.alignItems(lang), { width: WIDTH * 0.4, }]}>
+        {!isEmpty(userData) && <View style={[STYLES.alignItems(lang), { width: WIDTH * 0.4, }]}>
           <Text>{userData?.name}</Text>
           <Text numberOfLines={1}>{userData?.email}</Text>
           <Text>{userData?.phone}</Text>
-        </View>
+        </View>}
       </View>
       <FlatList
         style={{ marginTop: HEIGHT * 0.02 }}

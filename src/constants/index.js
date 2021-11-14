@@ -1,4 +1,4 @@
-import { Dimensions } from 'react-native'
+import { Dimensions,Platform } from 'react-native'
 
 import Axios from "./axios"
 import { API } from "./api"
@@ -60,25 +60,25 @@ const STYLES = {
   },
   fontRegular: () => {
     return { 
-      //fontFamily: "ProximaNovaAltRegular" 
+      fontFamily: Platform.OS == "ios" ? "Proxima Nova Alt Regular" : "ProximaNovaAltRegular",
       textAlign:  'left' 
     }
   },
   fontMedium: () => {
     return { 
-      //fontFamily: "ReneBiederMilliard-Medium" 
+      fontFamily: Platform.OS == "ios" ? "Milliard-Medium":"ReneBiederMilliard-Medium" ,
       textAlign:  'left'
     }
   },
   fontBold: () => {
     return { 
-      //fontFamily: "ReneBiederMilliard-Bold" 
+      fontFamily: Platform.OS == "ios" ? "Milliard-Bold":"ReneBiederMilliard-Bold" ,
       textAlign:  'left'
     }
   },
   fontSpecial: () => {
     return { 
-      //fontFamily: "BerkshireSwash-Regular" 
+      fontFamily: "BerkshireSwash-Regular" ,
       textAlign:  'left'
     }
   }

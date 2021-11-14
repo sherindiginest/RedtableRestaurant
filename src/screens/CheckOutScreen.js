@@ -126,7 +126,7 @@ const CheckOutScreen = (props, context) => {
             .then(async (response) => {
                 if (has(response, "success") && response.success) {
                     const { delivery_charge, free_delivery_amount } = response.data
-                    if(Number(delivery_charge)>0){
+                    if (Number(delivery_charge) > 0) {
                         setDeliveryFee(Number(delivery_charge))
                     }
                     /*if (Number(free_delivery_amount) >= Number(cartList.totalBill)) {
@@ -249,6 +249,7 @@ const CheckOutScreen = (props, context) => {
                     </View>
                 </View>
                 <FlatList
+                    scrollEnabled={false}
                     extraData={cartList?.cartDetails}
                     data={cartList?.cartDetails}
                     keyExtractor={(item, index) => index.toString()}
@@ -299,6 +300,7 @@ const CheckOutScreen = (props, context) => {
                             <Text style={{ color: COLORS.green2 }}> + Add Card</Text>
                         </Pressable>
                         <FlatList
+                            scrollEnabled={false}
                             data={list}
                             keyExtractor={(item, index) => index.toString()}
                             renderItem={({ item, index }) => <Pressable onPress={() => setPaymentMode(item.name)} style={{ borderWidth: 0.5, height: HEIGHT * 0.05, marginVertical: HEIGHT * 0.01, alignItems: "center", flexDirection: "row", paddingHorizontal: WIDTH * 0.05, justifyContent: "space-between", borderRadius: HEIGHT * 0.01, borderColor: COLORS.titleColor, backgroundColor: `${COLORS.titleColor}20` }}>

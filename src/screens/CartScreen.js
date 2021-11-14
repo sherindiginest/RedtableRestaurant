@@ -148,6 +148,7 @@ const CartScreen = (props, context) => {
                 </View>
             </View>
             <FlatList
+                scrollEnabled={false}
                 extraData={cartList?.cartDetails}
                 data={cartList?.cartDetails}
                 keyExtractor={(item, index) => index.toString()}

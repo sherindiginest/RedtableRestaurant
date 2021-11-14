@@ -37,7 +37,9 @@ continue to reset your password`,
     price: `{price} SR`,
     offers: "Offers",
     notifications: "Notifications",
-    coupons: "Coupons"
+    coupons: "Coupons",
+    discover: "Discover",
+    continue_as_guest: "Continue as Guest"
   },
   ar: {
     choose_your_language: 'CHOOSE YOUR LANGUAGE',
@@ -77,6 +79,8 @@ continue to reset your password`,
     price: `{price} SR`,
     offers: "Offers",
     notifications: "Notifications",
-    coupons: "Coupons"
+    coupons: "Coupons",
+    discover: "Discover",
+    continue_as_guest: "Continue as Guest"
   },
 }

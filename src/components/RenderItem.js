@@ -3,16 +3,19 @@ import { ImageBackground, Image, View, Text, Pressable, FlatList, ScrollView, Mo
 import PropTypes from 'prop-types'
 import { connect, useDispatch } from 'react-redux'
 import { isEmpty, has } from "lodash"
+import { useNavigation } from '@react-navigation/core'
 
 import { dummy, close, heart, logo } from '../../assets/images'
-import { API, Axios, COLORS, HEIGHT, STYLES, WIDTH } from '../constants'
+import { API, Axios, COLORS, HEIGHT, navigate, STYLES, WIDTH } from '../constants'
 import { AlertAction, LoadingAction, profileAction } from '../redux/actions'
+
 
 const RenderItem = (props, context) => {
     const { item, lang, restaurant_id, setCartList, userData, cartList, vertLast, cart, bestOffer, hideLoader, showLoader, setshowAddAddress = () => { }, setshowPickupModal = () => { }, pickupMode, addressList, showAddressSelect, } = props
     const [visible, setVisible] = useState(false)
     const [quantity, setQuantity] = useState(null)
     const dispatch = useDispatch()
+    const navigation = useNavigation()
     let disabled = false
     if ((item.stock && item.stock <= 0) || !item?.deliverable) {
         disabled = true
@@ -126,14 +129,35 @@ const RenderItem = (props, context) => {
     }
 
     const validateRes = () => {
-        if (has(cartList, "cartDetails") && !isEmpty(cartList.cartDetails) && cartList.cartDetails[0]?.restaurant_id != restaurant_id) {
+        if (!isEmpty(userData)) {
+            if (has(cartList, "cartDetails") && !isEmpty(cartList.cartDetails) && cartList.cartDetails[0]?.restaurant_id != restaurant_id) {
+                dispatch(AlertAction.handleAlert({
+                    visible: true,
+                    title: "Error",
+                    message: "Please choose food from same restaurant or clear cart and try again",
+                    buttons: [{
+                        title: "Okay",
+                        onPress: () => {
+                            dispatch(AlertAction.handleAlert({ visible: false, }))
+                        }
+                    }]
+                }))
+                return false
+            }
+        } else {
             dispatch(AlertAction.handleAlert({
                 visible: true,
-                title: "Error",
-                message: "Please choose food from same restaurant or clear cart and try again",
+                title: "Warning",
+                message: "Login to continue",
                 buttons: [{
-                    title: "Okay",
+                    title: "Close",
                     onPress: () => {
+                        dispatch(AlertAction.handleAlert({ visible: false, }))
+                    }
+                }, {
+                    title: "Login",
+                    onPress: () => {
+                        navigation.navigate("LoginScreen")
                         dispatch(AlertAction.handleAlert({ visible: false, }))
                     }
                 }]
@@ -199,7 +223,7 @@ const RenderItem = (props, context) => {
         </Pressable> : <View style={{ marginLeft: lang == "en" ? WIDTH * 0.07 : vertLast ? WIDTH * 0.07 : 0, marginRight: lang == "ar" ? WIDTH * 0.07 : vertLast ? WIDTH * 0.07 : 0, marginBottom: WIDTH * 0.025, }}>
             <Pressable
                 onPress={() => setVisible(true)}
-                style={{ height: WIDTH * 0.4, width: WIDTH * 0.4, marginVertical: WIDTH * 0.025, borderRadius: WIDTH * 0.07, backgroundColor: COLORS.white, elevation: 3, }}>
+                style={{ height: WIDTH * 0.4, width: WIDTH * 0.4, marginVertical: WIDTH * 0.025, borderRadius: WIDTH * 0.07, backgroundColor: COLORS.white, elevation: 3, shadowColor: COLORS.primary, shadowOffset: { height: 5, width: 5 }, shadowRadius: WIDTH * 0.015, shadowOpacity: 0.2 }}>
                 <View style={{ height: WIDTH * 0.4, width: WIDTH * 0.4, backgroundColor: !disabled ? COLORS.white : "#00000020", alignItems: "center", borderRadius: WIDTH * 0.07, }}>
                     <Image key={item?.media[0]?.url} style={{ width: WIDTH * 0.27, height: WIDTH * 0.23, marginTop: WIDTH * 0.01, }}
                         source={item?.media && item?.media.length > 0 ? { uri: item?.media[0]?.url } : logo} defaultSource={logo} resizeMode="contain" />

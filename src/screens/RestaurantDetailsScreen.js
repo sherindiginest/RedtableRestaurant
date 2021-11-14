@@ -166,7 +166,7 @@ const RestaurantDetailsScreen = (props) => {
                             data={["Menu", "About", "Featured"/* , "Reviews" */]}
                             keyExtractor={(item, index) => index.toString()}
                             renderItem={({ item, index }) => <View style={{ justifyContent: "center", }}>
-                                <Pressable onPress={() => setTab(index)} style={{ justifyContent: "center", alignItems: "center", borderRadius: HEIGHT * 0.01, elevation: 3, backgroundColor: tab == index ? COLORS.statusbar : COLORS.white, height: HEIGHT * 0.03, marginLeft: index == 0 ? WIDTH * 0.05 : 0, marginRight: index == 2 ? WIDTH * 0.05 : 0, width: WIDTH * 0.2, width: WIDTH * 0.27 }}>
+                                <Pressable onPress={() => setTab(index)} style={{ justifyContent: "center", alignItems: "center", borderRadius: HEIGHT * 0.01, elevation: 3, backgroundColor: tab == index ? COLORS.statusbar : COLORS.white, height: HEIGHT * 0.03, marginLeft: index == 0 ? WIDTH * 0.05 : 0, marginRight: index == 2 ? WIDTH * 0.05 : 0, width: WIDTH * 0.2, width: WIDTH * 0.27, shadowColor: COLORS.primary, shadowOffset: { height: 5, width: 5 }, shadowRadius: WIDTH * 0.015, shadowOpacity: 0.2 }}>
                                     <Text style={[{ color: tab == index ? COLORS.white : COLORS.black, fontSize: 12 }, STYLES.fontRegular()]}>{item}</Text>
                                 </Pressable>
                             </View>}
@@ -275,32 +275,32 @@ const RestaurantDetailsScreen = (props) => {
                         </View>
                         {/* FEATURED */}
                         <View style={{ flex: 1, width: WIDTH }}>
-                            <ScrollView showsVerticalScrollIndicator={false}>
-                                <Text style={[{ marginHorizontal: WIDTH * 0.05, fontSize: 20, }, STYLES.textAlign(lang), STYLES.fontSpecial()]}>Today's Special</Text>
-                                <View>
-                                    <FlatList
-                                        inverted={lang == "ar"}
-                                        horizontal
-                                        data={todaylist}
-                                        showsHorizontalScrollIndicator={false}
-                                        keyExtractor={(item, index) => index.toString()}
-                                        contentContainerStyle={[STYLES.alignItems(lang)]}
-                                        renderItem={({ item, index }) => <RenderItem setshowPickupModal={(value) => setshowPickupModal(value)} item={item} lang={lang} vertLast={todaylist?.length - 1 == index} restaurant_id={details.id} />}
-                                    />
-                                </View>
-                                <Text style={[{ marginHorizontal: WIDTH * 0.05, fontSize: 20, }, STYLES.textAlign(lang), STYLES.fontSpecial()]}>Best Offers</Text>
-                                <View style={{}}>
-                                    <FlatList
-                                        horizontal
-                                        data={bestoffers}
-                                        inverted={lang == "ar"}
-                                        showsHorizontalScrollIndicator={false}
-                                        keyExtractor={(item, index) => index.toString()}
-                                        contentContainerStyle={[STYLES.alignItems(lang)]}
-                                        renderItem={({ item, index }) => <RenderItem setshowPickupModal={(value) => setshowPickupModal(value)} item={item} lang={lang} vertLast={bestoffers?.length - 1 == index} bestOffer restaurant_id={details.id} />}
-                                    />
-                                </View>
-                            </ScrollView>
+                            {/* <ScrollView  showsVerticalScrollIndicator={false}> */}
+                            <Text style={[{ marginHorizontal: WIDTH * 0.05, fontSize: 20, }, STYLES.textAlign(lang), STYLES.fontSpecial()]}>Today's Special</Text>
+                            <View>
+                                <FlatList
+                                    inverted={lang == "ar"}
+                                    horizontal
+                                    data={todaylist}
+                                    showsHorizontalScrollIndicator={false}
+                                    keyExtractor={(item, index) => index.toString()}
+                                    contentContainerStyle={[STYLES.alignItems(lang)]}
+                                    renderItem={({ item, index }) => <RenderItem setshowPickupModal={(value) => setshowPickupModal(value)} item={item} lang={lang} vertLast={todaylist?.length - 1 == index} restaurant_id={details.id} />}
+                                />
+                            </View>
+                            <Text style={[{ marginHorizontal: WIDTH * 0.05, fontSize: 20, }, STYLES.textAlign(lang), STYLES.fontSpecial()]}>Best Offers</Text>
+                            <View style={{}}>
+                                <FlatList
+                                    horizontal
+                                    data={bestoffers}
+                                    inverted={lang == "ar"}
+                                    showsHorizontalScrollIndicator={false}
+                                    keyExtractor={(item, index) => index.toString()}
+                                    contentContainerStyle={[STYLES.alignItems(lang)]}
+                                    renderItem={({ item, index }) => <RenderItem setshowPickupModal={(value) => setshowPickupModal(value)} item={item} lang={lang} vertLast={bestoffers?.length - 1 == index} bestOffer restaurant_id={details.id} />}
+                                />
+                            </View>
+                            {/* </ScrollView> */}
                         </View>
                         {/* REVIEW */}
                         {/* <View style={{ flex: 1, width: WIDTH }}>

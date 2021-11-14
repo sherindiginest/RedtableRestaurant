@@ -54,7 +54,6 @@ const SetLocationScreen = () => {
     const getData = async () => {
         //dispatch(LoadingAction.showLoader())
         await Axios.get(API.restaurants()).then(async (response) => {
-            console.log("fewewfe", response.data);
             if (has(response, "success") && response.success) {
                 setRestaurantList(response.data)
             }
@@ -64,7 +63,7 @@ const SetLocationScreen = () => {
         })
     }
 
-    return (<Header backgroundColor={`${COLORS.statusbar}80`} title="Discover">
+    return (<Header backgroundColor={`${COLORS.statusbar}80`} title="discover">
         <View style={{ flex: 1 }}>
             <MapView
                 provider={PROVIDER_GOOGLE}
@@ -101,7 +100,6 @@ const SetLocationScreen = () => {
                     </Marker>} */}
 
                 {restaurantList.length > 0 && restaurantList.map((item, index) => {
-                    console.log(item);
                     return (<Marker key={index}
                         coordinate={{
                             latitude: Number(item.latitude),
